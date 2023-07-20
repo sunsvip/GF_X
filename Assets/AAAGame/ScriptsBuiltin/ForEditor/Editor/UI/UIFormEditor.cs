@@ -83,7 +83,7 @@ namespace UGF.EditorTools
                 }
                 if (drawItem != null)
                 {
-                    var displayContent = EditorGUIUtilityEx.TextContent(Utility.Text.Format("{0} {1} {2}", GetVarPrefix(drawItem.VarPrefix), GetDisplayVarTypeName(drawItem.VarType), drawItem.VarName));
+                    var displayContent = EditorGUIUtility.TrTextContent(Utility.Text.Format("{0} {1} {2}", GetVarPrefix(drawItem.VarPrefix), GetDisplayVarTypeName(drawItem.VarType), drawItem.VarName));
                     var itemLabelRect = GUILayoutUtility.GetRect(displayContent, EditorStyles.selectionRect);
                     itemLabelRect.y = rect.y;
                     itemLabelRect.x = rect.xMax - itemLabelRect.width;

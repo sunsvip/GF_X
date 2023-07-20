@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityGameFramework.Runtime", "UnityGameFramework.Runtime.csproj", "{45115597-F98F-F656-0A5F-908468051CAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmplifyShaderEditor", "AmplifyShaderEditor.csproj", "{917ED8DA-C057-0B66-F55C-F81B5F2AACB9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Builtin.Runtime", "Builtin.Runtime.csproj", "{AF484EF5-F8AE-3F97-C9DC-21F02F13B8A8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hotfix", "Hotfix.csproj", "{D4289CC1-183B-1B53-907D-2022E45FF528}"
@@ -43,10 +41,6 @@ Global
 		{45115597-F98F-F656-0A5F-908468051CAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45115597-F98F-F656-0A5F-908468051CAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45115597-F98F-F656-0A5F-908468051CAF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{917ED8DA-C057-0B66-F55C-F81B5F2AACB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{917ED8DA-C057-0B66-F55C-F81B5F2AACB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{917ED8DA-C057-0B66-F55C-F81B5F2AACB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{917ED8DA-C057-0B66-F55C-F81B5F2AACB9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF484EF5-F8AE-3F97-C9DC-21F02F13B8A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AF484EF5-F8AE-3F97-C9DC-21F02F13B8A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF484EF5-F8AE-3F97-C9DC-21F02F13B8A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
