@@ -1,1 +1,0 @@
-CustomCategory/ricardo#Hidden/CubeMapReflection#Hidden/DoLSimpleTexture
