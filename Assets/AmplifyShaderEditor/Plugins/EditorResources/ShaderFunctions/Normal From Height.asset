@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: Normal From Height
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor v1.9.1\n// Available at the
+    Unity Asset Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=19100\nNode;AmplifyShaderEditor.WorldNormalVector;109;109.7551,-549.6889;Inherit;False;False;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3\nNode;AmplifyShaderEditor.WorldPosInputsNode;108;117.2075,-701.2255;Inherit;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3\nNode;AmplifyShaderEditor.TransformDirectionNode;42;687.678,-435.2692;Inherit;False;World;Tangent;False;Fast;False;1;0;FLOAT3;0,0,0;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3\nNode;AmplifyShaderEditor.FunctionInput;20;190.7045,-386.7478;Inherit;False;Height;1;0;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionInput;110;196.2401,-283.7451;Inherit;False;Strength;1;1;False;1;0;FLOAT;1;False;1;FLOAT;0\nNode;AmplifyShaderEditor.CustomExpressionNode;107;424.2144,-542.7633;Inherit;False;//
+    \"Bump Mapping Unparametrized Surfaces on the GPU\" by Morten S. Mikkelsen$float3
+    vSigmaS = ddx( surf_pos )@$float3 vSigmaT = ddy( surf_pos )@$float3 vN = surf_norm@$float3
+    vR1 = cross( vSigmaT , vN )@$float3 vR2 = cross( vN , vSigmaS )@$float fDet =
+    dot( vSigmaS , vR1 )@$float dBs = ddx( height )@$float dBt = ddy( height )@$float3
+    vSurfGrad = scale * 0.05 * sign( fDet ) * ( dBs * vR1 + dBt * vR2 )@$return normalize
+    ( abs( fDet ) * vN - vSurfGrad )@$;3;Create;4;True;surf_pos;FLOAT3;0,0,0;In;;Inherit;False;True;surf_norm;FLOAT3;0,0,0;In;;Inherit;False;True;height;FLOAT;0;In;;Inherit;False;True;scale;FLOAT;0;In;;Inherit;False;PerturbNormal;True;False;0;;False;4;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.FunctionOutput;40;936.6965,-431.3251;Inherit;False;False;-1;Tangent
+    Normal;0;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.FunctionOutput;0;709.3525,-542.4827;Inherit;False;True;-1;World
+    Normal;1;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nWireConnection;42;0;107;0\nWireConnection;107;0;108;0\nWireConnection;107;1;109;0\nWireConnection;107;2;20;0\nWireConnection;107;3;110;0\nWireConnection;40;0;42;0\nWireConnection;0;0;107;0\nASEEND*/\n//CHKSM=13B414AAF4558C19EAE99045630567FB11270643"
+  m_functionName: 
+  m_description: Derive a normal vector from a procedural height value.
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_customEdited: 0
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesIndex: -1
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 3
+  m_headerStyle: 1
+  m_headerColor: {r: 1, g: 0.4, b: 0, a: 1}
+  m_customNodeCategory: 
+  m_previewPosition: 0
+  m_hidden: 0
+  m_url: 

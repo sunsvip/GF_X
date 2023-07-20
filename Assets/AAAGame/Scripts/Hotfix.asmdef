@@ -1,0 +1,22 @@
+{
+    "name": "Hotfix",
+    "rootNamespace": "",
+    "references": [
+        "Unity.TextMeshPro",
+        "Cinemachine",
+        "UnityGameFramework.Runtime",
+        "UltimateJoystick",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Builtin.Runtime",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

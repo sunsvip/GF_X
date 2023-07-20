@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: DepthMaskedRefraction
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor v1.9.1\n// Available at the
+    Unity Asset Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=19100\nNode;AmplifyShaderEditor.CommentaryNode;42;-1534.82,-801.194;Inherit;False;1532.902;402.5788;;8;9;11;15;14;16;17;13;1;Artifact
+    Correction;1,1,1,1;0;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;10;-1793.859,-388.0908;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT;1;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.SimpleSubtractOpNode;4;-2173.438,17.72729;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionSwitch;40;-3154.926,-42.33801;Inherit;False;Boundaries;False;0;2;-1;Continous;Discontinous;Object;-1;9;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;41;-3398.61,-20.0625;Inherit;False;Constant;_Float1;Float
+    1;0;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleSubtractOpNode;29;-3573.743,-87.7131;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.ScreenDepthNode;28;-3823.751,-92.9282;Inherit;False;0;True;1;0;FLOAT4;0,0,0,0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SaturateNode;21;-3400.329,-87.85226;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SaturateNode;5;-1980.353,17.46826;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;1;-241.299,-550.8569;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;13;-818.5988,-648.5499;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.FunctionSwitchByPipeline;89;54.23302,-226.3335;Inherit;False;4;0;FLOAT2;0,0;False;3;FLOAT2;0,0;False;1;FLOAT2;0,0;False;2;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.SimpleAddOpNode;17;-426.9748,-742.0114;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT;0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.SwizzleNode;16;-1056.131,-538.2838;Inherit;False;FLOAT2;0;1;2;3;1;0;FLOAT4;0,0,0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.SwizzleNode;32;-1232.117,-189.1583;Inherit;False;FLOAT2;0;1;2;3;1;0;FLOAT4;0,0,0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.RangedFloatNode;104;-3565.097,-516.2079;Inherit;False;Constant;_Float2;Float
+    2;0;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.ScreenPosInputsNode;19;-2842.449,-169.8328;Float;False;0;False;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.FunctionInput;35;-3255.611,-273.0523;Inherit;False;Normals;3;0;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.NormalVertexDataNode;97;-3494.124,-268.1942;Inherit;False;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.SwizzleNode;26;-2978.274,-271.8887;Inherit;False;FLOAT2;0;1;2;3;1;0;FLOAT3;0,0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode;20;-2766.966,-392.6118;Inherit;False;3;3;0;FLOAT2;1,1;False;1;FLOAT;0;False;2;FLOAT;0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.SimpleAddOpNode;7;-2569.792,-276.0808;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT4;0,0,0,0;False;1;FLOAT4;0\nNode;AmplifyShaderEditor.Vector4Node;9;-1446.455,-736.3716;Inherit;False;Global;_CameraDepthTexture_TexelSize;_CameraDepthTexture_TexelSize;21;0;Fetch;True;0;0;0;True;0;False;0,0,0,0;0.001474926,0.002949852,678,339;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.SimpleAddOpNode;18;-1576.075,-184.5327;Inherit;False;2;2;0;FLOAT2;0,0;False;1;FLOAT4;0,0,0,0;False;1;FLOAT4;0\nNode;AmplifyShaderEditor.SwizzleNode;11;-1053.65,-736.3645;Inherit;False;FLOAT2;2;3;2;3;1;0;FLOAT4;0,0,0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.FloorOpNode;14;-667.9666,-648.5499;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.ScreenDepthNode;2;-2384.089,-51.48779;Inherit;False;0;True;1;0;FLOAT4;0,0,0,0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionSwitch;103;-3375.097,-436.2079;Inherit;False;Strength
+    Scaling;False;0;2;-1;Scale with distance;Constant;Object;-1;9;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleDivideOpNode;105;-2972.097,-452.2079;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionInput;37;-3265.538,-527.2198;Inherit;False;Refraction
+    Strength;1;1;False;1;0;FLOAT;0.02;False;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleMaxOpNode;101;-3546.097,-431.2079;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0.1;False;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;15;-712.0767,-726.3988;Inherit;False;Constant;_Float0;Float
+    0;1;0;Create;True;0;0;0;False;0;False;0.5;0.5;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.SurfaceDepthNode;27;-3936.345,30.59574;Inherit;False;0;1;0;FLOAT3;0,0,0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;38;357.6264,-224.0661;Inherit;False;True;-1;Refracted
+    UV;0;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nWireConnection;10;0;20;0\nWireConnection;10;1;5;0\nWireConnection;4;0;2;0\nWireConnection;4;1;27;0\nWireConnection;40;0;21;0\nWireConnection;40;1;41;0\nWireConnection;29;0;28;0\nWireConnection;29;1;27;0\nWireConnection;21;0;29;0\nWireConnection;5;0;4;0\nWireConnection;1;0;17;0\nWireConnection;1;1;16;0\nWireConnection;13;0;32;0\nWireConnection;13;1;11;0\nWireConnection;89;0;1;0\nWireConnection;89;3;1;0\nWireConnection;89;1;32;0\nWireConnection;89;2;32;0\nWireConnection;17;0;14;0\nWireConnection;17;1;15;0\nWireConnection;16;0;9;0\nWireConnection;32;0;18;0\nWireConnection;35;0;97;0\nWireConnection;26;0;35;0\nWireConnection;20;0;26;0\nWireConnection;20;1;105;0\nWireConnection;20;2;40;0\nWireConnection;7;0;20;0\nWireConnection;7;1;19;0\nWireConnection;18;0;10;0\nWireConnection;18;1;19;0\nWireConnection;11;0;9;0\nWireConnection;14;0;13;0\nWireConnection;2;0;7;0\nWireConnection;103;0;101;0\nWireConnection;103;1;104;0\nWireConnection;105;0;37;0\nWireConnection;105;1;103;0\nWireConnection;101;0;27;0\nWireConnection;38;0;89;0\nASEEND*/\n//CHKSM=6A65159986219EDC2A222A7D13F349863E64421B"
+  m_functionName: 
+  m_description: 'Outputs normal-warped UVs for use in a Screen Color node to simulate
+    refraction. Depth Textures have to be enabled. In URP, ''Depth Texture'' and
+    ''Opaque Texture'' have to be enabled and ''Opaque Downsampling'' set to ''None''
+    to obtain no artifacts.
+
+    Created by community member Sai
+
+    https://twitter.com/saismirk'
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_customEdited: 0
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesIndex: -1
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 3
+  m_headerStyle: 1
+  m_headerColor: {r: 1, g: 0.4, b: 0, a: 1}
+  m_customNodeCategory: 
+  m_previewPosition: 0
+  m_hidden: 0
+  m_url: 

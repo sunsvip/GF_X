@@ -1,0 +1,13 @@
+﻿#	UI界面表								
+#	Id		SortOrder	UIPrefab	PauseCoveredUI	UIGroup	EscapeClose	OpenAnimType	CloseAnimType
+#	int		int	string	bool	string	bool	string	string
+#		备注						Custom,None,FadeIn,FadeOut,ScaleIn,ScaleOut	Custom,None,FadeIn,FadeOut,ScaleIn,ScaleOut
+	1	游戏界面	0	GameUIForm	True	UIForm	False	FadeIn	FadeOut
+	2		30	SettingDialog	True	Dialog	True	FadeIn	FadeOut
+	3		30	StarRateDialog	True	Dialog	False	FadeIn	FadeOut
+	4		30	TipsDialog	True	Dialog	False	FadeIn	FadeOut
+	5		30	CommonDialog	True	Dialog	False	FadeIn	FadeOut
+	6		999	ToastTips	False	Tips	False	None	None
+	7		10	GameOverUIForm	True	UIForm	False	FadeIn	FadeOut
+	8		0	MenuUIForm	True	UIForm	False	None	None
+	9		20	ShopUIForm	True	UIForm	False	FadeIn	FadeOut

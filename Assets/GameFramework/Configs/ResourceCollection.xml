@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<UnityGameFramework>
+  <ResourceCollection>
+    <Resources>
+      <Resource Name="Config" LoadType="2" Packed="False" />
+      <Resource Name="DataTable" LoadType="2" Packed="False" />
+      <Resource Name="HotfixDlls" LoadType="2" Packed="False" />
+      <Resource Name="Language" LoadType="2" Packed="False" />
+      <Resource Name="Prefabs/Entity" LoadType="2" Packed="False" />
+      <Resource Name="Prefabs/GFExtension" LoadType="0" Packed="False" />
+      <Resource Name="Prefabs/UI" LoadType="0" Packed="False" />
+      <Resource Name="Scene" LoadType="2" Packed="False" />
+      <Resource Name="ScriptableAssets" LoadType="0" Packed="False" />
+      <Resource Name="SharedAssets" LoadType="2" Packed="False" />
+    </Resources>
+    <Assets>
+      <Asset Guid="034b209892546994d8037e72ca910089" ResourceName="Language" />
+      <Asset Guid="065910b5c8a1bd045933f446c4f89c78" ResourceName="Prefabs/UI" />
+      <Asset Guid="0b69b108d75f47940881a60045f21976" ResourceName="Prefabs/UI" />
+      <Asset Guid="13b0b1255d7d6cf44a4d1987723460ef" ResourceName="ScriptableAssets" />
+      <Asset Guid="1b586e20031d8b44a9495620988ad3dc" ResourceName="HotfixDlls" />
+      <Asset Guid="1caa4c6fdc3281642b46f7c82c497dc5" ResourceName="Prefabs/GFExtension" />
+      <Asset Guid="2379a25eae5295042b43589e929570fd" ResourceName="DataTable" />
+      <Asset Guid="2cdf1b85fd520ef46b11f580e9443e78" ResourceName="Language" />
+      <Asset Guid="2f01263863577c74cb1a605c8766e743" ResourceName="DataTable" />
+      <Asset Guid="3fdcbb5b7d730f341bf585839b5502a5" ResourceName="Prefabs/UI" />
+      <Asset Guid="4035a8c10ba45d545802a8da357cd161" ResourceName="DataTable" />
+      <Asset Guid="48bb5f55d8670e349b6e614913f9d910" ResourceName="SharedAssets" />
+      <Asset Guid="66210d36a4cf7514e8d9e60ae298c2c4" ResourceName="DataTable" />
+      <Asset Guid="6792e8ab386017841ab27626b9753bec" ResourceName="Prefabs/UI" />
+      <Asset Guid="68e6db2ebdc24f95958faec2be5558d6" ResourceName="SharedAssets" />
+      <Asset Guid="6a4e2eebc9726fd49952a02518d04a6b" ResourceName="Prefabs/UI" />
+      <Asset Guid="6be38d7fc85a442489bc513d73291793" ResourceName="HotfixDlls" />
+      <Asset Guid="73d884ecdd851124aaca044feebbe87d" ResourceName="DataTable" />
+      <Asset Guid="743d91e4e5cb9bc478f0ab99fbd8f7d1" ResourceName="Prefabs/UI" />
+      <Asset Guid="74b06ad59906133448a2fe06366e4889" ResourceName="Language" />
+      <Asset Guid="7fa753003c0b5b24faded9b639aabaef" ResourceName="Prefabs/UI" />
+      <Asset Guid="81ed03a317f6d6a43aa694d24e6a8f64" ResourceName="DataTable" />
+      <Asset Guid="83bdadb9e1d24a94e8498def13d4804c" ResourceName="Language" />
+      <Asset Guid="84a6440c0fd8e974e8986ff4df2d489f" ResourceName="Language" />
+      <Asset Guid="8a192a5e08f98e144aa94e041e4373d3" ResourceName="SharedAssets" />
+      <Asset Guid="9f8375e22b5a1e3499c99ed3facbac63" ResourceName="Config" />
+      <Asset Guid="a8043c8d11e46d648bb702e4a3572406" ResourceName="Prefabs/Entity" />
+      <Asset Guid="bf63dfbb82a331b40ac9cfe31f7a2555" ResourceName="SharedAssets" />
+      <Asset Guid="c7a26b8d1ff63834298841254b2332c4" ResourceName="Prefabs/UI" />
+      <Asset Guid="ca4765c7a3113644e9f87e202a7ff91d" ResourceName="Scene" />
+      <Asset Guid="d78fcd5d7c7ec164ea79ab6dc8124c0b" ResourceName="DataTable" />
+      <Asset Guid="d946c3960d3e44847a45f42524ec6aeb" ResourceName="Config" />
+      <Asset Guid="e09d64781b233da4c8e75adde91c9652" ResourceName="Prefabs/Entity" />
+      <Asset Guid="e28cbf64cd5864f46ad3394fcab85cfd" ResourceName="DataTable" />
+      <Asset Guid="e81571591a3393745a08aee12b114309" ResourceName="HotfixDlls" />
+      <Asset Guid="ec835c8e8455a4e3eab94be7baf9c04a" ResourceName="Prefabs/UI" />
+      <Asset Guid="fb3663d475cbeb74ba97e229b86d2504" ResourceName="Prefabs/Entity" />
+      <Asset Guid="fca0697f771517f41a13845450b0f97a" ResourceName="Prefabs/Entity" />
+    </Assets>
+  </ResourceCollection>
+</UnityGameFramework>

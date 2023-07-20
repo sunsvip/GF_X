@@ -1,0 +1,91 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>构建热更资源</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>ProjectRoot</name>
+          <description>项目工程根目录</description>
+          <defaultValue>D:\Workspace\GF_HybridCLR</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>ResourceOutputDir</name>
+          <description>构建资源输出目录</description>
+          <defaultValue>D:/Workspace/GF_HybridCLR/AB</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>Platform</name>
+          <description>类型：enum (BuildTarget枚举)
+说明：构建平台</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>Android</string>
+              <string>iOS</string>
+              <string>StandaloneWindows</string>
+              <string>StandaloneWindows64</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>FullBuild</name>
+          <description>打包前为热更生成AOT dll</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>DebugMode</name>
+          <description>显示debug窗口</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>DevelopmentBuild</name>
+          <description>调试模式</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>BuildAppBundle</name>
+          <description>构建Google Play包(.aab)</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>Version</name>
+          <description>类型：string
+说明：热更资源版本号(如: 1.0.1)</description>
+          <defaultValue>1.0.0</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>VersionCode</name>
+          <description>类型：int
+说明：App版本编号</description>
+          <defaultValue>1</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.BatchFile>
+      <command>%ProjectRoot%\Tools\Jenkins\CreateBuildAppConfig.bat</command>
+      <configuredLocalRules/>
+    </hudson.tasks.BatchFile>
+    <org.jenkinsci.plugins.unity3d.Unity3dBuilder plugin="unity3d-plugin@1.3">
+      <unity3dName>Unity2021</unity3dName>
+      <argLine>-quit -nographics -batchmode -projectPath &quot;${ProjectRoot}&quot; -executeMethod UGF.EditorTools.JenkinsBuilder.BuildApp -logFile &quot;${ProjectRoot}/Tools/Jenkins/UnityBuildLog.log&quot;</argLine>
+      <unstableReturnCodes></unstableReturnCodes>
+    </org.jenkinsci.plugins.unity3d.Unity3dBuilder>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

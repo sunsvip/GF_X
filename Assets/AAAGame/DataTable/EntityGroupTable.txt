@@ -1,0 +1,11 @@
+﻿#	EntityGroup						
+#	ID		Name	ReleaseInterval	Capacity	ExpireTime	Priority
+#	int		string	float	int	float	int
+#		备注					
+	1		Default	60	60	60	0
+	2		Player	60	60	60	0
+	3		Effect	60	60	60	0
+	4		Item	60	60	60	0
+	5		Level	60	1	60	0
+	6		Bullet	60	60	60	0
+	7		Unrecycle	60	0	60	0

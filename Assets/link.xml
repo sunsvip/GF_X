@@ -1,0 +1,33 @@
+﻿<linker>
+	<!--GENERATE_TAG-->
+	<assembly fullname="Assembly-CSharp" preserve="all" />
+	<assembly fullname="Builtin.Runtime" preserve="all" />
+	<assembly fullname="Cinemachine" preserve="all" />
+	<assembly fullname="DOTween" preserve="all" />
+	<assembly fullname="GameFramework" preserve="all" />
+	<assembly fullname="HybridCLR.Runtime" preserve="all" />
+	<assembly fullname="mscorlib" preserve="all" />
+	<assembly fullname="Newtonsoft.Json" preserve="all" />
+	<assembly fullname="Newtonsoft.Json.UnityConverters" preserve="all" />
+	<assembly fullname="System.Core" preserve="all" />
+	<assembly fullname="System" preserve="all" />
+	<assembly fullname="Unity.TextMeshPro" preserve="all" />
+	<assembly fullname="UnityEngine.AnimationModule" preserve="all" />
+	<assembly fullname="UnityEngine.CoreModule" preserve="all" />
+	<assembly fullname="UnityEngine" preserve="all" />
+	<assembly fullname="UnityEngine.ParticleSystemModule" preserve="all" />
+	<assembly fullname="UnityEngine.PhysicsModule" preserve="all" />
+	<assembly fullname="UnityEngine.TextRenderingModule" preserve="all" />
+	<assembly fullname="UnityEngine.UI" preserve="all" />
+	<assembly fullname="UnityEngine.UIModule" preserve="all" />
+	<assembly fullname="UnityEngine.UnityWebRequestModule" preserve="all" />
+	<assembly fullname="UnityGameFramework.Runtime" preserve="all" />
+	<!--GENERATE_TAG-->
+	<!--<assembly fullname="UnityEngine">
+		<type fullname="UnityEngine.Vector2Int" preserve="all"/>
+		<type fullname="UnityEngine.Vector3Int" preserve="all"/>
+		<type fullname="UnityEngine.MeshRenderer" preserve="all"/>
+		<type fullname="UnityEngine.MeshFilter" preserve="all"/>
+		<type fullname="UnityEngine.TextMesh" preserve="all"/>
+	</assembly>-->
+</linker>

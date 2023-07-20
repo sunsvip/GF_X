@@ -1,0 +1,9 @@
+﻿#	关卡表					i18n
+#	ID		LvPfbName	InitMoney	MoneyColorId	LvDisplayName
+#	int		string	int	int	string
+#		备注	关卡prefab名	玩家初始钱数	取值1-6	关卡显示名(多语言)
+	1		Lv_1	200	1	Level.DisplayName1
+	2		Lv_1	160	5	Level.DisplayName2
+	3		Lv_1	315	6	Level.DisplayName3
+	4		Lv_1	210	6	Level.DisplayName4
+	5		Lv_1	315	3	Level.DisplayName5

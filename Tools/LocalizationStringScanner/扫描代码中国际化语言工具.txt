@@ -1,0 +1,13 @@
+工程地址：https://gitee.com/final5788/LocalizationCodeScanner.git
+
+使用说明：工具为控制台程序, 跨平台
+
+使用方法：
+需要3个参数, 依次为：
+1. 要扫描的代码目录或.cs文件名
+2. 要扫描的函数名
+3. 扫描结果字符串列表输出到文件名
+ .\LocalizationCodeScanner D:\Workspace\GF_HybridCLR\Assets\AAAGame\Scripts GF.Localization.GetText D:\Workspace\GF_HybridCLR\Tools\LocalizationStrings.txt
+
+
+注意: 结果是追加到输出文件中，每次扫描前删除输出文件

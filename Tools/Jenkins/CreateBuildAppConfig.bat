@@ -1,0 +1,1 @@
+echo {"ResourceOutputDir":"%ResourceOutputDir%","Platform":"%Platform%","FullBuild":%FullBuild%,"DebugMode":%DebugMode%,"DevelopmentBuild":%DevelopmentBuild%,"BuildAppBundle":%BuildAppBundle%,"Version":"%Version%","VersionCode":%VersionCode%}>%ProjectRoot%\Tools\Jenkins\BuildAppConfig.json

@@ -1,0 +1,56 @@
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_MainButton_Blue.Png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_MainButton_Dark.Png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_MainButton_Gray.Png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_MainButton_Green.Png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_MainButton_Orange.Png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_MainButton_Purple.Png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_MainButton_Red.Png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_MainButton_Sky.Png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_MainButton_White.Png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_MainButton_Yellow.Png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Circle01_d.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Circle01_n.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Hexagon01_Blue.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Hexagon01_Red.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Polygon01.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Polygon02.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_SideButton01_Left.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_SideButton02_Right.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Square01_Blue.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Square01_Yellow.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Square02.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Square03_Blue.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Square03_Purple.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Square04.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Square05.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Square06.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Square07.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+
+Assets/GUI PRO Kit - Casual Game/ResourcesData/Sprite/Component/Button/Btn_OtherButton_Square08.png--->Only textures with width/height being multiple of 4 can be compressed to Crunch format
+

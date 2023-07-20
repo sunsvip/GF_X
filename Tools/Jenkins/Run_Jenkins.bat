@@ -1,0 +1,1 @@
+D:\Apps\jdk-17.0.7\bin\java.exe -jar jenkins.war

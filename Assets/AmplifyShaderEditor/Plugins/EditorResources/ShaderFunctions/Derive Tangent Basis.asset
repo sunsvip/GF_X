@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: Derive Tangent Basis
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor v1.9.1\n// Available at the
+    Unity Asset Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=19100\nNode;AmplifyShaderEditor.WorldNormalVector;10;-821.4876,20.21545;Inherit;False;False;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3\nNode;AmplifyShaderEditor.FunctionInput;5;-784.8259,164.9036;Inherit;False;UV;2;0;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.WorldPosInputsNode;13;-823.4999,-127.2658;Inherit;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3\nNode;AmplifyShaderEditor.CustomExpressionNode;1;-529.4937,-4.008303;Inherit;False;#if
+    (SHADER_TARGET >= 45)$float3 dPdx = ddx_fine( WorldPosition )@$float3 dPdy =
+    ddy_fine( WorldPosition )@$#else$float3 dPdx = ddx( WorldPosition )@$float3 dPdy
+    = ddy( WorldPosition )@$#endif$$float3 sigmaX = dPdx - dot( dPdx, WorldNormal
+    ) * WorldNormal@$float3 sigmaY = dPdy - dot( dPdy, WorldNormal ) * WorldNormal@$$float
+    flip_sign = dot( dPdy, cross( WorldNormal, dPdx ) ) < 0 ? -1 : 1@$$#if (SHADER_TARGET
+    >= 45)$float2 dSTdx = ddx_fine( UV )@$float2 dSTdy = ddy_fine( UV )@$#else$float2
+    dSTdx = ddx( UV )@$float2 dSTdy = ddy( UV )@$#endif$$float det = dot( dSTdx,
+    float2( dSTdy.y, -dSTdy.x ) )@$float sign_det = ( det < 0 ) ? -1 : 1@$$float2
+    invC0 = sign_det * float2( dSTdy.y, -dSTdx.y )@$$float3 T = sigmaX * invC0.x
+    + sigmaY * invC0.y@$if ( abs( det ) > 0 ) T = normalize( T )@$$float3 B = ( sign_det
+    * flip_sign ) * cross( WorldNormal, T )@$$WorldToTangent = float3x3( T, B, WorldNormal
+    )@$TangentToWorld = transpose( WorldToTangent )@$return@;7;Create;5;True;WorldPosition;FLOAT3;0,0,0;In;;Float;False;True;WorldNormal;FLOAT3;0,0,0;In;;Float;False;True;UV;FLOAT2;0,0;In;;Float;False;True;TangentToWorld;FLOAT3x3;1,0,0,1,1,1,1,0,1;Out;;Float;False;True;WorldToTangent;FLOAT3x3;1,0,0,1,1,1,1,0,1;Out;;Float;False;Derive
+    Tangent Basis;False;False;0;;False;6;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT2;0,0;False;4;FLOAT3x3;1,0,0,1,1,1,1,0,1;False;5;FLOAT3x3;1,0,0,1,1,1,1,0,1;False;3;FLOAT3;0;FLOAT3x3;5;FLOAT3x3;6\nNode;AmplifyShaderEditor.FunctionOutput;0;-147.9617,-6.546963;Inherit;False;True;-1;Tangent
+    To World;0;False;1;0;FLOAT3x3;0,0,0,1,1,1,1,0,1;False;1;FLOAT3x3;0\nNode;AmplifyShaderEditor.FunctionOutput;6;-143.2227,68.66327;Inherit;False;False;-1;World
+    To Tangent;1;False;1;0;FLOAT3x3;0,0,0,1,1,1,1,0,1;False;1;FLOAT3x3;0\nWireConnection;1;1;13;0\nWireConnection;1;2;10;0\nWireConnection;1;3;5;0\nWireConnection;0;0;1;5\nWireConnection;6;0;1;6\nASEEND*/\n//CHKSM=5290087D1BB63169DE2BC6B31F3E508BBF2F0784"
+  m_functionName: 
+  m_description: 'This function derives a per-pixel tangent basis for a specific set
+    of UV coordinates. The built-in tangent basis is based on UV0. This function allows
+    normal mapping for UV1 or any other UV set, including runtime generated.
+
+
+    Typical usage case:
+
+    Blending additional normal mapped layers that require non-UV0 coordinates.
+
+
+    Based on "Surface Gradient Based Bump Mapping Framework" by Morten S. Mikkelsen'
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_customEdited: 0
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesIndex: -1
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 3
+  m_headerStyle: 1
+  m_headerColor: {r: 1, g: 0.4, b: 0, a: 1}
+  m_customNodeCategory: 
+  m_previewPosition: 0
+  m_hidden: 0
+  m_url: 
