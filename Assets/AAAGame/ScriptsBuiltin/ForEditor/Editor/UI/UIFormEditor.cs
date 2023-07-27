@@ -644,7 +644,7 @@ namespace UGF.EditorTools
                 if (property == null) continue;
                 if (item.Targets.Length <= 1)
                 {
-                    property.objectReferenceValue = isGameObject ? item.Targets[0] : item.Targets[0]?.GetComponent(varType);
+                    property.objectReferenceValue = isGameObject ? item.Targets[0] : item.Targets[0]?.GetComponent(GetSampleType(varType));
                 }
                 else if (property.isArray)
                 {
