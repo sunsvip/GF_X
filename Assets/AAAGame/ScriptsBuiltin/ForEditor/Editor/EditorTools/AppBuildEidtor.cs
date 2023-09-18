@@ -846,7 +846,7 @@ namespace UGF.EditorTools
             if (generateAotDll)
             {
                 // 生成裁剪后的aot dll
-                StripAOTDllCommand.GenerateStripedAOTDlls(target, EditorUserBuildSettings.selectedBuildTargetGroup);
+                StripAOTDllCommand.GenerateStripedAOTDlls(target);
                 HybridCLRExtensionTool.CopyAotDllsToProject(target);
             }
 
