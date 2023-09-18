@@ -1,7 +1,7 @@
 # GF_HybridCLR
 工程环境：
 Unity 2022.3.9f1
-HybridCLR 4.4
+HybridCLR 4.0.4
 #### 介绍
 GameFramework 接入HybridCLR；
 框架基于Unity2021、Unity2022维护
