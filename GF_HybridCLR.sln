@@ -21,8 +21,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask.Addressables", "Uni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor-firstpass", "Assembly-CSharp-Editor-firstpass.csproj", "{16B4D3DD-15B4-A996-4678-2ECB331F2EE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{1F031133-7FFE-BA88-99FB-ECE015F2E656}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask.TextMeshPro", "UniTask.TextMeshPro.csproj", "{84A2DE49-B9C0-30FC-4A73-B6E545472E5D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask.DOTween", "UniTask.DOTween.csproj", "{EDFD62EC-A6C1-87F3-F815-58C6A253F8C7}"
@@ -30,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UltimateJoystick", "UltimateJoystick.csproj", "{9DE3AE72-4F86-523B-B84C-66E001D160CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask.Editor", "UniTask.Editor.csproj", "{E746A6D9-CED0-DAC6-4E56-53E79E643B5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{1F031133-7FFE-BA88-99FB-ECE015F2E656}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,10 +77,6 @@ Global
 		{16B4D3DD-15B4-A996-4678-2ECB331F2EE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16B4D3DD-15B4-A996-4678-2ECB331F2EE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16B4D3DD-15B4-A996-4678-2ECB331F2EE6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1F031133-7FFE-BA88-99FB-ECE015F2E656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1F031133-7FFE-BA88-99FB-ECE015F2E656}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1F031133-7FFE-BA88-99FB-ECE015F2E656}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1F031133-7FFE-BA88-99FB-ECE015F2E656}.Release|Any CPU.Build.0 = Release|Any CPU
 		{84A2DE49-B9C0-30FC-4A73-B6E545472E5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{84A2DE49-B9C0-30FC-4A73-B6E545472E5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84A2DE49-B9C0-30FC-4A73-B6E545472E5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -97,6 +93,10 @@ Global
 		{E746A6D9-CED0-DAC6-4E56-53E79E643B5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E746A6D9-CED0-DAC6-4E56-53E79E643B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E746A6D9-CED0-DAC6-4E56-53E79E643B5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F031133-7FFE-BA88-99FB-ECE015F2E656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F031133-7FFE-BA88-99FB-ECE015F2E656}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F031133-7FFE-BA88-99FB-ECE015F2E656}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F031133-7FFE-BA88-99FB-ECE015F2E656}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

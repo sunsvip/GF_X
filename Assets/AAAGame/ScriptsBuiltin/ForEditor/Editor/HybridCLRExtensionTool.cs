@@ -1,6 +1,5 @@
 #if UNITY_EDITOR
 using GameFramework;
-using HybridCLR.Editor;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -122,8 +121,8 @@ namespace UGF.EditorTools
             }
             RefreshPlayerSettings();
             RefreshAssemblyDefinition(false);
-            HybridCLRSettings.Instance.enable = true;
-            HybridCLRSettings.Save();
+            HybridCLR.Editor.Settings.HybridCLRSettings.Instance.enable = true;
+            HybridCLR.Editor.Settings.HybridCLRSettings.Save();
             EditorUtility.DisplayDialog("HybridCLR", "切换到热更模式,已启用HybridCLR热更! 记得在ResourceEditor中添加热更dll资源.", "知道了");
         }
         public static void DisableHybridCLR()
@@ -146,8 +145,8 @@ namespace UGF.EditorTools
             }
             RefreshPlayerSettings();
             RefreshAssemblyDefinition(true);
-            HybridCLRSettings.Instance.enable = false;
-            HybridCLRSettings.Save();
+            HybridCLR.Editor.Settings.HybridCLRSettings.Instance.enable = false;
+            HybridCLR.Editor.Settings.HybridCLRSettings.Save();
             EditorUtility.DisplayDialog("HybridCLR", "切换到单机模式,已禁用HybridCLR热更! 记得在ResourceEditor中移除热更dll资源.", "知道了");
         }
         private static void RefreshPlayerSettings()

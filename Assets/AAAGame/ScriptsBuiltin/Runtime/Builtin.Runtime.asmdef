@@ -3,8 +3,7 @@
   "rootNamespace": "",
   "references": [
     "Unity.TextMeshPro",
-    "UnityGameFramework.Runtime",
-    "HybridCLR.Runtime"
+    "UnityGameFramework.Runtime"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

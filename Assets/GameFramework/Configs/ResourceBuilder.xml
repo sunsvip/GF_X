@@ -9,9 +9,9 @@
       <AdditionalCompressionSelected>True</AdditionalCompressionSelected>
       <ForceRebuildAssetBundleSelected>False</ForceRebuildAssetBundleSelected>
       <BuildEventHandlerTypeName>UGF.EditorTools.AssetBuildHandler</BuildEventHandlerTypeName>
-      <OutputDirectory>D:\Workspace\GF_HybridCLR\AB</OutputDirectory>
-      <OutputPackageSelected>False</OutputPackageSelected>
-      <OutputFullSelected>True</OutputFullSelected>
+      <OutputDirectory>D:/Workspace/UnityProjects/GF_HybridCLR/AB</OutputDirectory>
+      <OutputPackageSelected>True</OutputPackageSelected>
+      <OutputFullSelected>False</OutputFullSelected>
       <OutputPackedSelected>False</OutputPackedSelected>
     </Settings>
   </ResourceBuilder>

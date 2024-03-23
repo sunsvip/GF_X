@@ -1,8 +1,4 @@
-using GameFramework;
-using HybridCLR;
-using HybridCLR.Editor;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -77,7 +73,7 @@ namespace UGF.EditorTools
 
         internal static string[] GetSelectedAotDlls()
         {
-            return HybridCLRSettings.Instance.patchAOTAssemblies;
+            return HybridCLR.Editor.Settings.HybridCLRSettings.Instance.patchAOTAssemblies;
         }
         public static bool Save2LinkFile(string[] stripList)
         {
@@ -128,7 +124,7 @@ namespace UGF.EditorTools
 
         internal static bool Save2AotDllList(string[] strings)
         {
-            HybridCLRSettings.Instance.patchAOTAssemblies = strings;
+            HybridCLR.Editor.Settings.HybridCLRSettings.Instance.patchAOTAssemblies = strings;
             HybridCLRExtensionTool.CopyAotDllsToProject(EditorUserBuildSettings.activeBuildTarget);
             AssetDatabase.Refresh();
             return true;

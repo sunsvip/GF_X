@@ -10,7 +10,6 @@ public partial class MenuUIForm : UIFormBase
         base.OnOpen(userData);
         GF.Event.Subscribe(UserDataChangedEventArgs.EventId, OnUserDataChanged);
         GF.Event.Subscribe(PlayerEventArgs.EventId, OnPlayerEvent);
-        SetLevelNumText(GF.DataModel.GetOrCreate<PlayerDataModel>().GAME_LEVEL);
         RefreshMoneyText();
     }
     protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
@@ -46,14 +45,6 @@ public partial class MenuUIForm : UIFormBase
         }
     }
 
-    public void SetLevelProgress(float progress)
-    {
-        levelProgress.value = progress;
-    }
-    public float GetLevelProgress()
-    {
-        return levelProgress.value;
-    }
     private void OnUserDataChanged(object sender, GameEventArgs e)
     {
         var args = e as UserDataChangedEventArgs;
@@ -63,17 +54,11 @@ public partial class MenuUIForm : UIFormBase
                 RefreshMoneyText();
                 break;
             case UserDataType.GAME_LEVEL:
-                SetLevelNumText((int)args.Value);
+
                 break;
         }
     }
-    internal void SetLevelNumText(int id)
-    {
-        levelText.text = id.ToString();
-        var lvTb = GF.DataTable.GetDataTable<LevelTable>();
-        int nextLvId = Const.RepeatLevel ? id + 1 : Mathf.Min(id + 1, lvTb.MaxIdDataRow.Id);
-        nextLevelText.text = nextLvId.ToString();
-    }
+
 
     private void RefreshMoneyText()
     {

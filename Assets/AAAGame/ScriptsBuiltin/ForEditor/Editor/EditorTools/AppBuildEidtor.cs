@@ -561,15 +561,9 @@ namespace UGF.EditorTools
                 {
                     EditorGUILayout.LabelField("Version", GUILayout.Width(160f));
                     PlayerSettings.bundleVersion = EditorGUILayout.TextField(PlayerSettings.bundleVersion);
+                    EditorGUILayout.EndHorizontal();
                 }
-                EditorGUILayout.EndHorizontal();
-#if UNITY_ANDROID
-                EditorGUILayout.BeginHorizontal();
-                {
-                    EditorGUILayout.LabelField("Version Code", GUILayout.Width(160f));
-                    PlayerSettings.Android.bundleVersionCode = EditorGUILayout.IntField(PlayerSettings.Android.bundleVersionCode);
-                }
-                EditorGUILayout.EndHorizontal();
+
                 EditorGUILayout.BeginHorizontal();
                 {
                     EditorGUILayout.LabelField("App Build Path", GUILayout.Width(160f));
@@ -577,18 +571,22 @@ namespace UGF.EditorTools
                     if (GUILayout.Button("Select Path", GUILayout.Width(160f)))
                     {
                         string path = EditorUtilityExtension.OpenRelativeFolderPanel("Select App Build Path", AppBuildSettings.Instance.AppBuildDir);
-                        //string projectRoot = Directory.GetParent(Application.dataPath).FullName;
-                        //var appBuildDir = string.IsNullOrWhiteSpace(AppBuildSettings.Instance.AppBuildDir) ? projectRoot : AppBuildSettings.Instance.AppBuildDir;
-                        //var openPath = Directory.Exists(appBuildDir) ? appBuildDir : projectRoot;
-                        //string path = EditorUtility.OpenFolderPanel("Select App Build Path", openPath, "");
                         if (!string.IsNullOrWhiteSpace(path))
                         {
-                            AppBuildSettings.Instance.AppBuildDir = path;// Path.GetRelativePath(projectRoot, path);
+                            AppBuildSettings.Instance.AppBuildDir = path;
                         }
                         GUIUtility.ExitGUI();
                     }
                     EditorGUILayout.EndHorizontal();
                 }
+#if UNITY_ANDROID
+                EditorGUILayout.BeginHorizontal();
+                {
+                    EditorGUILayout.LabelField("Version Code", GUILayout.Width(160f));
+                    PlayerSettings.Android.bundleVersionCode = EditorGUILayout.IntField(PlayerSettings.Android.bundleVersionCode);
+                }
+                EditorGUILayout.EndHorizontal();
+                
                 EditorGUILayout.BeginHorizontal();
                 {
                     PlayerSettings.Android.useCustomKeystore = EditorGUILayout.ToggleLeft("Use Custom Keystore", PlayerSettings.Android.useCustomKeystore, GUILayout.Width(160f));

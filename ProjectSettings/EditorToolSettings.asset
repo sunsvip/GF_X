@@ -22,7 +22,7 @@ MonoBehaviour:
   CompressImgToolFastLv: 1
   CompressImgToolQualityLv: 80
   CompressImgToolQualityMinLv: 0
-  CompressImgMode: 0
+  CompressImgMode: 3
   FontCroppingCharSetsOutput: Tools\FontMinify
   FontCroppingCharSetsFile: Tools\FontMinify\CharacterSetsBase.txt
   ChatGPTKey: 
