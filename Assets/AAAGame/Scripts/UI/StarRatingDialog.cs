@@ -58,7 +58,7 @@ public class StarRatingDialog : UIFormBase
             OnClickClose();
             return;
         }
-        GF.AD.OpenAppstore();
+        //GF.AD.OpenAppstore();
         OnClickClose();
     }
 }

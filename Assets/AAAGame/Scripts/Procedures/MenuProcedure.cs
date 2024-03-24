@@ -35,7 +35,7 @@ public class MenuProcedure : ProcedureBase
             return;
         }
 
-        if (GF.AD.UserPrivacyAccepted() && GF.UI.IsValidUIForm(menuUIForm.UIForm) && GF.Entity.IsValidEntity(lvEntity.Entity) && lvEntity.IsAllReady)
+        if (GF.UI.IsValidUIForm(menuUIForm.UIForm) && GF.Entity.IsValidEntity(lvEntity.Entity) && lvEntity.IsAllReady)
         {
             if (Input.GetMouseButtonDown(0) && !GF.UI.IsPointerOverUIObject(Input.mousePosition) && GF.UI.GetTopUIFormId() == menuUIFormId)
             {

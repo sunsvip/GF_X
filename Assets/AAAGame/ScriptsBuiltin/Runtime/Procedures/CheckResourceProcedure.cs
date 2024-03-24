@@ -144,8 +144,8 @@ public class CheckAndUpdateProcedure : ProcedureBase
         var lastAppVersion = System.Version.Parse(vinfo.LastAppVersion);
         if (lastAppVersion > curAppVersion)
         {
-            GFBuiltin.BuiltinView.ShowDialog(GFBuiltin.Localization.GetText("New Version!"),
-                vinfo.AppUpdateDesc, GFBuiltin.Localization.GetText("UPDATE"), GFBuiltin.Localization.GetText("LATER"),
+            GFBuiltin.BuiltinView.ShowDialog(GFBuiltin.Localization.GetString("New Version!"),
+                vinfo.AppUpdateDesc, GFBuiltin.Localization.GetString("UPDATE"), GFBuiltin.Localization.GetString("LATER"),
                 () =>
                 {
                     Application.OpenURL(vinfo.AppUpdateUrl);

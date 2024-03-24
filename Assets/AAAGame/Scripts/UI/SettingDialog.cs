@@ -52,7 +52,7 @@ public class SettingDialog : UIFormBase
         switch (bt_tag)
         {
             case "RATE_US":
-                GF.AD.OpenAppstore();
+                //GF.AD.OpenAppstore();
                 break;
             case "HOME":
                 Back2Home();

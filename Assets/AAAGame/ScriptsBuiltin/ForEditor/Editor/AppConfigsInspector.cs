@@ -18,6 +18,7 @@ namespace UGF.EditorTools
         Config = 1 << 1,
         Language = 1 << 2
     }
+
     [CustomEditor(typeof(AppConfigs))]
     public class AppConfigsInspector : UnityEditor.Editor
     {
@@ -262,6 +263,7 @@ namespace UGF.EditorTools
         private GUIStyle selectedStyle;
         GUIContent procedureTitleContent;
         GUIContent editorConstSettingsContent;
+        //GUIContent gameDataSaveModeContent;
         private void OnEnable()
         {
             appConfig = target as AppConfigs;
@@ -272,6 +274,7 @@ namespace UGF.EditorTools
 
             procedureTitleContent = new GUIContent("流程(Procedures)", "勾选的流程在有限状态机中有效");
             editorConstSettingsContent = EditorGUIUtility.TrTextContentWithIcon("Path Settings [设置DataTable/Config导入/导出路径]", "Settings");
+            //gameDataSaveModeContent = new GUIContent("DataTable bytes mode:", "数据表文件存储为二进制");
             svDataArr = new GameDataScrollView[] { new GameDataScrollView(appConfig, GameDataType.DataTable), new GameDataScrollView(appConfig, GameDataType.Config), new GameDataScrollView(appConfig, GameDataType.Language) };
             ReloadScrollView(appConfig);
         }
@@ -279,11 +282,22 @@ namespace UGF.EditorTools
         public override void OnInspectorGUI()
         {
             //base.OnInspectorGUI();
+
             serializedObject.Update();
             if (GUILayout.Button(editorConstSettingsContent))
             {
-                InternalEditorUtility.OpenFileAtLineExternal(Path.Combine(Path.GetDirectoryName(ConstEditor.BuiltinAssembly), "../ForEditor/Editor/Common/ConstEditor.cs"), 0);
+                InternalEditorUtility.OpenFileAtLineExternal(Path.Combine(Path.GetDirectoryName(ConstEditor.BuiltinAssembly), "../Editor/Common/ConstEditor.cs"), 0);
             }
+            EditorGUI.BeginChangeCheck();
+            {
+                AppSettings.Instance.DesignResolution = EditorGUILayout.Vector2IntField("UI设计分辨率:", AppSettings.Instance.DesignResolution);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    EditorUtility.SetDirty(AppSettings.Instance);
+                }
+            }
+            EditorGUILayout.Space(10);
+            //appConfig.DataTableBytesMode = EditorGUILayout.ToggleLeft(gameDataSaveModeContent, appConfig.DataTableBytesMode);
             procedureFoldout = EditorGUILayout.Foldout(procedureFoldout, procedureTitleContent);
             if (procedureFoldout)
             {

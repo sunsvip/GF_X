@@ -26,7 +26,6 @@ public class GFBuiltin : MonoBehaviour
     public static UIComponent UI { get; private set; }
     public static WebRequestComponent WebRequest { get; private set; }
     public static BuiltinViewComponent BuiltinView { get; private set; }
-    public static HotFixComponent Hotfix { get; private set; }
     public static Camera UICamera { get; private set; }
 
     public static Canvas RootCanvas { get; private set; } = null;
@@ -70,7 +69,6 @@ public class GFBuiltin : MonoBehaviour
         GFBuiltin.UI = GameEntry.GetComponent<UIComponent>();
         GFBuiltin.WebRequest = GameEntry.GetComponent<WebRequestComponent>();
         GFBuiltin.BuiltinView = GameEntry.GetComponent<BuiltinViewComponent>();
-        GFBuiltin.Hotfix = GameEntry.GetComponent<HotFixComponent>();
 
         RootCanvas = GFBuiltin.UI.GetComponentInChildren<Canvas>();
         GFBuiltin.UICamera = RootCanvas.worldCamera;
