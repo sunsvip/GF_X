@@ -1,14 +1,13 @@
 using UnityEngine;
 using UnityEditor;
-using UnityGameFramework.Editor.ResourceTools;
 using System;
 using System.Collections.Generic;
 using GameFramework;
 using System.Linq;
 using System.Reflection;
-using Unity.VisualScripting;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
+using Unity.CodeEditor;
 
 namespace UGF.EditorTools
 {
@@ -18,6 +17,7 @@ namespace UGF.EditorTools
         private static GUIContent buildBtContent;
         private static GUIContent appConfigBtContent;
         private static GUIContent toolsDropBtContent;
+        private static GUIContent openCsProjectBtContent;
 
         //Toolbar栏工具箱下拉列表
         private static List<Type> editorToolList;
@@ -34,6 +34,7 @@ namespace UGF.EditorTools
             buildBtContent = EditorGUIUtility.TrTextContentWithIcon("Build App/Hotfix", "打新包/打热更", curPlatformIcon.image);
             appConfigBtContent = EditorGUIUtility.TrTextContentWithIcon("App Configs", "配置App运行时所需DataTable/Config/Procedure", "Settings");
             toolsDropBtContent = EditorGUIUtility.TrTextContentWithIcon("Tools", "工具箱", "CustomTool");
+            openCsProjectBtContent = EditorGUIUtility.TrTextContentWithIcon("Open C# Project", "打开C#工程", "dll Script Icon");
             EditorSceneManager.sceneOpened += OnSceneOpened;
             ScanEditorToolClass();
 
@@ -52,7 +53,7 @@ namespace UGF.EditorTools
         {
             editorToolList.Clear();
             var editorDll = Utility.Assembly.GetAssemblies().First(dll => dll.GetName().Name.CompareTo("Assembly-CSharp-Editor") == 0);
-            var allEditorTool = editorDll.GetTypes().Where(tp => (tp.IsClass && !tp.IsAbstract && tp.IsSubclassOf(typeof(EditorToolBase)) && tp.HasAttribute<EditorToolMenuAttribute>()));
+            var allEditorTool = editorDll.GetTypes().Where(tp => (tp.IsClass && !tp.IsAbstract && tp.IsSubclassOf(typeof(EditorToolBase)) && tp.GetCustomAttribute(typeof(EditorToolMenuAttribute)) != null));
 
             editorToolList.AddRange(allEditorTool);
             editorToolList.Sort((x, y) =>
@@ -86,19 +87,33 @@ namespace UGF.EditorTools
             if (GUILayout.Button(appConfigBtContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(100)))
             {
                 var config = AppConfigs.GetInstanceEditor();
-                //Selection.activeObject = config;
-                EditorUtility.OpenPropertyEditor(config);
+                Selection.activeObject = config;
+                //EditorUtility.OpenPropertyEditor(config);
             }
             EditorGUILayout.Space(10);
             if (EditorGUILayout.DropdownButton(toolsDropBtContent, FocusType.Passive, EditorStyles.toolbarPopup, GUILayout.MaxWidth(90)))
             {
                 DrawEditorToolDropdownMenus();
             }
+            EditorGUILayout.Space(10);
+            if (GUILayout.Button(openCsProjectBtContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(120)))
+            {
+                OpenCSharpProject();
+            }
             GUILayout.FlexibleSpace();
+        }
+        static void OpenCSharpProject()
+        {
+            // Ensure that the mono islands are up-to-date
+            AssetDatabase.Refresh();
+            CodeEditor.Editor.CurrentCodeEditor.SyncAll();
+
+            CodeEditor.Editor.CurrentCodeEditor.OpenProject();
         }
         static void DrawSwithSceneDropdownMenus()
         {
             GenericMenu popMenu = new GenericMenu();
+            popMenu.allowDuplicateNames = true;
             var sceneGuids = AssetDatabase.FindAssets("t:Scene", new string[] { ConstEditor.ScenePath });
             sceneAssetList.Clear();
             for (int i = 0; i < sceneGuids.Length; i++)
@@ -106,7 +121,7 @@ namespace UGF.EditorTools
                 var scenePath = AssetDatabase.GUIDToAssetPath(sceneGuids[i]);
                 sceneAssetList.Add(scenePath);
                 string fileDir = System.IO.Path.GetDirectoryName(scenePath);
-                bool isInRootDir = Utility.Path.GetRegularPath(ConstEditor.ScenePath).TrimEnd("/") == Utility.Path.GetRegularPath(fileDir).TrimEnd("/");
+                bool isInRootDir = Utility.Path.GetRegularPath(ConstEditor.ScenePath).TrimEnd('/') == Utility.Path.GetRegularPath(fileDir).TrimEnd('/');
                 var sceneName = System.IO.Path.GetFileNameWithoutExtension(scenePath);
                 string displayName = sceneName;
                 if (!isInRootDir)
