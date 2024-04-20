@@ -38,6 +38,7 @@ namespace UGF.EditorTools
 
         GUIContent prefixContent;
         GUIContent typeContent;
+        GUIStyle openCodeBtStyle;
 
         #region #右键菜单
 
@@ -294,6 +295,9 @@ namespace UGF.EditorTools
         {
             prefixContent = new GUIContent();
             typeContent = new GUIContent();
+            openCodeBtStyle = new GUIStyle(EditorGUIUtility.GetBuiltinSkin(EditorSkin.Inspector).button);
+            openCodeBtStyle.normal.textColor = openCodeBtStyle.hover.textColor = openCodeBtStyle.active.textColor = Color.green;
+            openCodeBtStyle.fontStyle = FontStyle.Bold;
             varPrefixIndex = 0;
             mShowSelectTypeMenu = false;
             uiForm = (target as UIFormBase);
@@ -357,7 +361,7 @@ namespace UGF.EditorTools
             EditorGUILayout.BeginHorizontal();
             EditorGUI.BeginDisabledGroup(disableAct);
             var btnHeight = GUILayout.Height(30);
-            if (GUILayout.Button("生成变量代码", btnHeight)) //生成脚本
+            if (GUILayout.Button("生成代码", btnHeight)) //生成脚本
             {
                 GenerateUIFormVariables(uiForm, serializedObject);
             }
@@ -366,19 +370,19 @@ namespace UGF.EditorTools
             {
                 SerializeFieldProperties(serializedObject, uiForm.GetFieldsProperties());
             }
-            if (GUILayout.Button("打开UI逻辑代码", btnHeight))
-            {
-                var monoScript = MonoScript.FromMonoBehaviour(uiForm);
-                string scriptFile = AssetDatabase.GetAssetPath(monoScript);
-                InternalEditorUtility.OpenFileAtLineExternal(scriptFile, 0);
-            }
-            if (GUILayout.Button("打开变量代码", btnHeight))
+
+            if (GUILayout.Button("变量代码", btnHeight))
             {
                 var uiFormClassName = uiForm.GetType().Name;
                 string scriptFile = UtilityBuiltin.ResPath.GetCombinePath(ConstEditor.UISerializeFieldDir, Utility.Text.Format("{0}.Variables.cs", uiFormClassName));
                 InternalEditorUtility.OpenFileAtLineExternal(scriptFile, 0);
             }
-
+            if (GUILayout.Button("编辑代码", openCodeBtStyle, btnHeight))
+            {
+                var monoScript = MonoScript.FromMonoBehaviour(uiForm);
+                string scriptFile = AssetDatabase.GetAssetPath(monoScript);
+                InternalEditorUtility.OpenFileAtLineExternal(scriptFile, 0);
+            }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal("box");
 
