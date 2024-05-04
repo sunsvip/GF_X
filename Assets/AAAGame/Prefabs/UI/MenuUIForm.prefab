@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2817118443285163712}
   - component: {fileID: 7098074131304580233}
   - component: {fileID: 2125572406840620875}
+  - component: {fileID: 6350677435659976263}
   m_Layer: 5
   m_Name: Tips
   m_TagString: Untagged
@@ -93,6 +94,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Key: MenuUIForm.Tips
+--- !u!114 &6350677435659976263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1171106175160448302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 2, y: -2}
+  m_UseGraphicAlpha: 1
 --- !u!1 &2124541604238092334
 GameObject:
   m_ObjectHideFlags: 0
@@ -132,7 +148,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 97.5, y: -50}
-  m_SizeDelta: {x: 0, y: 64}
+  m_SizeDelta: {x: 195, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &429075823233801656
 CanvasRenderer:

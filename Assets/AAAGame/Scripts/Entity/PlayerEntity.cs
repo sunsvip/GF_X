@@ -1,11 +1,4 @@
-using GameFramework;
-using GameFramework.Event;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityGameFramework.Runtime;
-using DG.Tweening;
 
 public class PlayerEntity : SampleEntity
 {
@@ -53,8 +46,8 @@ public class PlayerEntity : SampleEntity
         {
             lastFireTime = Time.time;
             var fireParms = EntityParams.Acquire(firePoint.position, firePoint.eulerAngles);
-            fireParms.Set<VarFloat>("LifeTime", 1.5f);
-            GF.Entity.ShowEntity<BulletEntity>("Effect/Trail", Const.EntityGroup.Effect, fireParms);
+            fireParms.Set<VarFloat>(BulletEntity.LIFE_TIME, 3f);
+            GF.Entity.ShowEntity<BulletEntity>("Bullet", Const.EntityGroup.Effect, fireParms);
         }
     }
     private void Move()
