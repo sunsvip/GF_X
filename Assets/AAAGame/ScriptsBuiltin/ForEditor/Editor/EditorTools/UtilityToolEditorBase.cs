@@ -32,6 +32,7 @@ namespace UGF.EditorTools
         UtilitySubToolBase curPanel;
         private int mCompressMode;
         private List<UnityEngine.Object> selectList;
+        public List<UnityEngine.Object> SelectObjectList => selectList;
 
         private void OnEnable()
         {
