@@ -32,7 +32,7 @@ public class ImageFontCreator : UtilitySubToolBase
     private int charTexInstanceId;
     private SpriteRect[] m_SpriteRects;
     ImageFontType m_FontType = ImageFontType.Font;
-
+    bool m_NormalizeHeight = true;
     Font m_TMPBaseFont;
     public ImageFontCreator(UtilityToolEditorBase ownerEditor) : base(ownerEditor)
     {
@@ -42,7 +42,7 @@ public class ImageFontCreator : UtilitySubToolBase
     {
         base.OnEnter();
         m_CharsFilePath = EditorPrefs.GetString(CharsFileKey, DefaultCharsFile);
-        if(m_CacheUnicodes == null) m_CacheUnicodes = new List<int>();
+        if (m_CacheUnicodes == null) m_CacheUnicodes = new List<int>();
         RefreshCharsUnicodes();
         m_FontSize = 24;
     }
@@ -75,7 +75,7 @@ public class ImageFontCreator : UtilitySubToolBase
             }
             EditorGUILayout.EndHorizontal();
         }
-
+        m_NormalizeHeight = EditorGUILayout.Toggle("统一字符高度:", m_NormalizeHeight);
         m_FontType = (ImageFontType)EditorGUILayout.EnumPopup("字体类型:", m_FontType);
         if (m_FontType == ImageFontType.TextMeshProFont)
         {
@@ -92,7 +92,7 @@ public class ImageFontCreator : UtilitySubToolBase
             m_CharsString = EditorGUILayout.TextArea(m_CharsString, GUILayout.Height(50));
             if (EditorGUI.EndChangeCheck())
             {
-                m_CacheUnicodes = RefreshCharsUnicodes();
+                RefreshCharsUnicodes();
             }
         }
         DrawSpriteMultiModeSettings();
@@ -209,7 +209,7 @@ public class ImageFontCreator : UtilitySubToolBase
             }
 
 
-            if (!ParseCharsInfo(m_CacheUnicodes, out CharacterInfo[] charInfoArr, out Texture2D charsTexture))
+            if (!ParseCharsInfo(m_CacheUnicodes, out CharacterInfo[] charInfoArr, out Texture2D charsTexture, out int maxFontHeight))
             {
                 return;
             }
@@ -264,7 +264,7 @@ public class ImageFontCreator : UtilitySubToolBase
                         if (m_TMPBaseFont != null)
                         {
                             outputFont = Path.Combine(outputDir, $"{charsTexture.name}_{m_FontSize}.asset");
-                            GenerateTextMeshProFont(charInfoArr, charsTexture, outputFont);
+                            GenerateTextMeshProFont(charInfoArr, charsTexture, outputFont, maxFontHeight);
                         }
                         break;
                 }
@@ -272,10 +272,9 @@ public class ImageFontCreator : UtilitySubToolBase
         }
     }
 
-    private void GenerateTextMeshProFont(CharacterInfo[] charInfoArr, Texture2D charsTexture, string outputFont)
+    private void GenerateTextMeshProFont(CharacterInfo[] charInfoArr, Texture2D charsTexture, string outputFont, int maxFontHeight)
     {
-        var maxHeight = charInfoArr[0].size;
-        var fontAsset = TMP_FontAsset.CreateFontAsset(m_TMPBaseFont, maxHeight, 0, UnityEngine.TextCore.LowLevel.GlyphRenderMode.SMOOTH, charsTexture.width, charsTexture.height, AtlasPopulationMode.Static, false);
+        var fontAsset = TMP_FontAsset.CreateFontAsset(m_TMPBaseFont, maxFontHeight, 0, UnityEngine.TextCore.LowLevel.GlyphRenderMode.SMOOTH, charsTexture.width, charsTexture.height, AtlasPopulationMode.Static, false);
         AssetDatabase.CreateAsset(fontAsset, outputFont);
 
         var tmpMat = new Material(Shader.Find("TextMeshPro/Bitmap Custom Atlas"));
@@ -299,7 +298,7 @@ public class ImageFontCreator : UtilitySubToolBase
         }
         var faceInfo = fontAsset.faceInfo;
         faceInfo.familyName = fileName;
-        faceInfo.lineHeight = faceInfo.ascentLine = maxHeight;
+        faceInfo.lineHeight = faceInfo.ascentLine = maxFontHeight;
         faceInfo.baseline = faceInfo.descentLine = 0;
         fontAsset.faceInfo = faceInfo;
         var fontSettings = fontAsset.creationSettings;
@@ -319,10 +318,11 @@ public class ImageFontCreator : UtilitySubToolBase
             new UnityEngine.TextCore.GlyphRect((int)(charInfo.uvBottomLeft.x * atlasWidth), (int)(charInfo.uvBottomLeft.y * atlasHeight), charInfo.glyphWidth, charInfo.glyphHeight));
         return glyph;
     }
-    private bool ParseCharsInfo(IList<int> unicodes, out CharacterInfo[] charInfoArr, out Texture2D charsTexture)
+    private bool ParseCharsInfo(IList<int> unicodes, out CharacterInfo[] charInfoArr, out Texture2D charsTexture, out int maxHeight)
     {
         charInfoArr = null;
         charsTexture = null;
+        maxHeight = 0;
         if (unicodes == null || unicodes.Count < 1)
         {
             return false;
@@ -336,25 +336,32 @@ public class ImageFontCreator : UtilitySubToolBase
         var spRects = texDataProvider.GetSpriteRects();
         int count = Mathf.Min(unicodes.Count, spRects.Length);
         charInfoArr = new CharacterInfo[count];
-
-        float maxHeight = 0;
         for (int i = 0; i < count; i++)
         {
             var spRect = spRects[i].rect;
+
             if (spRect.height > maxHeight)
             {
-                maxHeight = spRect.height;
+                maxHeight = (int)spRect.height;
             }
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            var spRect = spRects[i].rect;
+            var spHeight = m_NormalizeHeight ? maxHeight : spRect.height;
+            var spRectMax = spRect.max;
+            if (m_NormalizeHeight) spRectMax.y = spRect.min.y + spHeight;
             var uvMin = spRect.min / texSize;
-            var uvMax = spRect.max / texSize;
+            var uvMax = spRectMax / texSize;
             float fontHeight = m_FontSize;
-            float fontScale = m_FontSize / spRect.height;
+            float fontScale = m_FontSize / spHeight;
             int charBearing = 0;
             if (m_FontType == ImageFontType.TextMeshProFont)
             {
-                fontHeight = spRect.height;
+                fontHeight = spHeight;
                 fontScale = 1;
-                charBearing = Mathf.RoundToInt(spRect.height * 1.5f);
+                charBearing = Mathf.RoundToInt(spHeight * 1.5f);
             }
             var charInfo = new CharacterInfo
             {
@@ -372,7 +379,6 @@ public class ImageFontCreator : UtilitySubToolBase
             };
             charInfoArr[i] = charInfo;
         }
-        charInfoArr[0].size = (int)maxHeight;
         return true;
     }
 }
