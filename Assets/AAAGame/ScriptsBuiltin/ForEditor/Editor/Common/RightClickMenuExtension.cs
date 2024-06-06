@@ -30,6 +30,7 @@ namespace UGF.EditorTools
         /// 导出Multiple类型的Sprite为碎图
         /// </summary>
         [MenuItem("Assets/GF Editor Tool/2D/SpriteSheet to sprites", priority = 1002)]
+        [Obsolete]
         static void ExportSpriteMultiple()
         {
             int selectAssetsCount = Selection.objects.Length;

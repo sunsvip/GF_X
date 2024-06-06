@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using GameFramework;
-using Unity.VisualScripting;
 using System.Reflection;
 
 namespace UGF.EditorTools
@@ -60,7 +59,7 @@ namespace UGF.EditorTools
         {
             subPanelsClass.Clear();
             var editorDll = Utility.Assembly.GetAssemblies().First(dll => dll.GetName().Name.CompareTo("Assembly-CSharp-Editor") == 0);
-            var allEditorTool = editorDll.GetTypes().Where(tp => (tp.IsClass && !tp.IsAbstract && tp.IsSubclassOf(typeof(CompressToolSubPanel)) && tp.HasAttribute<EditorToolMenuAttribute>()));
+            var allEditorTool = editorDll.GetTypes().Where(tp => (tp.IsClass && !tp.IsAbstract && tp.IsSubclassOf(typeof(CompressToolSubPanel)) && tp.GetCustomAttribute<EditorToolMenuAttribute>() != null));
 
             subPanelsClass.AddRange(allEditorTool);
             subPanelsClass.Sort((x, y) =>

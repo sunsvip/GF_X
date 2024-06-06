@@ -195,7 +195,11 @@ public class UIFormBase : UIFormLogic
         GF.Sound.PlayEffect("ui_click.wav");
         GF.UI.CloseUIFormWithAnim(this.UIForm);
     }
-
+    public void ClickUIButton(Button button)
+    {
+        GF.Sound.PlayEffect("ui_click.wav");
+        OnButtonClick(this, button);
+    }
     public void ClickUIButton(string bt_tag)
     {
         GF.Sound.PlayEffect("ui_click.wav");
@@ -206,7 +210,10 @@ public class UIFormBase : UIFormLogic
     {
         Params.OnButtonClick?.Invoke(sender, btId);
     }
-
+    protected virtual void OnButtonClick(object sender, Button bt)
+    {
+        
+    }
     protected virtual void OnUIShowComplete()
     {
         Interactable = true;

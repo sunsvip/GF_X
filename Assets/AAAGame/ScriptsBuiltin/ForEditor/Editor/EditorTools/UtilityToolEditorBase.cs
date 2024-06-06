@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -58,7 +57,7 @@ namespace UGF.EditorTools
         {
             subPanelsClass.Clear();
             var editorDll = Utility.Assembly.GetAssemblies().First(dll => dll.GetName().Name.CompareTo("Assembly-CSharp-Editor") == 0);
-            var allEditorTool = editorDll.GetTypes().Where(tp => (tp.IsSubclassOf(typeof(UtilitySubToolBase)) && tp.HasAttribute<EditorToolMenuAttribute>() && tp.GetCustomAttribute<EditorToolMenuAttribute>().OwnerType == this.GetType()));
+            var allEditorTool = editorDll.GetTypes().Where(tp => (tp.IsSubclassOf(typeof(UtilitySubToolBase)) && tp.GetCustomAttribute<EditorToolMenuAttribute>() != null && tp.GetCustomAttribute<EditorToolMenuAttribute>().OwnerType == this.GetType()));
 
             subPanelsClass.AddRange(allEditorTool);
             subPanelsClass.Sort((x, y) =>
@@ -82,6 +81,9 @@ namespace UGF.EditorTools
             {
                 panel?.OnExit();
             }
+
+            selectList.Clear();
+            subPanelsClass.Clear();
         }
 
         private void OnGUI()

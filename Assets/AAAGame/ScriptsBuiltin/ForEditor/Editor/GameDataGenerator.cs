@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
-using static Unity.VisualScripting.Dependencies.Sqlite.SQLite3;
 
 namespace UGF.EditorTools
 {

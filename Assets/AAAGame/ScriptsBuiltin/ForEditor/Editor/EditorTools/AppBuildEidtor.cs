@@ -5,7 +5,6 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using GameFramework.Resource;
-using Unity.VisualScripting;
 using HybridCLR.Editor.Commands;
 using System.Text;
 using System.Linq;
@@ -819,7 +818,7 @@ namespace UGF.EditorTools
                 strBuilder.AppendLine("<linker>");
                 foreach (var dllName in HybridCLR.Editor.SettingsUtil.HotUpdateAssemblyNamesIncludePreserved)
                 {
-                    strBuilder.AppendLineFormat("\t<assembly fullname=\"{0}\" preserve=\"all\" />", dllName);
+                    strBuilder.AppendLine(Utility.Text.Format("\t<assembly fullname=\"{0}\" preserve=\"all\" />", dllName));
                 }
                 strBuilder.AppendLine("</linker>");
                 File.WriteAllText(linkFile, strBuilder.ToString());

@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "67c487f521087a3887e6c8817dff3cd264aa4f20"
+      "hash": "ef1b78caae7e195498df20b6e4096a8afcb4d06f"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
@@ -23,7 +23,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.burst": {
-      "version": "1.8.13",
+      "version": "1.8.15",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -33,7 +33,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cinemachine": {
-      "version": "2.9.7",
+      "version": "2.10.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -165,16 +165,6 @@
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
       }
-    },
-    "com.unity.visualscripting": {
-      "version": "1.9.2",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.ugui": "1.0.0",
-        "com.unity.modules.jsonserialize": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
     },
     "jillejr.newtonsoft.json-for-unity.converters": {
       "version": "1.6.3",

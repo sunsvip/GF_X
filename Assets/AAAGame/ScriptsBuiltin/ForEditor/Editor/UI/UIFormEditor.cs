@@ -175,8 +175,17 @@ namespace UGF.EditorTools
             removeToFieldToggle = true;
             addToFieldToggle = false;
         }
-        [MenuItem("GameObject/UIForm Fields Tool/Add Button OnClick Event", false, priority = 1101)]
-        private static void AddClickButtonEvent()
+        [MenuItem("GameObject/UIForm Fields Tool/Add Button OnClick(string)", false, priority = 1101)]
+        static void AddClickButtonStringEvent()
+        {
+            AddClickButtonEvent<string>();
+        }
+        [MenuItem("GameObject/UIForm Fields Tool/Add Button OnClick(Button)", false, priority = 1102)]
+        static void AddClickButtonObjectEvent()
+        {
+            AddClickButtonEvent<UnityEngine.UI.Button>();
+        }
+        private static void AddClickButtonEvent<T>()
         {
             if (Selection.count <= 0) return;
 
@@ -187,18 +196,30 @@ namespace UGF.EditorTools
                 return;
             }
             bool hasChanged = false;
+            var typeOfT = typeof(T);
             foreach (var item in Selection.gameObjects)
             {
-                var buttonCom = item?.GetComponent<Button>();
-                if (buttonCom == null) continue;
+                if (item == null || !item.TryGetComponent<Button>(out var buttonCom)) continue;
 
                 var m_OnClick = buttonCom.GetType().GetField("m_OnClick", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(buttonCom) as UnityEvent;
-                var btnEvent = UnityEngine.Events.UnityAction.CreateDelegate(typeof(UnityAction<string>), uiForm, KEY_BUTTON_ONCLICK) as UnityAction<string>;
                 for (int i = m_OnClick.GetPersistentEventCount() - 1; i >= 0; i--)
                 {
                     UnityEventTools.RemovePersistentListener(m_OnClick, i);
                 }
-                UnityEventTools.AddStringPersistentListener(m_OnClick, btnEvent, buttonCom.name);
+                if (typeOfT == typeof(string))
+                {
+                    var btnEvent = UnityEngine.Events.UnityAction.CreateDelegate(typeof(UnityAction<string>), uiForm, KEY_BUTTON_ONCLICK) as UnityAction<string>;
+                    UnityEventTools.AddStringPersistentListener(m_OnClick, btnEvent, buttonCom.name);
+                }
+                else if (typeOfT == typeof(UnityEngine.UI.Button))
+                {
+                    var btnEvent = UnityEngine.Events.UnityAction.CreateDelegate(typeof(UnityAction<UnityEngine.UI.Button>), uiForm, KEY_BUTTON_ONCLICK) as UnityAction<UnityEngine.UI.Button>;
+                    UnityEventTools.AddObjectPersistentListener(m_OnClick, btnEvent, buttonCom);
+                }
+                else
+                {
+                    Debug.LogWarningFormat("UIFormEditor Add Button Event, type:{0} invalid", typeOfT);
+                }
                 hasChanged = true;
             }
             if (hasChanged) EditorUtility.SetDirty(uiForm);
@@ -295,7 +316,7 @@ namespace UGF.EditorTools
         {
             prefixContent = new GUIContent();
             typeContent = new GUIContent();
-            openCodeBtStyle = new GUIStyle(EditorGUIUtility.GetBuiltinSkin(EditorSkin.Inspector).button);
+            openCodeBtStyle = new GUIStyle(EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene).button);
             openCodeBtStyle.normal.textColor = openCodeBtStyle.hover.textColor = openCodeBtStyle.active.textColor = Color.green;
             openCodeBtStyle.fontStyle = FontStyle.Bold;
             varPrefixIndex = 0;
@@ -564,7 +585,7 @@ namespace UGF.EditorTools
             stringBuilder.AppendLine("//---------------------------------");
             stringBuilder.AppendLine("//此文件由工具自动生成,请勿手动修改");
             stringBuilder.AppendLine($"//更新自:{CloudProjectSettings.userName}");
-            stringBuilder.AppendLine($"//更新时间:{DateTime.Now}");
+            //stringBuilder.AppendLine($"//更新时间:{DateTime.Now}");
             stringBuilder.AppendLine("//---------------------------------");
             foreach (var item in nameSpaceList)
             {
@@ -648,7 +669,8 @@ namespace UGF.EditorTools
                 if (property == null) continue;
                 if (item.Targets.Length <= 1)
                 {
-                    property.objectReferenceValue = isGameObject ? item.Targets[0] : item.Targets[0]?.GetComponent(GetSampleType(varType));
+                    var firstTarget = item.Targets[0];
+                    property.objectReferenceValue = isGameObject ? firstTarget : firstTarget.GetComponent(GetSampleType(varType));
                 }
                 else if (property.isArray)
                 {
@@ -659,12 +681,9 @@ namespace UGF.EditorTools
                         {
                             property.InsertArrayElementAtIndex(i);
                         }
-                        property.GetArrayElementAtIndex(i).objectReferenceValue = isGameObject ? item.Targets[i] : item.Targets[i]?.GetComponent(GetSampleType(varType));
+                        var firstTarget = item.Targets[0];
+                        property.GetArrayElementAtIndex(i).objectReferenceValue = isGameObject ? firstTarget : firstTarget.GetComponent(GetSampleType(varType));
                     }
-                    //for (int i = property.arraySize - 1; i >= item.Targets.Length; i--)
-                    //{
-                    //    property.DeleteArrayElementAtIndex(i);
-                    //}
                 }
             }
             serializedObject.ApplyModifiedProperties();
@@ -837,7 +856,7 @@ namespace UGF.EditorTools
             {
                 return string.Empty;
             }
-            return "var" + str.Substring(0, 1).ToUpper() + str.Substring(1);
+            return Utility.Text.Format("var{0}{1}", str[..1].ToUpper(), str[1..]);
         }
     }
 
