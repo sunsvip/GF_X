@@ -16,6 +16,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.TestTools;
 using UnityEngine.Assertions;
 using System.Drawing.Drawing2D;
+using UnityEditor.Build;
 
 namespace UGF.EditorTools
 {
@@ -834,6 +835,11 @@ namespace UGF.EditorTools
         /// <param name="generateAotDll"></param>
         private void HybridCLRGenerateAll(bool generateAotDll)
         {
+            var installer = new HybridCLR.Editor.Installer.InstallerController();
+            if (!installer.HasInstalledHybridCLR())
+            {
+                throw new BuildFailedException($"You have not initialized HybridCLR, please install it via menu 'HybridCLR/Installer'");
+            }
             BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
             HybridCLRExtensionTool.CompileTargetDll(false);
             Il2CppDefGeneratorCommand.GenerateIl2CppDef();
@@ -848,8 +854,7 @@ namespace UGF.EditorTools
             }
 
             // 桥接函数生成依赖于AOT dll，必须保证已经build过，生成AOT dll
-            MethodBridgeGeneratorCommand.GenerateMethodBridge(target);
-            ReversePInvokeWrapperGeneratorCommand.GenerateReversePInvokeWrapper(target);
+            MethodBridgeGeneratorCommand.GenerateMethodBridgeAndReversePInvokeWrapper(target);
             AOTReferenceGeneratorCommand.GenerateAOTGenericReference(target);
         }
         private void BrowseOutputDirectory()
