@@ -33,8 +33,11 @@ namespace UnityGameFramework.Runtime
         /// 默认调试器窗口缩放比例。
         /// </summary>
         internal static readonly float DefaultWindowScale = 1f;
-
+#if UNITY_6000_0_OR_NEWER
+        private static TextEditor s_TextEditor;
+#else
         private static readonly TextEditor s_TextEditor = new TextEditor();
+#endif
         private IDebuggerManager m_DebuggerManager = null;
         private Rect m_DragRect = new Rect(0f, 0f, float.MaxValue, 25f);
         private Rect m_IconRect = DefaultIconRect;
@@ -170,7 +173,9 @@ namespace UnityGameFramework.Runtime
         protected override void Awake()
         {
             base.Awake();
-
+#if UNITY_6000_0_OR_NEWER
+            s_TextEditor = new TextEditor();
+#endif
             m_DebuggerManager = GameFrameworkEntry.GetModule<IDebuggerManager>();
             if (m_DebuggerManager == null)
             {
