@@ -756,10 +756,10 @@ namespace UGF.EditorTools
         }
         private void DeleteAotDlls()
         {
-            string aotSaveDir = UtilityBuiltin.ResPath.GetCombinePath(Application.dataPath, "Resources", ConstBuiltin.AOT_DLL_DIR);
+            string aotSaveDir = UtilityBuiltin.ResPath.GetCombinePath("Resources", ConstBuiltin.AOT_DLL_DIR);
             if (Directory.Exists(aotSaveDir))
             {
-                Directory.Delete(aotSaveDir, true);
+                AssetDatabase.DeleteAsset(aotSaveDir);
             }
         }
 
