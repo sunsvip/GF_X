@@ -207,7 +207,6 @@ public class LoadHotfixDllProcedure : ProcedureBase
             }
 
         }
-
         GFBuiltin.Event.Fire(this, ReferencePool.Acquire<LoadHotfixDllEventArgs>().Fill(assetName, dllAssembly, userData));
     }
     /// <summary>

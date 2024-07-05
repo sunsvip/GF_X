@@ -235,6 +235,7 @@ PlayerSettings:
   iOSMetalForceHardShadows: 0
   metalEditorSupport: 1
   metalAPIValidation: 1
+  metalCompileShaderBinary: 0
   iOSRenderExtraFrameOnPause: 0
   iosCopyPluginsCodeInsteadOfSymlink: 0
   appleDeveloperTeamID: 
@@ -678,7 +679,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Android: AMPLIFY_SHADER_EDITOR;ENABLE_LOG;DOTWEEN
+    Android: AMPLIFY_SHADER_EDITOR;ENABLE_LOG;DOTWEEN;DISABLE_HYBRIDCLR
     EmbeddedLinux: DOTWEEN
     GameCoreScarlett: DOTWEEN
     GameCoreXboxOne: DOTWEEN
@@ -688,9 +689,9 @@ PlayerSettings:
     PS5: DOTWEEN
     QNX: DOTWEEN
     Stadia: DOTWEEN
-    Standalone: AMPLIFY_SHADER_EDITOR;ENABLE_LOG;DOTWEEN
+    Standalone: AMPLIFY_SHADER_EDITOR;ENABLE_LOG;DOTWEEN;DISABLE_HYBRIDCLR
     VisionOS: DOTWEEN
-    WebGL: AMPLIFY_SHADER_EDITOR;DISABLE_HYBRIDCLR;ENABLE_LOG;DOTWEEN
+    WebGL: AMPLIFY_SHADER_EDITOR;ENABLE_LOG;DOTWEEN;DISABLE_HYBRIDCLR
     Windows Store Apps: ENABLE_LOG;DOTWEEN
     XboxOne: DOTWEEN
     iPhone: ENABLE_LOG;DOTWEEN
@@ -707,7 +708,7 @@ PlayerSettings:
     Android: 3
   incrementalIl2cppBuild: {}
   suppressCommonWarnings: 1
-  allowUnsafeCode: 0
+  allowUnsafeCode: 1
   useDeterministicCompilation: 1
   additionalIl2CppArgs: 
   scriptingRuntimeVersion: 1
@@ -740,6 +741,7 @@ PlayerSettings:
   metroTileBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21568628, a: 0}
   metroSplashScreenBackgroundColor: {r: 0.12941177, g: 0.17254902, b: 0.21568628, a: 1}
   metroSplashScreenUseBackgroundColor: 0
+  syncCapabilities: 0
   platformCapabilities: {}
   metroTargetDeviceFamilies: {}
   metroFTAName: 

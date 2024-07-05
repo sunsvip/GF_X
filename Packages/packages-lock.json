@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "e5a69527776ca01cf95372c809f522a33d0f9022"
+      "hash": "909e96ca7c808cf9be733b881382fabb49523d0b"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
@@ -23,7 +23,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.burst": {
-      "version": "1.8.15",
+      "version": "1.8.16",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -42,7 +42,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "2.3.1",
+      "version": "2.4.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {},

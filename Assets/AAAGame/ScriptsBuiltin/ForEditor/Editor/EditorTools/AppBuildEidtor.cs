@@ -13,9 +13,6 @@ using System.Collections;
 using UnityEditor.Build.Reporting;
 using UnityGameFramework.Editor.ResourceTools;
 using Cysharp.Threading.Tasks;
-using UnityEngine.TestTools;
-using UnityEngine.Assertions;
-using System.Drawing.Drawing2D;
 using UnityEditor.Build;
 
 namespace UGF.EditorTools
@@ -57,10 +54,6 @@ namespace UGF.EditorTools
 
         private void OnEnable()
         {
-            if (Utility.Assembly.GetType("UnityEditor.BuildPlayerWindow").GetField("getBuildPlayerOptionsHandler", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null) == null)
-            {
-                RegisterGetBuildPlayerOptionsHandler(CustomBuildOptions);
-            }
             hotfixUrlContent = new GUIContent("Update Prefix Uri", "热更新资源服务器地址");
             applicableVerContent = new GUIContent("Applicable Version", "资源适用的客户端版本号,多版本用'|'分割");
             forceUpdateAppContent = new GUIContent("Force Update", "是否强制更新App");
@@ -586,7 +579,7 @@ namespace UGF.EditorTools
                     PlayerSettings.Android.bundleVersionCode = EditorGUILayout.IntField(PlayerSettings.Android.bundleVersionCode);
                 }
                 EditorGUILayout.EndHorizontal();
-                
+
                 EditorGUILayout.BeginHorizontal();
                 {
                     PlayerSettings.Android.useCustomKeystore = EditorGUILayout.ToggleLeft("Use Custom Keystore", PlayerSettings.Android.useCustomKeystore, GUILayout.Width(160f));
@@ -776,13 +769,37 @@ namespace UGF.EditorTools
         }
         private void CallBuildMethods()
         {
-            var buildWin = Utility.Assembly.GetType("UnityEditor.BuildPlayerWindow");
-            if (buildWin != null)
+            typeof(UnityEditor.BuildPlayerWindow).GetField("buildCompletionHandler", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new Action<BuildReport>(OnPostprocessBuild));
+            var getBuildPlayerOptions = typeof(UnityEditor.BuildPlayerWindow.DefaultBuildMethods).GetMethod("GetBuildPlayerOptionsInternal", BindingFlags.NonPublic | BindingFlags.Static);
+            var buildOptions = new BuildPlayerOptions();
+            buildOptions.options = BuildOptions.ShowBuiltPlayer;
+
+            buildOptions.targetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
+            buildOptions.target = (BuildTarget)Utility.Assembly.GetType("UnityEditor.EditorUserBuildSettingsUtils").GetMethod("CalculateSelectedBuildTarget", BindingFlags.Public | BindingFlags.Static).Invoke(null, null);
+            buildOptions.subtarget = (int)typeof(UnityEditor.EditorUserBuildSettings).GetMethod("GetSelectedSubtargetFor", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { buildOptions.target });
+            var errBuildDir = string.IsNullOrWhiteSpace(AppBuildSettings.Instance.AppBuildDir);
+            var locationPathName = GetBuildLocation(buildOptions.targetGroup, buildOptions.target, buildOptions.subtarget, buildOptions.options);
+            var locationDir = Path.GetDirectoryName(locationPathName);
+            if (!Directory.Exists(locationDir))
             {
-                buildWin.GetField("buildCompletionHandler", BindingFlags.Static | BindingFlags.NonPublic).SetValue(buildWin, new Action<BuildReport>(OnPostprocessBuild));
-                var buildFunc = buildWin.GetMethod("CallBuildMethods", System.Reflection.BindingFlags.Static | BindingFlags.NonPublic);
-                buildFunc.Invoke(null, new object[] { false, BuildOptions.ShowBuiltPlayer });
+                Directory.CreateDirectory(locationDir);
             }
+            EditorUserBuildSettings.SetBuildLocation(buildOptions.target, locationPathName);
+
+            buildOptions = (BuildPlayerOptions)getBuildPlayerOptions.Invoke(null, new object[] { errBuildDir, buildOptions });
+            buildOptions.locationPathName = locationPathName;
+            ArrayList scenesList = new ArrayList();
+            EditorBuildSettingsScene[] editorScenes = EditorBuildSettings.scenes;
+            foreach (EditorBuildSettingsScene scene in editorScenes)
+            {
+                if (scene.enabled && !string.IsNullOrEmpty(scene.path))
+                {
+                    scenesList.Add(scene.path);
+                    break;// GF框架只需要把启动场景打进包里,其它场景动态加载
+                }
+            }
+            buildOptions.scenes = scenesList.ToArray(typeof(string)) as string[];
+            DefaultBuildMethods.BuildPlayer(buildOptions);
         }
 
         private void OnPostprocessBuild(BuildReport report)
@@ -792,16 +809,7 @@ namespace UGF.EditorTools
                 Debug.LogError("Build App Failed:" + report.summary.result.ToString());
                 return;
             }
-
-            if (File.Exists(report.summary.outputPath))
-            {
-                var desFile = GetRenamedApp(report.summary.outputPath);
-                if (File.Exists(desFile))
-                {
-                    File.Delete(desFile);
-                }
-                File.Move(report.summary.outputPath, desFile);
-            }
+            RenameApp(report);
         }
 
         /// <summary>
@@ -1047,95 +1055,30 @@ namespace UGF.EditorTools
             EditorUtility.ClearProgressBar();
             Debug.LogWarning(Utility.Text.Format("Build resources error with error message '{0}'.", errorMessage));
         }
-        private BuildTarget GetSelectedBuildTarget()
+        private void RenameApp(BuildReport report)
         {
-            var buildTarget = (BuildTarget)Utility.Assembly.GetType("UnityEditor.EditorUserBuildSettingsUtils").GetMethod("CalculateSelectedBuildTarget", BindingFlags.Static | BindingFlags.Public).Invoke(null, null);
-            return buildTarget;
-        }
-        private BuildPlayerOptions CustomBuildOptions(BuildPlayerOptions options)
-        {
-            var buildTarget = GetSelectedBuildTarget();
-            BuildTargetGroup buildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
-            int subtarget = (int)Utility.Assembly.GetType("UnityEditor.EditorUserBuildSettings").GetMethod("GetSelectedSubtargetFor", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { buildTarget });
+            if (report.summary.result != BuildResult.Succeeded) return;
 
-            string buildLocation = GetBuildLocation(buildTargetGroup, buildTarget, subtarget, options.options);
-
-            bool isDir = !Path.HasExtension(buildLocation);
-            if (string.IsNullOrWhiteSpace(buildLocation) || (isDir && !Directory.Exists(buildLocation)))
-                throw new BuildMethodException("Build location for buildTarget " + buildTarget + " is not valid:" + buildLocation);
-
-            //Check if Lz4 is supported for the current buildtargetgroup and enable it if need be
-            if ((bool)Utility.Assembly.GetType("UnityEditor.PostprocessBuildPlayer").GetMethod("SupportsLz4Compression", BindingFlags.Static | BindingFlags.Public).Invoke(null, new object[] { buildTargetGroup, buildTarget }))
+            if (report.summary.platform == BuildTarget.Android || report.summary.platform == BuildTarget.iOS)
             {
-                //internal enum Compression
-                //{
-                //    None = 0,
-                //    Lz4 = 2,
-                //    Lz4HC = 3,
-                //}
-                var compression = (int)Utility.Assembly.GetType("UnityEditor.EditorUserBuildSettings").GetMethod("GetCompressionType", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { buildTargetGroup });
-                if (compression < 0)
-                    compression = (int)Utility.Assembly.GetType("UnityEditor.PostprocessBuildPlayer").GetMethod("GetDefaultCompression", BindingFlags.Static | BindingFlags.Public).Invoke(null, new object[] { buildTargetGroup, buildTarget });
-                if (compression == 2)//Lz4
-                    options.options |= BuildOptions.CompressWithLz4;
-                else if (compression == 3)//Lz4HC
-                    options.options |= BuildOptions.CompressWithLz4HC;
-            }
-
-            bool developmentBuild = EditorUserBuildSettings.development;
-            if (developmentBuild)
-                options.options |= BuildOptions.Development;
-            if (EditorUserBuildSettings.allowDebugging && developmentBuild)
-                options.options |= BuildOptions.AllowDebugging;
-            if (EditorUserBuildSettings.symlinkSources)
-                options.options |= BuildOptions.SymlinkSources;
-            if (EditorUserBuildSettings.connectProfiler && (developmentBuild || buildTarget == BuildTarget.WSAPlayer))
-                options.options |= BuildOptions.ConnectWithProfiler;
-            if (EditorUserBuildSettings.buildWithDeepProfilingSupport && developmentBuild)
-                options.options |= BuildOptions.EnableDeepProfilingSupport;
-            if (EditorUserBuildSettings.buildScriptsOnly)
-                options.options |= BuildOptions.BuildScriptsOnly;
-
-            string connectID = Utility.Assembly.GetType("UnityEditor.Profiling.ProfilerUserSettings").GetProperty("customConnectionID", BindingFlags.Static | BindingFlags.Public).GetValue(null, null) as string;
-            if (!string.IsNullOrEmpty(connectID) && developmentBuild)
-                options.options |= BuildOptions.CustomConnectionID;
-
-            var checkFunc = typeof(UnityEditor.BuildPlayerWindow.DefaultBuildMethods).GetMethod("IsInstallInBuildFolderOption", BindingFlags.Static | BindingFlags.NonPublic);
-
-            if ((bool)checkFunc.Invoke(null, null))
-            {
-                options.options |= BuildOptions.InstallInBuildFolder;
-            }
-
-            options.target = buildTarget;
-            options.subtarget = subtarget;
-            options.targetGroup = buildTargetGroup;
-            options.locationPathName = buildLocation;
-            options.assetBundleManifestPath = Utility.Assembly.GetType("UnityEditor.PostprocessBuildPlayer").GetMethod("GetStreamingAssetsBundleManifestPath", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, null) as string;
-
-            // Build a list of scenes that are enabled
-            ArrayList scenesList = new ArrayList();
-            EditorBuildSettingsScene[] editorScenes = EditorBuildSettings.scenes;
-            foreach (EditorBuildSettingsScene scene in editorScenes)
-            {
-                if (scene.enabled && !string.IsNullOrEmpty(scene.path))
+                var appFile = report.summary.outputPath;
+                if (File.Exists(appFile))
                 {
-                    scenesList.Add(scene.path);
-                    break;// GF框架只需要把启动场景打进包里,其它场景动态加载
+                    var dir = Path.GetDirectoryName(appFile);
+                    var name = Path.GetFileNameWithoutExtension(appFile);
+                    var ext = Path.GetExtension(appFile);
+
+                    var finalName = Utility.Text.Format("{0}_{1}{2}_v{3}{4}", name, AppSettings.Instance.DebugMode ? "debug" : "release", EditorUserBuildSettings.development ? "Dev" : string.Empty, Application.version, ext);
+                    finalName = Path.Combine(dir, finalName);
+
+                    if (File.Exists(finalName))
+                    {
+                        File.Delete(finalName);
+                    }
+                    File.Move(report.summary.outputPath, finalName);
                 }
+
             }
-
-            options.scenes = scenesList.ToArray(typeof(string)) as string[];
-            return options;
-        }
-        private string GetRenamedApp(string appFile)
-        {
-            var dir = Path.GetDirectoryName(appFile);
-            var name = Path.GetFileNameWithoutExtension(appFile);
-            var ext = Path.GetExtension(appFile);
-
-            var finalName = Utility.Text.Format("{0}_{1}{2}_v{3}{4}", name, AppSettings.Instance.DebugMode ? "debug" : "release", EditorUserBuildSettings.development ? "Dev" : string.Empty, Application.version, ext);
-            return Path.Combine(dir, finalName);
         }
         private static string GetBuildLocation(BuildTargetGroup targetGroup, BuildTarget target, int subtarget, BuildOptions options)
         {
