@@ -22,6 +22,7 @@ namespace UGF.EditorTools
     [CustomEditor(typeof(AppConfigs))]
     public class AppConfigsInspector : UnityEditor.Editor
     {
+        public const int ONE_LINE_SHOW_COUNT = 3;
         private class ItemData
         {
             public bool isOn;
@@ -110,7 +111,7 @@ namespace UGF.EditorTools
                 }
             }
 
-            internal bool DrawPanel()
+            internal bool DrawPanel(GUILayoutOption perItemWidth)
             {
                 bool dataChanged = false;
                 var dataTypeStr = this.CfgType.ToString();
@@ -119,17 +120,24 @@ namespace UGF.EditorTools
                 {
                     EditorGUILayout.BeginVertical();
                     {
-                        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, EditorStyles.textArea, GUILayout.MaxHeight(200));
+                        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, "box", GUILayout.MaxHeight(200));
                         {
                             EditorGUI.BeginChangeCheck();
-                            foreach (var item in ExcelItems)
+                            for (int i = 0; i < ExcelItems.Count; i++)
                             {
-                                item.isOn = EditorGUILayout.ToggleLeft(item.excelName, item.isOn, item.isOn ? selectedStyle : normalStyle);
+                                if (i % ONE_LINE_SHOW_COUNT == 0)
+                                    EditorGUILayout.BeginHorizontal();
+                                var item = ExcelItems[i];
+                                item.isOn = EditorGUILayout.ToggleLeft(item.excelName, item.isOn, item.isOn ? selectedStyle : normalStyle, perItemWidth);
+                                if (i % ONE_LINE_SHOW_COUNT == ONE_LINE_SHOW_COUNT - 1)
+                                    EditorGUILayout.EndHorizontal();
                             }
                             if (EditorGUI.EndChangeCheck())
                             {
                                 dataChanged = true;
                             }
+                            if (ExcelItems.Count % ONE_LINE_SHOW_COUNT != 0)
+                                EditorGUILayout.EndHorizontal();
                             EditorGUILayout.EndScrollView();
                         }
                         EditorGUILayout.BeginHorizontal("box");
@@ -299,21 +307,29 @@ namespace UGF.EditorTools
             EditorGUILayout.Space(10);
             //appConfig.DataTableBytesMode = EditorGUILayout.ToggleLeft(gameDataSaveModeContent, appConfig.DataTableBytesMode);
             procedureFoldout = EditorGUILayout.Foldout(procedureFoldout, procedureTitleContent);
+            var perItemWidth = GUILayout.Width(Mathf.Max(EditorGUIUtility.currentViewWidth / ONE_LINE_SHOW_COUNT - 20, 100));
             if (procedureFoldout)
             {
                 EditorGUILayout.BeginVertical();
                 {
-                    procedureScrollPos = EditorGUILayout.BeginScrollView(procedureScrollPos, EditorStyles.textField, GUILayout.Height(200));
+                    procedureScrollPos = EditorGUILayout.BeginScrollView(procedureScrollPos, "box", GUILayout.Height(200));
                     {
                         EditorGUI.BeginChangeCheck();
-                        foreach (var item in procedures)
+                        for (int i = 0; i < procedures.Length; i++)
                         {
-                            item.isOn = EditorGUILayout.ToggleLeft(item.excelName, item.isOn, item.isOn ? selectedStyle : normalStyle);
+                            if (i % ONE_LINE_SHOW_COUNT == 0)
+                                EditorGUILayout.BeginHorizontal();
+                            var item = procedures[i];
+                            item.isOn = EditorGUILayout.ToggleLeft(item.excelName, item.isOn, item.isOn ? selectedStyle : normalStyle, perItemWidth);
+                            if (i % ONE_LINE_SHOW_COUNT == ONE_LINE_SHOW_COUNT - 1)
+                                EditorGUILayout.EndHorizontal();
                         }
                         if (EditorGUI.EndChangeCheck())
                         {
                             SaveConfig(appConfig);
                         }
+                        if (procedures.Length % ONE_LINE_SHOW_COUNT != 0)
+                            EditorGUILayout.EndHorizontal();
                         EditorGUILayout.EndScrollView();
                     }
                     EditorGUILayout.EndVertical();
@@ -321,7 +337,7 @@ namespace UGF.EditorTools
             }
             foreach (var item in svDataArr)
             {
-                if (item.DrawPanel())
+                if (item.DrawPanel(perItemWidth))
                 {
                     SaveConfig(appConfig);
                 }

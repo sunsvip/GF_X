@@ -65,15 +65,7 @@ namespace UGF.EditorTools
         }
         private static void OnLeftToolbarGUI()
         {
-            //GUILayout.FlexibleSpace();
-            //if (EditorGUILayout.DropdownButton(switchSceneBtContent, FocusType.Passive, EditorStyles.toolbarPopup, GUILayout.MaxWidth(150)))
-            //{
-            //    DrawSwithSceneDropdownMenus();
-            //}
-        }
-
-        private static void OnRightToolbarGUI()
-        {
+            GUILayout.FlexibleSpace();
             if (EditorGUILayout.DropdownButton(switchSceneBtContent, FocusType.Passive, EditorStyles.toolbarPopup, GUILayout.MaxWidth(150)))
             {
                 DrawSwithSceneDropdownMenus();
@@ -83,7 +75,20 @@ namespace UGF.EditorTools
             {
                 AppBuildEidtor.Open();
             }
-            EditorGUILayout.Space(10);
+        }
+
+        private static void OnRightToolbarGUI()
+        {
+            //if (EditorGUILayout.DropdownButton(switchSceneBtContent, FocusType.Passive, EditorStyles.toolbarPopup, GUILayout.MaxWidth(150)))
+            //{
+            //    DrawSwithSceneDropdownMenus();
+            //}
+            //EditorGUILayout.Space(10);
+            //if (GUILayout.Button(buildBtContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(125)))
+            //{
+            //    AppBuildEidtor.Open();
+            //}
+            //EditorGUILayout.Space(10);
             if (GUILayout.Button(appConfigBtContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(100)))
             {
                 var config = AppConfigs.GetInstanceEditor();
