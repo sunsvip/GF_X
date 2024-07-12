@@ -8,6 +8,8 @@ using UnityGameFramework.Runtime;
 
 public class ToastTips : UIFormBase
 {
+    public const string P_Content = "content";
+    public const string P_Duration = "duration";
     const float maxWidth = 500;
     private Text toastText;
     private LayoutElement toastEle;
@@ -28,18 +30,18 @@ public class ToastTips : UIFormBase
         canvasGp.alpha = 0;
         canvasGp.DOFade(1, 0.4f);
         toastEle.enabled = false;
-        if (!Params.Has("content"))
+        if (!Params.Has(P_Content))
         {
             GF.UI.CloseUIForm(this.UIForm);
             return;
         }
 
-        if (Params.Has("duration"))
+        if (Params.Has(P_Duration))
         {
-            duration = Params.Get<VarFloat>("duration");
+            duration = Params.Get<VarFloat>(P_Duration);
         }
 
-        toastText.text = Params.Get<VarString>("content");
+        toastText.text = Params.Get<VarString>(P_Content);
         StartCoroutine(InitLayout());
     }
 

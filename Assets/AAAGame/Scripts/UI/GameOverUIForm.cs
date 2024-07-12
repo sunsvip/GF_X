@@ -10,6 +10,7 @@ using UnityGameFramework.Runtime;
 
 public class GameOverUIForm : UIFormBase
 {
+    public const string P_IsWin = "IsWin";
     [SerializeField] Text moneyText;
     [SerializeField] GameObject[] panels;
     [SerializeField] Text rewardNumText;
@@ -27,7 +28,7 @@ public class GameOverUIForm : UIFormBase
     {
         base.OnOpen(userData);
         isClaimed = false;
-        isWin = Params.Get<VarBoolean>("IsWin");
+        isWin = Params.Get<VarBoolean>(P_IsWin);
         rewardNum = 10;
         panels[0].SetActive(!isWin);
         panels[1].SetActive(isWin);

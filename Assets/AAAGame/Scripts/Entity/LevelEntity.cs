@@ -6,6 +6,8 @@ using UnityGameFramework.Runtime;
 
 public class LevelEntity : EntityBase
 {
+    public const string P_LevelData = "LevelData";
+    public const string P_LevelReadyCallback = "OnLevelReady";
     public bool IsAllReady { get; private set; }
     private Transform playerSpawnPoint;
     List<int> loadEntityTaskList;
@@ -61,9 +63,9 @@ public class LevelEntity : EntityBase
             }
             if (IsAllReady)
             {
-                if (Params.Has("OnLevelReady"))
+                if (Params.Has(LevelEntity.P_LevelReadyCallback))
                 {
-                    (Params.Get<VarObject>("OnLevelReady").Value as GameFrameworkAction).Invoke();
+                    (Params.Get<VarObject>(LevelEntity.P_LevelReadyCallback).Value as GameFrameworkAction).Invoke();
                 }
             }
         }

@@ -86,8 +86,8 @@ public class MenuProcedure : ProcedureBase
         var lvRow = lvTb.GetDataRow(playerMd.GAME_LEVEL);
 
         var lvParams = EntityParams.Acquire(Vector3.zero, Vector3.zero, Vector3.one);
-        lvParams.Set("LevelData", lvRow);
-        lvParams.Set("OnLevelReady", (GameFrameworkAction)OnLevelAllReady);
+        lvParams.Set(LevelEntity.P_LevelData, lvRow);
+        lvParams.Set(LevelEntity.P_LevelReadyCallback, (GameFrameworkAction)OnLevelAllReady);
         levelEntityId = GF.Entity.ShowEntity<LevelEntity>(lvRow.LvPfbName, Const.EntityGroup.Level, lvParams);
     }
     private void OnLevelAllReady()

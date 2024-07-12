@@ -34,10 +34,10 @@ public class GameProcedure : ProcedureBase
             switch (btId)
             {
                 case "ADD":
-                    Level?.AddEnemies(10);
+                    Level.AddEnemies(10);
                     break;
                 case "SUB":
-                    Level?.RemoveEnemies(10);
+                    Level.RemoveEnemies(10);
                     break;
             }
         };

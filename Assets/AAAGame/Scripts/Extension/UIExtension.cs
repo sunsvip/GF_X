@@ -74,8 +74,8 @@ public static class UIExtension
             return;
         }
         var uiParams = UIParams.Acquire();
-        uiParams.Set<VarString>("content", content);
-        uiParams.Set<VarFloat>("duration", duration);
+        uiParams.Set<VarString>(ToastTips.P_Content, content);
+        uiParams.Set<VarFloat>(ToastTips.P_Duration, duration);
 
         ui.OpenUIForm(UIViews.ToastTips, uiParams);
     }
