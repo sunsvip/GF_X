@@ -18,9 +18,9 @@ public class BillboardEntity : SampleEntity
     protected override void OnShow(object userData)
     {
         base.OnShow(userData);
-        if (Params.Has("Axis"))
+        if (Params.TryGet<VarInt32>("Axis", out var tempAxis))
         {
-            PivotAxis = (PivotAxis)Params.Get<VarInt32>("Axis").Value;
+            PivotAxis = (PivotAxis)tempAxis.Value;
         }
         else
         {

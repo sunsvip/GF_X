@@ -63,9 +63,9 @@ public class LevelEntity : EntityBase
             }
             if (IsAllReady)
             {
-                if (Params.Has(LevelEntity.P_LevelReadyCallback))
+                if (Params.TryGet<VarObject>(LevelEntity.P_LevelReadyCallback, out var callback))
                 {
-                    (Params.Get<VarObject>(LevelEntity.P_LevelReadyCallback).Value as GameFrameworkAction).Invoke();
+                    (callback.Value as GameFrameworkAction).Invoke();
                 }
             }
         }

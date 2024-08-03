@@ -27,7 +27,7 @@ public static class SoundExtension
     /// <returns></returns>
     public static int PlaySound(this SoundComponent soundCom, string name, string group, Vector3 worldPos, bool isLoop = false)
     {
-        string assetName = UtilityBuiltin.ResPath.GetSoundPath(name);
+        string assetName = UtilityBuiltin.AssetsPath.GetSoundPath(name);
         //TODO 临时资源存在判定
         if (GFBuiltin.Resource.HasAsset(assetName) == GameFramework.Resource.HasAssetResult.NotExist) return 0;
         var parms = ReferencePool.Acquire<GameFramework.Sound.PlaySoundParams>();

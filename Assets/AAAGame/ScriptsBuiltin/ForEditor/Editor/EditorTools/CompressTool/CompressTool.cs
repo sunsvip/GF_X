@@ -328,7 +328,7 @@ namespace UGF.EditorTools
                 return null;
             }
             
-            var atlasVariantName = UtilityBuiltin.ResPath.GetCombinePath(Path.GetDirectoryName(atlasFileName), $"{Path.GetFileNameWithoutExtension(atlasFileName)}_Variant{Path.GetExtension(atlasFileName)}");
+            var atlasVariantName = UtilityBuiltin.AssetsPath.GetCombinePath(Path.GetDirectoryName(atlasFileName), $"{Path.GetFileNameWithoutExtension(atlasFileName)}_Variant{Path.GetExtension(atlasFileName)}");
 
             SpriteAtlas varAtlas;
             if (EditorSettings.spritePackerMode == SpritePackerMode.SpriteAtlasV2)

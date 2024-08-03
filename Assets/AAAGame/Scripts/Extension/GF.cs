@@ -7,7 +7,7 @@ public class GF : GFBuiltin
 {
     public static DataModelComponent DataModel { get; private set; }
     //替代DataNode, 使用Jobs的高性能变量存储池,用于海量数据存储
-    //public static VariablePoolComponent VariablePool { get; private set; }
+    public static VariablePoolComponent VariablePool { get; private set; }
     //public static ADComponent AD { get; private set; }
 
     public static StaticUIComponent StaticUI { get; private set; } //无需异步加载的, 通用UI
@@ -17,7 +17,7 @@ public class GF : GFBuiltin
         DataModel = GameEntry.GetComponent<DataModelComponent>();
         //AD = GameEntry.GetComponent<ADComponent>();
         StaticUI = GameEntry.GetComponent<StaticUIComponent>();
-        //VariablePool = GameEntry.GetComponent<VariablePoolComponent>();
+        VariablePool = GameEntry.GetComponent<VariablePoolComponent>();
     }
 
     private void OnApplicationQuit()

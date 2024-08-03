@@ -77,7 +77,7 @@ public class PreloadProcedure : ProcedureBase
         {
             language = GFBuiltin.Localization.SystemLanguage;//默认语言跟随用户操作系统语言
         }
-        var languageJson = UtilityBuiltin.ResPath.GetLanguagePath(language.ToString());
+        var languageJson = UtilityBuiltin.AssetsPath.GetLanguagePath(language.ToString());
         if (GF.Resource.HasAsset(languageJson) == GameFramework.Resource.HasAssetResult.NotExist)
         {
             language = GameFramework.Localization.Language.English;//不支持的语言默认用英文
@@ -172,7 +172,7 @@ public class PreloadProcedure : ProcedureBase
     }
     private void CreateGFExtension()
     {
-        GF.Resource.LoadAsset(UtilityBuiltin.ResPath.GetPrefab("GFExtension"), typeof(GameObject), new GameFramework.Resource.LoadAssetCallbacks(OnLoadGFExtensionSuccess));
+        GF.Resource.LoadAsset(UtilityBuiltin.AssetsPath.GetPrefab("GFExtension"), typeof(GameObject), new GameFramework.Resource.LoadAssetCallbacks(OnLoadGFExtensionSuccess));
     }
     /// <summary>
     /// 加载配置

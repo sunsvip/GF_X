@@ -21,7 +21,7 @@ namespace UGF.EditorTools
         public static void CompileTargetDll(bool includeAotDll)
         {
             HybridCLR.Editor.Commands.CompileDllCommand.CompileDllActiveBuildTarget();
-            var desDir = UtilityBuiltin.ResPath.GetCombinePath(Application.dataPath, ConstBuiltin.HOT_FIX_DLL_DIR);
+            var desDir = UtilityBuiltin.AssetsPath.GetCombinePath(Application.dataPath, ConstBuiltin.HOT_FIX_DLL_DIR);
             var dllFils = Directory.GetFiles(desDir, "*.dll.bytes");
             for (int i = dllFils.Length - 1; i >= 0; i--)
             {
@@ -54,10 +54,10 @@ namespace UGF.EditorTools
 
             foreach (var dll in HybridCLR.Editor.SettingsUtil.HotUpdateAssemblyFilesIncludePreserved)
             {
-                string dllPath = UtilityBuiltin.ResPath.GetCombinePath(hotfixDllSrcDir, dll);
+                string dllPath = UtilityBuiltin.AssetsPath.GetCombinePath(hotfixDllSrcDir, dll);
                 if (File.Exists(dllPath))
                 {
-                    string dllBytesPath = UtilityBuiltin.ResPath.GetCombinePath(desDir, Utility.Text.Format("{0}.bytes", dll));
+                    string dllBytesPath = UtilityBuiltin.AssetsPath.GetCombinePath(desDir, Utility.Text.Format("{0}.bytes", dll));
                     File.Copy(dllPath, dllBytesPath, true);
                 }
                 else
@@ -71,7 +71,7 @@ namespace UGF.EditorTools
                 var failNames = CopyAotDllsToProject(target);
                 failList.AddRange(failNames);
             }
-            var hotfixListFile = UtilityBuiltin.ResPath.GetCombinePath(Application.dataPath, ConstBuiltin.HOT_FIX_DLL_DIR, "HotfixFileList.txt");
+            var hotfixListFile = UtilityBuiltin.AssetsPath.GetCombinePath(Application.dataPath, ConstBuiltin.HOT_FIX_DLL_DIR, "HotfixFileList.txt");
             File.WriteAllText(hotfixListFile, UtilityBuiltin.Json.ToJson(HybridCLR.Editor.SettingsUtil.HotUpdateAssemblyFilesIncludePreserved), System.Text.Encoding.UTF8);
             AssetDatabase.Refresh();
             return failList.ToArray();
@@ -80,7 +80,7 @@ namespace UGF.EditorTools
         {
             List<string> failList = new List<string>();
             string aotDllDir = HybridCLR.Editor.SettingsUtil.GetAssembliesPostIl2CppStripDir(target);
-            string aotSaveDir = UtilityBuiltin.ResPath.GetCombinePath(Application.dataPath, "Resources", ConstBuiltin.AOT_DLL_DIR);
+            string aotSaveDir = UtilityBuiltin.AssetsPath.GetCombinePath(Application.dataPath, "Resources", ConstBuiltin.AOT_DLL_DIR);
             if (Directory.Exists(aotSaveDir))
             {
                 Directory.Delete(aotSaveDir, true);
@@ -88,14 +88,14 @@ namespace UGF.EditorTools
             Directory.CreateDirectory(aotSaveDir);
             foreach (var dll in HybridCLR.Editor.SettingsUtil.AOTAssemblyNames)
             {
-                string dllPath = UtilityBuiltin.ResPath.GetCombinePath(aotDllDir, dll.EndsWith(".dll") ? dll : dll + ".dll");
+                string dllPath = UtilityBuiltin.AssetsPath.GetCombinePath(aotDllDir, dll.EndsWith(".dll") ? dll : dll + ".dll");
                 if (!File.Exists(dllPath))
                 {
                     Debug.LogWarning($"ab中添加AOT补充元数据dll:{dllPath} 时发生错误,文件不存在。裁剪后的AOT dll在BuildPlayer时才能生成，因此需要你先构建一次游戏App后再打包。");
                     failList.Add(dllPath);
                     continue;
                 }
-                string dllBytesPath = UtilityBuiltin.ResPath.GetCombinePath(aotSaveDir, Utility.Text.Format("{0}.bytes", dll));
+                string dllBytesPath = UtilityBuiltin.AssetsPath.GetCombinePath(aotSaveDir, Utility.Text.Format("{0}.bytes", dll));
                 File.Copy(dllPath, dllBytesPath, true);
             }
 
@@ -167,7 +167,7 @@ namespace UGF.EditorTools
         {
             var assetParentDir = Directory.GetParent(Application.dataPath).FullName;
 
-            var builtinFile = UtilityBuiltin.ResPath.GetCombinePath(assetParentDir, ConstEditor.BuiltinAssembly);
+            var builtinFile = UtilityBuiltin.AssetsPath.GetCombinePath(assetParentDir, ConstEditor.BuiltinAssembly);
             var textData = File.ReadAllText(builtinFile);
             var jsonData = UtilityBuiltin.Json.ToObject<Newtonsoft.Json.Linq.JObject>(textData);
             var refAsmbs = jsonData["references"] as Newtonsoft.Json.Linq.JArray;

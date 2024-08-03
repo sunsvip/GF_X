@@ -117,7 +117,7 @@ namespace UGF.EditorTools
             sBuilder.AppendLine("{");
             foreach (var excel in groupExcels)
             {
-                var excelFileName = UtilityBuiltin.ResPath.GetCombinePath(excelDir, excel);
+                var excelFileName = UtilityBuiltin.AssetsPath.GetCombinePath(excelDir, excel);
                 if (!File.Exists(excelFileName))
                 {
                     Debug.LogErrorFormat("Excel is not exists:{0}", excelFileName);
@@ -185,7 +185,7 @@ namespace UGF.EditorTools
                 Debug.LogError($"生成UIView代码失败! 不存在文件夹:{excelDir}");
                 return;
             }
-            var excelFileName = UtilityBuiltin.ResPath.GetCombinePath(excelDir, ConstEditor.UITableExcel);
+            var excelFileName = UtilityBuiltin.AssetsPath.GetCombinePath(excelDir, ConstEditor.UITableExcel);
             if (!File.Exists(excelFileName))
             {
                 Debug.LogError($"{excelFileName} 文件不存在!");
@@ -261,7 +261,7 @@ namespace UGF.EditorTools
         {
             bool result = false;
             var fileInfo = new FileInfo(excelFileName);
-            string tmpExcelFile = UtilityBuiltin.ResPath.GetCombinePath(fileInfo.Directory.FullName, Utility.Text.Format("{0}.temp", fileInfo.Name));
+            string tmpExcelFile = UtilityBuiltin.AssetsPath.GetCombinePath(fileInfo.Directory.FullName, Utility.Text.Format("{0}.temp", fileInfo.Name));
             //Debug.Log($">>>>>>>>Excel2Txt: excel:{excelFileName}, outTxtFile:{outTxtFile}");
             try
             {
@@ -392,7 +392,7 @@ namespace UGF.EditorTools
             for (int i = 0; i < dataTbCount; i++)
             {
                 var dataTableName = Path.GetFileNameWithoutExtension(appConfig.DataTables[i]);
-                string tbTxtFile = UtilityBuiltin.ResPath.GetCombinePath(outputDir, appConfig.DataTables[i] + outputExtension);
+                string tbTxtFile = UtilityBuiltin.AssetsPath.GetCombinePath(outputDir, appConfig.DataTables[i] + outputExtension);
                 EditorUtility.DisplayProgressBar($"进度:({i}/{dataTbCount})", $"生成DataTable代码:{dataTableName}", i / (float)dataTbCount);
                 if (!File.Exists(tbTxtFile))
                 {
@@ -456,7 +456,7 @@ namespace UGF.EditorTools
         public static string GetGameDataExcelRelativePath(GameDataType tp, string excelFile)
         {
             var excelRelativePath = Path.GetRelativePath(GameDataGenerator.GetGameDataExcelDir(tp), excelFile);
-            excelRelativePath = UtilityBuiltin.ResPath.GetCombinePath(Path.GetDirectoryName(excelRelativePath), Path.GetFileNameWithoutExtension(excelRelativePath)); // 获取表的相对路径并去掉扩展名
+            excelRelativePath = UtilityBuiltin.AssetsPath.GetCombinePath(Path.GetDirectoryName(excelRelativePath), Path.GetFileNameWithoutExtension(excelRelativePath)); // 获取表的相对路径并去掉扩展名
             return excelRelativePath;
         }
         public static string[] GameDataExcelRelative2FullPath(GameDataType tp, string[] relativeExcelPathArr)
@@ -477,16 +477,16 @@ namespace UGF.EditorTools
             var fullDir = Utility.Path.GetRegularPath(Path.GetDirectoryName(relativeExcelPath));
             if (fullDir.StartsWith(excelDir))
             {
-                return UtilityBuiltin.ResPath.GetCombinePath(fullDir, fileName);
+                return UtilityBuiltin.AssetsPath.GetCombinePath(fullDir, fileName);
             }
-            return UtilityBuiltin.ResPath.GetCombinePath(excelDir, fileName);
+            return UtilityBuiltin.AssetsPath.GetCombinePath(excelDir, fileName);
         }
         public static string GetGameDataExcelOutputFile(GameDataType tp, string excelFile)
         {
             var excelRelativePath = GetGameDataExcelRelativePath(tp, excelFile);
 
             string extensionName = GetGameDataExcelOutputFileExtension(tp);
-            return UtilityBuiltin.ResPath.GetCombinePath(GetGameDataExcelOutputDir(tp), excelRelativePath + extensionName);
+            return UtilityBuiltin.AssetsPath.GetCombinePath(GetGameDataExcelOutputDir(tp), excelRelativePath + extensionName);
         }
 
         private static string GetGameDataExcelOutputFileExtension(GameDataType tp)

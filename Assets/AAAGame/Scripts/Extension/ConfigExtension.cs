@@ -9,12 +9,12 @@ public static class ConfigExtension
         if (!string.IsNullOrWhiteSpace(abTestGroup))
         {
             var abTestCfgName = Utility.Text.Format("{0}{1}{2}", name, ConstBuiltin.AB_TEST_TAG, abTestGroup);
-            if (GF.Resource.HasAsset(UtilityBuiltin.ResPath.GetConfigPath(abTestCfgName)) != GameFramework.Resource.HasAssetResult.NotExist)
+            if (GF.Resource.HasAsset(UtilityBuiltin.AssetsPath.GetConfigPath(abTestCfgName)) != GameFramework.Resource.HasAssetResult.NotExist)
             {
                 cfgName = abTestCfgName;
             }
         }
-        cfg.ReadData(UtilityBuiltin.ResPath.GetConfigPath(cfgName), userData);
+        cfg.ReadData(UtilityBuiltin.AssetsPath.GetConfigPath(cfgName), userData);
     }
     public static void LoadConfig(this ConfigComponent cfg, string name, object userData)
     {

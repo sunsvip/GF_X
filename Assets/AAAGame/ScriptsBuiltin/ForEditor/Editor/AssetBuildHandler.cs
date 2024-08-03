@@ -93,7 +93,7 @@ namespace UGF.EditorTools
             var dir = Path.GetDirectoryName(versionListPath);
             var resourceVersionStr = new DirectoryInfo(dir).Parent.Name.Split('_').Last();
             int resourceVersion = string.IsNullOrWhiteSpace(resourceVersionStr) ? 0 : int.Parse(resourceVersionStr);
-            var outputVersionFile = UtilityBuiltin.ResPath.GetCombinePath(dir, ConstBuiltin.VersionFile);
+            var outputVersionFile = UtilityBuiltin.AssetsPath.GetCombinePath(dir, ConstBuiltin.VersionFile);
 
             var outputVersionInfo = new VersionInfo()
             {
@@ -101,7 +101,7 @@ namespace UGF.EditorTools
                 ForceUpdateApp = AppBuildSettings.Instance.ForceUpdateApp,
                 AppUpdateDesc = AppBuildSettings.Instance.AppUpdateDesc,
                 AppUpdateUrl = AppBuildSettings.Instance.AppUpdateUrl,
-                UpdatePrefixUri = UtilityBuiltin.ResPath.GetCombinePath(AppBuildSettings.Instance.UpdatePrefixUri, platform.ToString()),
+                UpdatePrefixUri = UtilityBuiltin.AssetsPath.GetCombinePath(AppBuildSettings.Instance.UpdatePrefixUri, platform.ToString()),
                 VersionListHashCode = versionListHashCode,
                 VersionListLength = versionListLength,
                 VersionListCompressedHashCode = versionListCompressedHashCode,

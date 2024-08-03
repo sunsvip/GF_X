@@ -12,7 +12,7 @@ namespace UGF.EditorTools
                 var assetName = System.IO.Path.GetFileNameWithoutExtension(assetPath);
                 if (assetName.EndsWith(".cs") || assetName.EndsWith(".txt"))
                 {
-                    var fullName = UtilityBuiltin.ResPath.GetCombinePath(System.IO.Path.GetDirectoryName(assetPath), assetName);
+                    var fullName = UtilityBuiltin.AssetsPath.GetCombinePath(System.IO.Path.GetDirectoryName(assetPath), assetName);
                     ConvertScriptToUTF8(fullName);
                 }
             }

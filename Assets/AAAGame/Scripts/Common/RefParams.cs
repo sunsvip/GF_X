@@ -1,30 +1,30 @@
 
 using Cysharp.Threading.Tasks;
 using GameFramework;
-using GameFramework.DataNode;
 using UnityGameFramework.Runtime;
 /// <summary>
 /// 引用类型参数, 用于Entity/UI传递参数,规避new
 /// </summary>
 public class RefParams : IReference
 {
-    static int _instanceId = 0;
-    protected IDataNode RootNode { get; private set; }
-    protected string RootNodeName { get; private set; }
-
+    public int Id { get; protected set; }
+    public static RefParams Acquire()
+    {
+        var eParams = ReferencePool.Acquire<RefParams>();
+        eParams.CreateRoot();
+        return eParams;
+    }
     /// <summary>
     /// 创建数据根节点
     /// </summary>
     protected void CreateRoot()
     {
-        RootNode = GF.DataNode.GetOrAddNode(Utility.Text.Format("PDN_{0}", ++_instanceId));
-        RootNodeName = RootNode.FullName;
+        this.Id = UtilityBuiltin.GenerateEntityId();
     }
 
     public void Set<T>(string key, T value) where T : Variable
     {
-        var node = RootNode.GetOrAddChild(key);
-        node.SetData(value);
+        GF.VariablePool.SetVariable<T>(Id, key, value);
     }
     public void Set(string key, object value)
     {
@@ -40,33 +40,33 @@ public class RefParams : IReference
     /// <returns></returns>
     public T Get<T>(string key, T defaultValue = null) where T : Variable
     {
-        if(defaultValue != null)
+        if (defaultValue != null)
         {
-            _ = UniTask.RunOnThreadPool(async () =>
+            _ = UniTask.DelayFrame(1).ContinueWith(() =>
             {
-                await UniTask.DelayFrame(1);
                 ReferencePool.Release(defaultValue);
             });
+
         }
-        if (!Has(key))
-        {
-            return defaultValue;
-        }
-        var node = RootNode.GetChild(key);
-        return node.GetData<T>();
+
+        return GF.VariablePool.GetVariable<T>(Id, key) ?? defaultValue;
     }
 
-    /// <summary>
-    /// 是否存在参数
-    /// </summary>
-    /// <param name="key"></param>
-    /// <returns></returns>
-    public bool Has(string key)
+    public bool TryGet<T>(string key, out T value) where T : Variable
     {
-        return RootNode.HasChild(key);
+        return GF.VariablePool.TryGetVariable<T>(this.Id, key, out value);
     }
+
     public void Clear()
     {
-        GF.DataNode.RemoveNode(RootNode.Name);
+        ClearDirtyData();
+        GF.VariablePool.ClearVariables(this.Id);
+    }
+    /// <summary>
+    /// 释放时回调, 需重写此方法重置数据以避免脏数据
+    /// </summary>
+    protected virtual void ClearDirtyData()
+    {
+
     }
 }

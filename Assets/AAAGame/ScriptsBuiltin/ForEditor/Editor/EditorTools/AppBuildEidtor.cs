@@ -749,7 +749,7 @@ namespace UGF.EditorTools
         }
         private void DeleteAotDlls()
         {
-            string aotSaveDir = UtilityBuiltin.ResPath.GetCombinePath("Resources", ConstBuiltin.AOT_DLL_DIR);
+            string aotSaveDir = UtilityBuiltin.AssetsPath.GetCombinePath("Resources", ConstBuiltin.AOT_DLL_DIR);
             if (Directory.Exists(aotSaveDir))
             {
                 AssetDatabase.DeleteAsset(aotSaveDir);
@@ -820,7 +820,7 @@ namespace UGF.EditorTools
         private void GenerateHotfixCodeStripConfig(bool v)
         {
             var linkDir = Path.GetDirectoryName(ConstEditor.HotfixAssembly);
-            var linkFile = UtilityBuiltin.ResPath.GetCombinePath(linkDir, "link.xml");
+            var linkFile = UtilityBuiltin.AssetsPath.GetCombinePath(linkDir, "link.xml");
             if (v)
             {
                 var strBuilder = new StringBuilder();
@@ -1046,7 +1046,7 @@ namespace UGF.EditorTools
 
             if (AppBuildSettings.Instance.RevealFolder && AppSettings.Instance.ResourceMode != ResourceMode.Package)
             {
-                EditorUtility.RevealInFinder(UtilityBuiltin.ResPath.GetCombinePath(GetResourceOupoutPathByMode(AppSettings.Instance.ResourceMode), platform.ToString()));
+                EditorUtility.RevealInFinder(UtilityBuiltin.AssetsPath.GetCombinePath(GetResourceOupoutPathByMode(AppSettings.Instance.ResourceMode), platform.ToString()));
             }
         }
 
@@ -1082,7 +1082,7 @@ namespace UGF.EditorTools
         }
         private static string GetBuildLocation(BuildTargetGroup targetGroup, BuildTarget target, int subtarget, BuildOptions options)
         {
-            string defaultFolder = UtilityBuiltin.ResPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, AppBuildSettings.Instance.AppBuildDir, target.ToString());
+            string defaultFolder = UtilityBuiltin.AssetsPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, AppBuildSettings.Instance.AppBuildDir, target.ToString());
             string defaultName = Application.productName;
             //打出包后给包重命名
 
@@ -1091,7 +1091,7 @@ namespace UGF.EditorTools
             if (!string.IsNullOrEmpty(extension))
             {
                 string appFileName = Utility.Text.Format("{0}.{1}", defaultName, extension);
-                buildPath = UtilityBuiltin.ResPath.GetCombinePath(defaultFolder, appFileName);
+                buildPath = UtilityBuiltin.AssetsPath.GetCombinePath(defaultFolder, appFileName);
             }
             return buildPath;
         }

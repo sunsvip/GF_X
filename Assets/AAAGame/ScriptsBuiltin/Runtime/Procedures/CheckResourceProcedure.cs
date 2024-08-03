@@ -110,7 +110,7 @@ public class CheckAndUpdateProcedure : ProcedureBase
         if (GFBuiltin.Resource.ResourceMode == GameFramework.Resource.ResourceMode.Updatable || GFBuiltin.Resource.ResourceMode == GameFramework.Resource.ResourceMode.UpdatableWhilePlaying)
         {
             Log.Info("当前为热更新模式, Web请求最新版本号...");
-            string verFileUrl = UtilityBuiltin.ResPath.GetCombinePath(ConstBuiltin.CheckVersionUrl, GetPlatformPath(), ConstBuiltin.VersionFile);
+            string verFileUrl = UtilityBuiltin.AssetsPath.GetCombinePath(ConstBuiltin.CheckVersionUrl, GetPlatformPath(), ConstBuiltin.VersionFile);
             Log.Info("请求版本信息地址:{0}", verFileUrl);
             GFBuiltin.WebRequest.AddWebRequest(verFileUrl, this);
             GFBuiltin.BuiltinView.ShowLoadingProgress(0);
@@ -165,7 +165,7 @@ public class CheckAndUpdateProcedure : ProcedureBase
     }
     private void CheckVersionAndUpdate(VersionInfo vinfo)
     {
-        GFBuiltin.Resource.UpdatePrefixUri = UtilityBuiltin.ResPath.GetCombinePath(vinfo.UpdatePrefixUri);
+        GFBuiltin.Resource.UpdatePrefixUri = UtilityBuiltin.AssetsPath.GetCombinePath(vinfo.UpdatePrefixUri);
         GFBuiltin.LogInfo($"资源服务器地址:{GFBuiltin.Resource.UpdatePrefixUri}");
         CheckVersionListResult checkResult;
         if (CheckResourceApplicable(vinfo.ApplicableGameVersion))

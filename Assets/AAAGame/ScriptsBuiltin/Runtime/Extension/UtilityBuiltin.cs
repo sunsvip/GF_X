@@ -13,6 +13,11 @@ using ICSharpCode.SharpZipLib.Zip;
 
 public static class UtilityBuiltin
 {
+    static int m_EntityId = 0;
+    public static int GenerateEntityId()
+    {
+        return ++m_EntityId;
+    }
     public static class Zip
     {
         /// <summary>
@@ -79,11 +84,11 @@ public static class UtilityBuiltin
                     string fileName = Path.GetFileName(zipEntry.Name);
                     if (!string.IsNullOrEmpty(directoryName))
                     {
-                        Directory.CreateDirectory(ResPath.GetCombinePath(unzipDir, directoryName));
+                        Directory.CreateDirectory(AssetsPath.GetCombinePath(unzipDir, directoryName));
                     }
                     if (fileName != String.Empty)
                     {
-                        using (FileStream streamWriter = File.Create(ResPath.GetCombinePath(unzipDir, zipEntry.Name)))
+                        using (FileStream streamWriter = File.Create(AssetsPath.GetCombinePath(unzipDir, zipEntry.Name)))
                         {
                             int size;
                             byte[] data = new byte[zipEntry.Size];
@@ -99,7 +104,7 @@ public static class UtilityBuiltin
         }
     }
 
-    public static class ResPath
+    public static class AssetsPath
     {
         public static string GetCombinePath(params string[] args)
         {

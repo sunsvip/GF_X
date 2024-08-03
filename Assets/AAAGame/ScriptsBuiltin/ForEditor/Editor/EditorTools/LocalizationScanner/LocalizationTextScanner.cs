@@ -183,7 +183,7 @@ namespace UGF.EditorTools
             var textsFromPrefab = ScanLocalizationTextFromPrefab(onScanProgress);
             var textsFromDataTable = ScanLocalizationTextFromDataTables(onScanProgress);
 
-            var tmpOutputTxtFile = UtilityBuiltin.ResPath.GetCombinePath(ConstEditor.ToolsPath, "LocalizationTextsScannerOutput.txt");
+            var tmpOutputTxtFile = UtilityBuiltin.AssetsPath.GetCombinePath(ConstEditor.ToolsPath, "LocalizationTextsScannerOutput.txt");
             var textsFromCode = ScanLocalizationTextFromCode(Path.GetDirectoryName(ConstEditor.HotfixAssembly), LocalizationFuncNames, tmpOutputTxtFile, onScanProgress, true);
 
             List<string> result = new List<string>();
@@ -265,7 +265,7 @@ namespace UGF.EditorTools
         /// <returns></returns>
         private static bool ScanLocalizationTextFromScript(string srcPath, string[] functionNames, string outputFile)
         {
-            string scannerToolFile = UtilityBuiltin.ResPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, scannerTool);
+            string scannerToolFile = UtilityBuiltin.AssetsPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, scannerTool);
 
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.Append($" {srcPath}");
@@ -333,7 +333,7 @@ namespace UGF.EditorTools
                 if (!fileInfo.Exists) continue;
 
                 onProgressUpdate?.Invoke(excelFile, tbFullFiles.Length, i);
-                string tmpExcelFile = UtilityBuiltin.ResPath.GetCombinePath(fileInfo.Directory.FullName, GameFramework.Utility.Text.Format("{0}.temp", fileInfo.Name));
+                string tmpExcelFile = UtilityBuiltin.AssetsPath.GetCombinePath(fileInfo.Directory.FullName, GameFramework.Utility.Text.Format("{0}.temp", fileInfo.Name));
                 try
                 {
                     File.Copy(excelFile, tmpExcelFile, true);
@@ -397,7 +397,7 @@ namespace UGF.EditorTools
             try
             {
                 var fileInfo = new FileInfo(lanExcelFile);
-                string tmpExcelFile = UtilityBuiltin.ResPath.GetCombinePath(fileInfo.Directory.FullName, GameFramework.Utility.Text.Format("{0}.temp", fileInfo.Name));
+                string tmpExcelFile = UtilityBuiltin.AssetsPath.GetCombinePath(fileInfo.Directory.FullName, GameFramework.Utility.Text.Format("{0}.temp", fileInfo.Name));
                 File.Copy(lanExcelFile, tmpExcelFile, true);
 
                 using (var excelPackage = new ExcelPackage(tmpExcelFile))
@@ -445,7 +445,7 @@ namespace UGF.EditorTools
         /// <returns></returns>
         public static string GetLanguageExcelFileName(GameFramework.Localization.Language language)
         {
-            var lanExcelFile = UtilityBuiltin.ResPath.GetCombinePath(ConstEditor.LanguageExcelPath, GameFramework.Utility.Text.Format("{0}.xlsx", language.ToString()));
+            var lanExcelFile = UtilityBuiltin.AssetsPath.GetCombinePath(ConstEditor.LanguageExcelPath, GameFramework.Utility.Text.Format("{0}.xlsx", language.ToString()));
             return lanExcelFile;
         }
         /// <summary>

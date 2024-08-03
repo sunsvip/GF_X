@@ -63,7 +63,7 @@ namespace UGF.EditorTools
                     texImporter.isReadable = true;
                     texImporter.SaveAndReimport();
                 }
-                var outputDir = UtilityBuiltin.ResPath.GetCombinePath(Path.GetDirectoryName(spFileName), $"{Path.GetFileNameWithoutExtension(spFileName)}_sliced");
+                var outputDir = UtilityBuiltin.AssetsPath.GetCombinePath(Path.GetDirectoryName(spFileName), $"{Path.GetFileNameWithoutExtension(spFileName)}_sliced");
 
                 if (!Directory.Exists(outputDir))
                 {
@@ -76,7 +76,7 @@ namespace UGF.EditorTools
                     var tex = new Texture2D((int)spDt.rect.width, (int)spDt.rect.height);
                     tex.SetPixels(spTex.GetPixels((int)spDt.rect.x, (int)spDt.rect.y, tex.width, tex.height));
                     tex.Apply();
-                    string fileName = UtilityBuiltin.ResPath.GetCombinePath(outputDir, $"{spDt.name}.png");
+                    string fileName = UtilityBuiltin.AssetsPath.GetCombinePath(outputDir, $"{spDt.name}.png");
                     if (File.Exists(fileName))
                     {
                         File.Delete(fileName);

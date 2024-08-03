@@ -29,7 +29,7 @@ public class GameProcedure : ProcedureBase
         Level.StartGame();
 
         var uiParms = UIParams.Acquire();
-        uiParms.OnButtonClick = (sender, btId) =>
+        uiParms.ButtonClickCallback = (sender, btId) =>
         {
             switch (btId)
             {

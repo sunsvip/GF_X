@@ -1,16 +1,12 @@
-﻿using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 
 public class ToastTips : UIFormBase
 {
-    public const string P_Content = "content";
-    public const string P_Duration = "duration";
     const float maxWidth = 500;
+    const float defaultDuration = 2f;
     private Text toastText;
     private LayoutElement toastEle;
     private float duration;
@@ -30,35 +26,28 @@ public class ToastTips : UIFormBase
         canvasGp.alpha = 0;
         canvasGp.DOFade(1, 0.4f);
         toastEle.enabled = false;
-        if (!Params.Has(P_Content))
+
+        if (Params.TryGet<VarFloat>("duration", out var tempDur))
         {
-            GF.UI.CloseUIForm(this.UIForm);
-            return;
+            duration = tempDur;
+        }
+        else
+        {
+            duration = defaultDuration;
         }
 
-        if (Params.Has(P_Duration))
-        {
-            duration = Params.Get<VarFloat>(P_Duration);
-        }
-
-        toastText.text = Params.Get<VarString>(P_Content);
-        StartCoroutine(InitLayout());
+        toastText.text = Params.Get<VarString>("content");
+        ScheduleStart();
     }
 
-    IEnumerator InitLayout()
+    private async void ScheduleStart()
     {
-        yield return new WaitForEndOfFrame();
+        await UniTask.DelayFrame(1);
         toastEle.enabled = true;
         toastEle.preferredWidth = Mathf.Min(maxWidth, toastText.rectTransform.sizeDelta.x);
-        //yield return new WaitForSeconds(duration);
-        //GF.UI.HideUIForm(this.UIForm);
-        var seqAct = DOTween.Sequence();
-        seqAct.SetEase(Ease.Linear);
-        seqAct.SetUpdate(true);
-        seqAct.AppendInterval(duration);
-        seqAct.onComplete = () =>
+        _ = UniTask.Delay((int)(duration * 1000)).ContinueWith(() =>
         {
-            UIExtension.CloseUIFormWithAnim(GF.UI, this.UIForm);
-        };
+            GF.UI.CloseUIFormWithAnim(this.UIForm);
+        });
     }
 }

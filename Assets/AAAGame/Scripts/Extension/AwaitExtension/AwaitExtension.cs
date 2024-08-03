@@ -108,7 +108,7 @@ public static class AwaitExtension
 
         var loadTcs = new UniTaskCompletionSource<bool>();
         dataTableComponent.LoadDataTable(dataTableName, userData);
-        var dataTableAssetName = UtilityBuiltin.ResPath.GetDataTablePath(dataTableName);
+        var dataTableAssetName = UtilityBuiltin.AssetsPath.GetDataTablePath(dataTableName);
         mDataTableTask.Add(dataTableAssetName, loadTcs);
         bool isLoaded = await loadTcs.Task;
         dataTable = isLoaded ? dataTableComponent.GetDataTable<T>() : null;

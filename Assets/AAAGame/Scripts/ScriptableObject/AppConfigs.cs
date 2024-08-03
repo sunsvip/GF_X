@@ -43,7 +43,7 @@ public class AppConfigs : ScriptableObject
     {
         if (mInstance == null)
         {
-            var configAsset = UtilityBuiltin.ResPath.GetScriptableAsset("AppConfigs");
+            var configAsset = UtilityBuiltin.AssetsPath.GetScriptableAsset("AppConfigs");
             mInstance = AssetDatabase.LoadAssetAtPath<AppConfigs>(configAsset);
         }
         return mInstance;
@@ -55,7 +55,7 @@ public class AppConfigs : ScriptableObject
     /// <returns></returns>
     public static async Task<AppConfigs> GetInstanceSync()
     {
-        var configAsset = UtilityBuiltin.ResPath.GetScriptableAsset("AppConfigs");
+        var configAsset = UtilityBuiltin.AssetsPath.GetScriptableAsset("AppConfigs");
         if (mInstance == null)
         {
             mInstance = await GFBuiltin.Resource.LoadAssetAsync<AppConfigs>(configAsset);

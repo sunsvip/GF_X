@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "909e96ca7c808cf9be733b881382fabb49523d0b"
+      "hash": "34df2799432d9dedd2c17d461c126a311fe12157"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
@@ -33,7 +33,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cinemachine": {
-      "version": "2.10.0",
+      "version": "2.10.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {

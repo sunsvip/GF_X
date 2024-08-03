@@ -39,7 +39,7 @@ public class ChangeSceneProcedure : ProcedureBase
         GF.Base.ResetNormalGameSpeed();
 
         nextScene = procedureOwner.GetData<VarString>("NextScene");
-        GF.Scene.LoadScene(UtilityBuiltin.ResPath.GetScenePath(nextScene), this);
+        GF.Scene.LoadScene(UtilityBuiltin.AssetsPath.GetScenePath(nextScene), this);
     }
 
     protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)

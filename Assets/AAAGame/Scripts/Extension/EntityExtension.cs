@@ -107,8 +107,8 @@ public static class EntityExtension
     }
     public static int ShowEntity(this EntityComponent eCom, string pfbName, string logicName, Const.EntityGroup eGroup, int priority, EntityParams parms = null)
     {
-        var eId = GenerateEntityId();
-        var assetFullName = UtilityBuiltin.ResPath.GetEntityPath(pfbName);
+        var eId = UtilityBuiltin.GenerateEntityId();
+        var assetFullName = UtilityBuiltin.AssetsPath.GetEntityPath(pfbName);
         eCom.ShowEntity(eId, Type.GetType(logicName), assetFullName, eGroup.ToString(), priority, parms);
         return eId;
     }
@@ -118,8 +118,8 @@ public static class EntityExtension
     }
     public static int ShowEntity<T>(this EntityComponent eCom, string pfbName, Const.EntityGroup eGroup, int priority, EntityParams parms = null) where T : EntityLogic
     {
-        var eId = GenerateEntityId();
-        var assetFullName = UtilityBuiltin.ResPath.GetEntityPath(pfbName);
+        var eId = UtilityBuiltin.GenerateEntityId();
+        var assetFullName = UtilityBuiltin.AssetsPath.GetEntityPath(pfbName);
         eCom.ShowEntity<T>(eId, assetFullName, eGroup.ToString(), priority, parms);
         return eId;
     }
@@ -163,9 +163,5 @@ public static class EntityExtension
 
         var eLogic = eCom.GetEntity(eId).Logic as T;
         return eLogic;
-    }
-    public static int GenerateEntityId()
-    {
-        return ++m_EntityId;
     }
 }

@@ -34,12 +34,12 @@ public class SerializeFieldData
 }
 public enum UIFormAnimationType
 {
-    Custom = -1,
-    None,
-    FadeIn,
-    FadeOut,
-    ScaleIn,
-    ScaleOut
+    Default = -1, //使用UIForm表配置的默认动画类型
+    None,       //无动画
+    FadeIn,     //透明淡入
+    FadeOut,    //透明淡出
+    ScaleIn,    //缩放淡入
+    ScaleOut    //缩放淡出
 }
 public class UIFormBase : UIFormLogic
 {
@@ -88,8 +88,8 @@ public class UIFormBase : UIFormLogic
         cvs.sortingOrder = Params.SortOrder ?? 0;
         Interactable = false;
         isOnEscape = Params.AllowEscapeClose ?? false;
-        PlayUIAnimation(Params.AnimationOpen ?? UIFormAnimationType.None, OnUIShowComplete);
-        Params.OnOpenCallback?.Invoke(this);
+        PlayUIAnimation(Params.AnimationOpen, OnUIShowComplete);
+        Params.OpenCallback?.Invoke(this);
     }
     public SerializeFieldData[] GetFieldsProperties()
     {
@@ -114,8 +114,8 @@ public class UIFormBase : UIFormLogic
         DOTween.Kill(this);
         if (!isShutdown)
         {
-            Params.OnCloseCallback?.Invoke(this);
-            if (Params != null) ReferencePool.Release(Params);
+            Params.CloseCallback?.Invoke(this);
+            ReferencePool.Release(Params);
         }
         base.OnClose(isShutdown, userData);
     }
@@ -124,13 +124,13 @@ public class UIFormBase : UIFormLogic
         UIStringKey[] texts = GetComponentsInChildren<UIStringKey>(true);
         foreach (var t in texts)
         {
-            if (t.TryGetComponent<Text>(out var textCom))
+            if (t.TryGetComponent<TMPro.TextMeshProUGUI>(out var textMeshCom))
             {
-                textCom.text = GF.Localization.GetText(t.Key);
+                textMeshCom.text = GF.Localization.GetString(t.Key);
             }
-            else if (t.TryGetComponent<TMPro.TextMeshProUGUI>(out var textMeshCom))
+            else if (t.TryGetComponent<Text>(out var textCom))
             {
-                textMeshCom.text = GF.Localization.GetText(t.Key);
+                textCom.text = GF.Localization.GetString(t.Key);
             }
         }
     }
@@ -161,8 +161,6 @@ public class UIFormBase : UIFormLogic
         }
         switch (animType)
         {
-            case UIFormAnimationType.Custom:
-                break;
             case UIFormAnimationType.None:
                 onAnimComplete.Invoke();
                 break;
@@ -185,34 +183,32 @@ public class UIFormBase : UIFormLogic
             return;
         }
         Interactable = false;
-        UIFormAnimationType animType = Params.AnimationClose ?? UIFormAnimationType.None;
-        PlayUIAnimation(animType, OnUIHideComplete);
+        PlayUIAnimation(Params.AnimationClose, OnUIHideComplete);
     }
 
 
     public virtual void OnClickClose()
     {
-        GF.Sound.PlayEffect("ui_click.wav");
+        GF.Sound.PlayEffect("ui/ui_click.wav");
         GF.UI.CloseUIFormWithAnim(this.UIForm);
     }
-    public void ClickUIButton(Button button)
-    {
-        GF.Sound.PlayEffect("ui_click.wav");
-        OnButtonClick(this, button);
-    }
+
     public void ClickUIButton(string bt_tag)
     {
-        GF.Sound.PlayEffect("ui_click.wav");
+        GF.Sound.PlayEffect("ui/ui_click.wav");
         OnButtonClick(this, bt_tag);
     }
-
+    public void ClickUIButton(Button btSelf)
+    {
+        GF.Sound.PlayEffect("ui/ui_click.wav");
+        OnButtonClick(this, btSelf);
+    }
     protected virtual void OnButtonClick(object sender, string btId)
     {
-        Params.OnButtonClick?.Invoke(sender, btId);
+        Params.ButtonClickCallback?.Invoke(sender, btId);
     }
-    protected virtual void OnButtonClick(object sender, Button bt)
+    protected virtual void OnButtonClick(object sender, UnityEngine.UI.Button btSelf)
     {
-        
     }
     protected virtual void OnUIShowComplete()
     {

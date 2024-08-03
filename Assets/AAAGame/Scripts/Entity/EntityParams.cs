@@ -5,69 +5,62 @@ using UnityGameFramework.Runtime;
 
 public class EntityParams : RefParams
 {
-    const string KeyLocalPosition = "localPosition";
-    const string KeyPosition = "position";
-    const string KeyLocalEulerAngles = "localEulerAngles";
-    const string KeyEulerAngles = "eulerAngles";
-    const string KeyLocalScale = "localScale";
-    const string KeyLayer = "layer";
+    public Vector3? position { get; set; } = null;
+    public Vector3? localPosition { get; set; } = null;
+    public Vector3? localEulerAngles { get; set; } = null;
+    public Vector3? eulerAngles { get; set; } = null;
+
+    public Vector3? localScale { get; set; } = null;
+    public int gameObjectLayer { get; set; } = -1;
+
+    /// <summary>
+    /// 绑定到父实体
+    /// </summary>
+    public Entity AttchToEntity { get; set; } = null;
+    /// <summary>
+    /// 指定绑定到父实体下的哪个节点
+    /// </summary>
+    public Transform ParentTransform { get; set; } = null;
+
+    /// <summary>
+    /// 实体显示时回调
+    /// </summary>
+    public GameFrameworkAction<EntityLogic> OnShowCallback { get; set; } = null;
+
+    /// <summary>
+    /// 实体隐藏时回调
+    /// </summary>
+    public GameFrameworkAction<EntityLogic> OnHideCallback { get; set; } = null;
+
+    /// <summary>
+    /// 创建一个实例(必须使用该接口创建)
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="eulerAngles"></param>
+    /// <param name="localScale"></param>
+    /// <returns></returns>
     public static EntityParams Acquire(Vector3? position = null, Vector3? eulerAngles = null, Vector3? localScale = null)
     {
         var eParams = ReferencePool.Acquire<EntityParams>();
         eParams.CreateRoot();
-        if (position != null) eParams.position = position.Value;
-        if (eulerAngles != null) eParams.eulerAngles = eulerAngles.Value;
-        if (localScale != null) eParams.localScale = localScale.Value;
+        eParams.position = position;
+        eParams.eulerAngles = eulerAngles;
+        eParams.localScale = localScale;
         return eParams;
     }
-    public VarVector3 position
+    protected override void ClearDirtyData()
     {
-        get => Get<VarVector3>(KeyPosition);
-        set
-        {
-            Set<VarVector3>(KeyPosition, value);
-        }
-    }
-    public VarVector3 localPosition
-    {
-        get => Get<VarVector3>(KeyLocalPosition);
-        set
-        {
-            Set<VarVector3>(KeyLocalPosition, value);
-        }
-    }
-    public VarVector3 localEulerAngles
-    {
-        get => Get<VarVector3>(KeyLocalEulerAngles);
-        set
-        {
-            Set<VarVector3>(KeyLocalEulerAngles, value);
-        }
-    }
-    public VarVector3 eulerAngles
-    {
-        get => Get<VarVector3>(KeyEulerAngles);
-        set
-        {
-            Set<VarVector3>(KeyEulerAngles, value);
-        }
-    }
-
-    public VarVector3 localScale
-    {
-        get => Get<VarVector3>(KeyLocalScale);
-        set
-        {
-            Set<VarVector3>(KeyLocalScale, value);
-        }
-    }
-    public VarString layer
-    {
-        get => Get<VarString>(KeyLayer);
-        set
-        {
-            Set<VarString>(KeyLayer, value);
-        }
+        base.ClearDirtyData();
+        this.position = null;
+        this.localPosition = null;
+        this.eulerAngles = null;
+        this.localEulerAngles = null;
+        this.localScale = null;
+        this.gameObjectLayer = -1;
+        this.AttchToEntity = null;
+        this.ParentTransform = null;
+        OnShowCallback = null;
+        OnHideCallback = null;
     }
 }
 #pragma warning restore IDE1006 // 命名样式

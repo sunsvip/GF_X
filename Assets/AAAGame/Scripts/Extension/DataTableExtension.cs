@@ -47,13 +47,13 @@ public static class DataTableExtension
         if (!string.IsNullOrWhiteSpace(abTestGroupName))
         {
             var abTableFileName = Utility.Text.Format("{0}{1}{2}", dataTableName, ConstBuiltin.AB_TEST_TAG, abTestGroupName);
-            if (GFBuiltin.Resource.HasAsset(UtilityBuiltin.ResPath.GetDataTablePath(abTableFileName)) != GameFramework.Resource.HasAssetResult.NotExist)
+            if (GFBuiltin.Resource.HasAsset(UtilityBuiltin.AssetsPath.GetDataTablePath(abTableFileName)) != GameFramework.Resource.HasAssetResult.NotExist)
             {
                 tableFileName = abTableFileName;
             }
         }
 
-        string assetName = UtilityBuiltin.ResPath.GetDataTablePath(tableFileName);
+        string assetName = UtilityBuiltin.AssetsPath.GetDataTablePath(tableFileName);
         dataTable.ReadData(assetName, userData);
     }
 

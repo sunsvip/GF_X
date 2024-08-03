@@ -74,7 +74,7 @@ public class MenuProcedure : ProcedureBase
 
         //异步打开主菜单UI
         var uiParms = UIParams.Acquire();//用于给UI传递各种参数
-        uiParms.OnOpenCallback = uiLogic =>
+        uiParms.OpenCallback = uiLogic =>
         {
             menuUIForm = uiLogic as MenuUIForm;
         };

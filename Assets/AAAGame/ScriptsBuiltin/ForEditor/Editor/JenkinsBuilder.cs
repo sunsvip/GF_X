@@ -12,7 +12,7 @@ namespace UGF.EditorTools
         public static void BuildResource()
         {
             Debug.Log("------------------------------Start BuildResource------------------------------");
-            var configFile = UtilityBuiltin.ResPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, BuildResourceConfigFile);
+            var configFile = UtilityBuiltin.AssetsPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, BuildResourceConfigFile);
             if (!File.Exists(configFile))
             {
                 Debug.LogError($"构建失败! 构建配置文件不存在:{configFile}");
@@ -49,7 +49,7 @@ namespace UGF.EditorTools
         public static void BuildApp()
         {
             Debug.Log("------------------------------Start BuildApp------------------------------");
-            var configFile = UtilityBuiltin.ResPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, BuildAppConfigFile);
+            var configFile = UtilityBuiltin.AssetsPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, BuildAppConfigFile);
             if (!File.Exists(configFile))
             {
                 Debug.LogError($"构建失败! 构建配置文件不存在:{configFile}");

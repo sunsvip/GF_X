@@ -13,16 +13,16 @@ namespace UGF.EditorTools
         public const string UIViewScriptFile = "Assets/AAAGame/Scripts/UI/UIViews.cs";
         public const string UISerializeFieldDir = "Assets/AAAGame/Scripts/UI/UIVariables";//生成UI变量代码目录
         public const string UITableExcel = "UITable.xlsx";
-        public static string UITableExcelFullPath => UtilityBuiltin.ResPath.GetCombinePath(DataTableExcelPath, UITableExcel);
+        public static string UITableExcelFullPath => UtilityBuiltin.AssetsPath.GetCombinePath(DataTableExcelPath, UITableExcel);
 
         public const string EntityGroupTableExcel = "EntityGroupTable.xlsx";
-        public static string EntityGroupTableExcelFullPath => UtilityBuiltin.ResPath.GetCombinePath(DataTableExcelPath, EntityGroupTableExcel);
+        public static string EntityGroupTableExcelFullPath => UtilityBuiltin.AssetsPath.GetCombinePath(DataTableExcelPath, EntityGroupTableExcel);
 
         public const string SoundGroupTableExcel = "SoundGroupTable.xlsx";
-        public static string SoundGroupTableExcelFullPath => UtilityBuiltin.ResPath.GetCombinePath(DataTableExcelPath, SoundGroupTableExcel);
+        public static string SoundGroupTableExcelFullPath => UtilityBuiltin.AssetsPath.GetCombinePath(DataTableExcelPath, SoundGroupTableExcel);
 
         public const string UIGroupTableExcel = "UIGroupTable.xlsx";
-        public static string UIGroupTableExcelFullPath => UtilityBuiltin.ResPath.GetCombinePath(DataTableExcelPath, UIGroupTableExcel);
+        public static string UIGroupTableExcelFullPath => UtilityBuiltin.AssetsPath.GetCombinePath(DataTableExcelPath, UIGroupTableExcel);
 
         public const string ConstGroupScriptFileFullName = "Assets/AAAGame/Scripts/Common/Const.Groups.cs";
 
@@ -38,26 +38,26 @@ namespace UGF.EditorTools
         public static readonly string[] DefaultLayers = { "UI" };
         internal static readonly string KeystorePass = "topgames";
         internal static readonly string KeyAliasPass = "topgames";
-        internal static string KeystoreName => UtilityBuiltin.ResPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, "user.keystore");
+        internal static string KeystoreName => UtilityBuiltin.AssetsPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, "user.keystore");
         internal static readonly string KeyAliasName = "release";
-        internal static string AssetBundleOutputPath => UtilityBuiltin.ResPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, "AB");
+        internal static string AssetBundleOutputPath => UtilityBuiltin.AssetsPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, "AB");
         public static readonly string UpdatePrefixUri = "https://gitcode.net/topgamesopen/gf_hybridclr_hotfix/-/raw/master";//默认资源下载地址
         internal static readonly string AppUpdateUrl = "https://play.google.com/store/apps/details?id=";
 
         /// <summary>
         /// 数据表Excel目录
         /// </summary>
-        public static string DataTableExcelPath => UtilityBuiltin.ResPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, "AAAGameData/DataTables");
+        public static string DataTableExcelPath => UtilityBuiltin.AssetsPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, "AAAGameData/DataTables");
         /// <summary>
         /// 配置表Excel目录
         /// </summary>
-        public static string ConfigExcelPath => UtilityBuiltin.ResPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, "AAAGameData/Configs");
+        public static string ConfigExcelPath => UtilityBuiltin.AssetsPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, "AAAGameData/Configs");
         /// <summary>
         /// 语言国际化Excel目录
         /// </summary>
-        public static string LanguageExcelPath => UtilityBuiltin.ResPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, "AAAGameData/Languages");
+        public static string LanguageExcelPath => UtilityBuiltin.AssetsPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, "AAAGameData/Languages");
 
-        public static string ToolsPath = UtilityBuiltin.ResPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, "Tools");
+        public static string ToolsPath = UtilityBuiltin.AssetsPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, "Tools");
         public const string DataTablePath = "Assets/AAAGame/DataTable";
         public const string GameConfigPath = "Assets/AAAGame/Config";
         public const string LanguagePath = "Assets/AAAGame/Language";

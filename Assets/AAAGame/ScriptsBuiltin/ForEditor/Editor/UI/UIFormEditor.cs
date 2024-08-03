@@ -395,7 +395,7 @@ namespace UGF.EditorTools
             if (GUILayout.Button("变量代码", btnHeight))
             {
                 var uiFormClassName = uiForm.GetType().Name;
-                string scriptFile = UtilityBuiltin.ResPath.GetCombinePath(ConstEditor.UISerializeFieldDir, Utility.Text.Format("{0}.Variables.cs", uiFormClassName));
+                string scriptFile = UtilityBuiltin.AssetsPath.GetCombinePath(ConstEditor.UISerializeFieldDir, Utility.Text.Format("{0}.Variables.cs", uiFormClassName));
                 InternalEditorUtility.OpenFileAtLineExternal(scriptFile, 0);
             }
             if (GUILayout.Button("编辑代码", openCodeBtStyle, btnHeight))
@@ -525,7 +525,7 @@ namespace UGF.EditorTools
 
             var monoScript = MonoScript.FromMonoBehaviour(uiForm);
             var uiFormClassName = monoScript.GetClass().Name;
-            string scriptFile = UtilityBuiltin.ResPath.GetCombinePath(ConstEditor.UISerializeFieldDir, Utility.Text.Format("{0}.Variables.cs", uiFormClassName));
+            string scriptFile = UtilityBuiltin.AssetsPath.GetCombinePath(ConstEditor.UISerializeFieldDir, Utility.Text.Format("{0}.Variables.cs", uiFormClassName));
             var fields = uiForm.GetFieldsProperties();
             if (fields == null || fields.Length <= 0)
             {

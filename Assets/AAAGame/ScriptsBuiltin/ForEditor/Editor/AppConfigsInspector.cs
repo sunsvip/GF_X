@@ -229,7 +229,7 @@ namespace UGF.EditorTools
                 {
                     return;
                 }
-                var excelPath = UtilityBuiltin.ResPath.GetCombinePath(excelDir, v + ".xlsx");
+                var excelPath = UtilityBuiltin.AssetsPath.GetCombinePath(excelDir, v + ".xlsx");
                 if (File.Exists(excelPath))
                 {
                     Debug.LogWarning($"创建DataTable失败, 文件已存在:{excelPath}");
@@ -248,7 +248,7 @@ namespace UGF.EditorTools
                 {
                     return;
                 }
-                var excelPath = UtilityBuiltin.ResPath.GetCombinePath(excelDir, v + ".xlsx");
+                var excelPath = UtilityBuiltin.AssetsPath.GetCombinePath(excelDir, v + ".xlsx");
                 if (File.Exists(excelPath))
                 {
                     Debug.LogWarning($"创建Config失败, 文件已存在:{excelPath}");

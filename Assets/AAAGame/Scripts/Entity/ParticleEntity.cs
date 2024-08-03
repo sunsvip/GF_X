@@ -1,33 +1,34 @@
-﻿using GameFramework;
-using System.Collections;
-using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
 public class ParticleEntity : EntityBase
 {
+    public const string LIFE_TIME = "LifeTime";
+    public const string SORT_LAYER = "SortLayer";
     bool autoHide;
     float lifeTime;
     protected override void OnShow(object userData)
     {
         base.OnShow(userData);
         autoHide = true;
-        gameObject.SetLayerRecursively(LayerMask.GetMask("TransparentFX"));
 
-        lifeTime = Params.Get<VarFloat>("LifeTime", 2f);
+        lifeTime = Params.Get<VarFloat>(LIFE_TIME, 2f);
 
         autoHide = lifeTime > 0;
 
-        if (Params.Has("SortLayer"))
+        if (Params.TryGet<VarInt32>(SORT_LAYER, out var pSortLayer))
         {
-            int pSortLayer = Params.Get<VarInt32>("SortLayer");
             SetParticlesSortLayer(pSortLayer);
         }
-        if (Params.Has("OnShow"))
-        {
-            (Params.Get<VarObject>("OnShow").Value as GameFrameworkAction<EntityLogic>)?.Invoke(this);
-        }
 
+        if (autoHide)
+        {
+            UniTask.Delay((int)(lifeTime * 1000)).ContinueWith(() =>
+            {
+                GF.Entity.HideEntitySafe(this);
+            }).Forget();
+        }
     }
     private void SetParticlesSortLayer(int layer)
     {
@@ -36,19 +37,6 @@ public class ParticleEntity : EntityBase
         {
             var render = item.GetComponent<Renderer>();
             render.sortingOrder = layer;
-        }
-    }
-    protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
-    {
-        base.OnUpdate(elapseSeconds, realElapseSeconds);
-        if (!autoHide)
-        {
-            return;
-        }
-        lifeTime -= elapseSeconds;
-        if (lifeTime <= 0)
-        {
-            GF.Entity.HideEntitySafe(this);
         }
     }
 }

@@ -160,14 +160,14 @@ namespace UGF.EditorTools
                 return;
             }
             var projectRoot = Directory.GetParent(Application.dataPath).FullName;
-            var backupDir = UtilityBuiltin.ResPath.GetCombinePath(projectRoot, EditorToolSettings.Instance.CompressImgToolBackupDir);
+            var backupDir = UtilityBuiltin.AssetsPath.GetCombinePath(projectRoot, EditorToolSettings.Instance.CompressImgToolBackupDir);
 
             if (string.IsNullOrWhiteSpace(EditorToolSettings.Instance.CompressImgToolBackupDir))
             {
                 EditorUtility.DisplayDialog("错误", $"当前选择的备份路径无效:{Environment.NewLine}{EditorToolSettings.Instance.CompressImgToolBackupDir}", "OK");
                 return;
             }
-            var backupPath = UtilityBuiltin.ResPath.GetCombinePath(backupDir, DateTime.Now.ToString("yyyy-MM-dd-HHmmss"));
+            var backupPath = UtilityBuiltin.AssetsPath.GetCombinePath(backupDir, DateTime.Now.ToString("yyyy-MM-dd-HHmmss"));
 
             int successCount = 0;
             for (int i = 0; i < itmList.Count; i++)
@@ -206,7 +206,7 @@ namespace UGF.EditorTools
         private void RecoveryImages()
         {
             var projectRoot = Directory.GetParent(Application.dataPath).FullName;
-            var backupRoot = UtilityBuiltin.ResPath.GetCombinePath(projectRoot, EditorToolSettings.Instance.CompressImgToolBackupDir);
+            var backupRoot = UtilityBuiltin.AssetsPath.GetCombinePath(projectRoot, EditorToolSettings.Instance.CompressImgToolBackupDir);
             if (!Directory.Exists(backupRoot))
             {
                 EditorUtility.DisplayDialog("提示", $"备份路径不存在:{backupRoot}", "OK");
@@ -234,7 +234,7 @@ namespace UGF.EditorTools
                 {
                     return;
                 }
-                var recoveryDir = UtilityBuiltin.ResPath.GetCombinePath(backupRoot, backupName);
+                var recoveryDir = UtilityBuiltin.AssetsPath.GetCombinePath(backupRoot, backupName);
                 var imgList = GetAllBackupFilesByDir(recoveryDir, recoveryDir);
                 CopyFilesTo(imgList, recoveryDir, projectRoot);
             }, null);
@@ -247,13 +247,13 @@ namespace UGF.EditorTools
             for (int i = 0; i < totalCount; i++)
             {
                 var item = imgList[i];
-                var desFile = UtilityBuiltin.ResPath.GetCombinePath(desRoot, item);
+                var desFile = UtilityBuiltin.AssetsPath.GetCombinePath(desRoot, item);
                 var desFileDir = Path.GetDirectoryName(desFile);
                 if (!Directory.Exists(desFileDir))
                 {
                     Directory.CreateDirectory(desFileDir);
                 }
-                var srcFile = UtilityBuiltin.ResPath.GetCombinePath(srcRoot, item);
+                var srcFile = UtilityBuiltin.AssetsPath.GetCombinePath(srcRoot, item);
                 if (!EditorUtility.DisplayCancelableProgressBar("还原进度", $"还原文件:{item}", i / (float)totalCount))
                 {
                     try
