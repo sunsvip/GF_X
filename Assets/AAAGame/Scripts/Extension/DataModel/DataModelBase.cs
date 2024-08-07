@@ -4,7 +4,9 @@ namespace GameFramework
 
     public abstract class DataModelBase : IReference
     {
+        [Newtonsoft.Json.JsonIgnore]
         public int Id { get; private set; } = 0;
+        [Newtonsoft.Json.JsonIgnore]
         public RefParams Userdata { get; private set; } = null;
 
         /// <summary>
