@@ -1,32 +1,42 @@
-using GameFramework;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public class DataModelBase : IReference
+namespace GameFramework
 {
-    public int Id { get; private set; } = 0;
 
-    protected virtual void OnInit() { }
-
-    /// <summary>
-    /// µ±¶ÔÏó»ØÊÕÊ±×Ô¶¯µ÷ÓÃOnClear,³£ÓÃÓÚÖØÖÃ±äÁ¿ÊôĞÔ,±ÜÃâ¸´ÓÃ¶ÔÏóÊ±´øÓĞÄ¬ÈÏÊıÖµ(ÔàÊı¾İ)
-    /// </summary>
-    protected virtual void OnClear() { }
-    public void Init(int id)
+    public abstract class DataModelBase : IReference
     {
-        this.Id = id;
+        public int Id { get; private set; } = 0;
+        public RefParams Userdata { get; private set; } = null;
 
-        OnInit();
-    }
-    public void Clear()
-    {
-        this.Id = 0;
+        /// <summary>
+        /// é¦–æ¬¡è·å–æ—¶
+        /// </summary>
+        /// <param name="userdata"></param>
+        protected virtual void OnCreate(RefParams userdata) { }
+
+        /// <summary>
+        /// å½“å¯¹è±¡å›æ”¶æ—¶è‡ªåŠ¨è°ƒç”¨OnClear,å¸¸ç”¨äºé‡ç½®å˜é‡å±æ€§,é¿å…å¤ç”¨å¯¹è±¡æ—¶å¸¦æœ‰é»˜è®¤æ•°å€¼(è„æ•°æ®)
+        /// </summary>
+        protected virtual void OnRelease() { }
+        internal void Init(int id, RefParams userdata)
+        {
+            this.Id = id;
+            this.Userdata = userdata;
+            OnCreate(userdata);
+        }
+        public void Clear()
+        {
+            this.Id = 0;
+            if (Userdata != null)
+            {
+                ReferencePool.Release(Userdata);
+            }
+        }
+
+        internal void Shutdown()
+        {
+            OnRelease();
+            ReferencePool.Release(this);
+        }
     }
 
-    internal void Shutdown()
-    {
-        ReferencePool.Release(this);
-    }
 }
