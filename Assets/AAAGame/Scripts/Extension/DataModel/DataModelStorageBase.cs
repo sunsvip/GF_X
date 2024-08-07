@@ -2,10 +2,8 @@
 using GameFramework;
 using UnityGameFramework.Runtime;
 
-public class DataModelStorageBase : DataModelBase
+public abstract class DataModelStorageBase : DataModelBase
 {
-    public int Hp { get; private set; } = 99;
-    public float HpSpeed { get; private set; } = 12;
     protected override void OnCreate(RefParams userdata)
     {
         base.OnCreate(userdata);
