@@ -1,13 +1,12 @@
 ﻿
 using GameFramework;
-using UnityGameFramework.Runtime;
 
 public abstract class DataModelStorageBase : DataModelBase
 {
     protected override void OnCreate(RefParams userdata)
     {
         base.OnCreate(userdata);
-        InitStorageData();
+        Load();
     }
 
     protected override void OnRelease()
@@ -15,7 +14,7 @@ public abstract class DataModelStorageBase : DataModelBase
         Save();
     }
 
-    private void InitStorageData()
+    private void Load()
     {
         string dataJson = GF.Setting.GetString(this.GetType().FullName);
         if (!string.IsNullOrEmpty(dataJson))
