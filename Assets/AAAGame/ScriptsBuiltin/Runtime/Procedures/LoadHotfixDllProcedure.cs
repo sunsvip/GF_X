@@ -103,7 +103,7 @@ public class LoadHotfixDllProcedure : ProcedureBase
     private void LoadHotfixDlls()
     {
         GFBuiltin.LogInfo("开始加载热更新dll");
-        var hotfixListFile = UtilityBuiltin.ResPath.GetCombinePath("Assets", ConstBuiltin.HOT_FIX_DLL_DIR, "HotfixFileList.txt");
+        var hotfixListFile = UtilityBuiltin.AssetsPath.GetCombinePath("Assets", ConstBuiltin.HOT_FIX_DLL_DIR, "HotfixFileList.txt");
         if (GFBuiltin.Resource.HasAsset(hotfixListFile) == GameFramework.Resource.HasAssetResult.NotExist)
         {
             Log.Fatal("热更新dll列表文件不存在:{0}", hotfixListFile);
@@ -119,7 +119,7 @@ public class LoadHotfixDllProcedure : ProcedureBase
                 for (int i = 0; i < hotfixDlls.Length - 1; i++)
                 {
                     var dllName = hotfixDlls[i];
-                    var dllAsset = UtilityBuiltin.ResPath.GetHotfixDll(dllName);
+                    var dllAsset = UtilityBuiltin.AssetsPath.GetHotfixDll(dllName);
                     LoadHotfixDll(dllAsset, this);
                 }
                 hotfixListIsLoaded = true;
@@ -147,7 +147,7 @@ public class LoadHotfixDllProcedure : ProcedureBase
         //所有依赖dll加载完成后再加载Hotfix.dll
         if (loadedProgress + 1 == totalProgress)
         {
-            var mainDll = UtilityBuiltin.ResPath.GetHotfixDll(hotfixDlls.Last());
+            var mainDll = UtilityBuiltin.AssetsPath.GetHotfixDll(hotfixDlls.Last());
             LoadHotfixDll(mainDll, this);
         }
     }
