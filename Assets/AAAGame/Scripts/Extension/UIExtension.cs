@@ -1,13 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 using GameFramework;
 using UnityGameFramework.Runtime;
-using System.Collections.Generic;
 
 using UnityEngine.U2D;
 using DG.Tweening;
 using System;
-using UnityEditor.Playables;
 
 public static class UIExtension
 {
