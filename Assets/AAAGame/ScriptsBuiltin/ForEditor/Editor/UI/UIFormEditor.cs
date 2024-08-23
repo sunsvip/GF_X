@@ -29,7 +29,8 @@ namespace UGF.EditorTools
         static bool addToFieldToggle;
         static bool removeToFieldToggle;
         ReorderableList[] mReorderableList;
-        UIFormBase uiForm;
+        static UIFormBase uiForm;
+        static SerializedObject cachedSerializedObj;
         int mCurFieldIdx;
 
         int mCurFoldoutItemIdx = -1;
@@ -39,7 +40,7 @@ namespace UGF.EditorTools
         GUIContent prefixContent;
         GUIContent typeContent;
         GUIStyle openCodeBtStyle;
-
+        static bool m_DirtyFlag = false;
         #region #右键菜单
 
         const string REFRESH_BIND = "UI_REFRESH_BIND";
@@ -47,12 +48,13 @@ namespace UGF.EditorTools
         [InitializeOnLoadMethod]
         static void InitEditor()
         {
+            PrefabStage.prefabStageClosing -= OnPrefabClosing;
+            PrefabStage.prefabStageClosing += OnPrefabClosing;
             Selection.selectionChanged = () =>
             {
                 addToFieldToggle = false;
                 removeToFieldToggle = false;
             };
-
             EditorApplication.hierarchyWindowItemOnGUI = delegate (int id, Rect rect)
             {
                 OpenSelectComponentMenuListener(rect);
@@ -94,6 +96,7 @@ namespace UGF.EditorTools
 
             };
         }
+
         private static string GetVarPrefix(int idx)
         {
             return varPrefixArr[idx];
@@ -174,6 +177,7 @@ namespace UGF.EditorTools
             EditorUtility.SetDirty(uiForm);
             removeToFieldToggle = true;
             addToFieldToggle = false;
+            m_DirtyFlag = true;
         }
         [MenuItem("GameObject/UIForm Fields Tool/Add Button OnClick(string)", false, priority = 1101)]
         static void AddClickButtonStringEvent()
@@ -299,6 +303,7 @@ namespace UGF.EditorTools
             EditorUtility.SetDirty(uiForm);
             addToFieldToggle = true;
             removeToFieldToggle = false;
+            m_DirtyFlag = true;
         }
         private static GameObject[] GetTargetsFromSelectedNodes(GameObject[] selectedList)
         {
@@ -326,10 +331,12 @@ namespace UGF.EditorTools
             {
                 uiForm.ModifyFieldsProperties(new SerializeFieldData[0]);
             }
+            cachedSerializedObj = serializedObject;
             mFields = serializedObject.FindProperty("_fields");
             mReorderableList = new ReorderableList[mFields.arraySize];
             EditorApplication.update += OnEditorUpdate;
         }
+
         private void OnDisable()
         {
             EditorApplication.update -= OnEditorUpdate;
@@ -347,6 +354,18 @@ namespace UGF.EditorTools
         {
             EditorToolSettings.Save();
         }
+
+        private static void OnPrefabClosing(PrefabStage stage)
+        {
+            if (!m_DirtyFlag || uiForm == null || cachedSerializedObj == null) return;
+
+            if (EditorUtility.DisplayDialog("提示", "存在改动,需要生成变量代码", "好的", "取消"))
+            {
+                PrefabStageUtility.OpenPrefab(stage.assetPath);
+                GenerateUIFormVariables(uiForm, cachedSerializedObj);
+            }
+        }
+
         private static void OpenSelectComponentMenuListener(Rect rect)
         {
             if (mShowSelectTypeMenu)
@@ -519,10 +538,10 @@ namespace UGF.EditorTools
         /// </summary>
         /// <param name="uiForm"></param>
         /// <param name="uiFormSerializer"></param>
-        private void GenerateUIFormVariables(UIFormBase uiForm, SerializedObject uiFormSerializer)
+        private static void GenerateUIFormVariables(UIFormBase uiForm, SerializedObject uiFormSerializer)
         {
             if (uiForm == null) return;
-
+            m_DirtyFlag = false;
             var monoScript = MonoScript.FromMonoBehaviour(uiForm);
             var uiFormClassName = monoScript.GetClass().Name;
             string scriptFile = UtilityBuiltin.AssetsPath.GetCombinePath(ConstEditor.UISerializeFieldDir, Utility.Text.Format("{0}.Variables.cs", uiFormClassName));
@@ -624,7 +643,7 @@ namespace UGF.EditorTools
             }
             AssetDatabase.Refresh();
         }
-        private void GeneratePropertiesUseGetComponent(StringBuilder stringBuilder, SerializeFieldData[] fields)
+        private static void GeneratePropertiesUseGetComponent(StringBuilder stringBuilder, SerializeFieldData[] fields)
         {
             stringBuilder.AppendLine("\tprotected override void InitUIProperties()");
             stringBuilder.AppendLine("\t{");
@@ -730,12 +749,14 @@ namespace UGF.EditorTools
                     lastVarName.stringValue += idx.ToString();
                 }
             }
+            m_DirtyFlag = true;
         }
         private void RemoveField(int idx)
         {
             Undo.RecordObject(uiForm, uiForm.name);
             mFields.DeleteArrayElementAtIndex(idx);
             ArrayUtility.RemoveAt(ref mReorderableList, idx);
+            m_DirtyFlag = true;
         }
         private void DrawVariableTargets(Rect rect, int index, bool isActive, bool isFocused)
         {
