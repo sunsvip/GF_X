@@ -1,8 +1,4 @@
 ﻿//------------------------------------------------------------
-// Game Framework
-// Copyright © 2013-2020 Jiang Yin. All rights reserved.
-// Homepage: https://gameframework.cn/
-// Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
 // 生成时间：__DATA_TABLE_CREATE_TIME__
@@ -16,6 +12,7 @@ using System.Text;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
+[System.Reflection.Obfuscation(Feature = "renaming", ApplyToMembers = false)]
 /// <summary>
 /// UI界面表
 /// </summary>
@@ -113,7 +110,6 @@ public class UITable : DataRowBase
             OpenAnimType = columnStrings[index++];
             CloseAnimType = columnStrings[index++];
 
-            GeneratePropertyArray();
             return true;
         }
 
@@ -134,12 +130,8 @@ public class UITable : DataRowBase
                 }
             }
 
-            GeneratePropertyArray();
             return true;
         }
 
-        private void GeneratePropertyArray()
-        {
-
-        }
+//__DATA_TABLE_PROPERTY_ARRAY__
 }

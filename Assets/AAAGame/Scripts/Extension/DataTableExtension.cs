@@ -117,10 +117,30 @@ public static class DataTableExtension
         string[] splitValue = value.Split(',');
         return new Vector2(float.Parse(splitValue[0]), float.Parse(splitValue[1]));
     }
+    public static Vector2[] ParseVector2Array(string value)
+    {
+        string[] arr = ParseArrayElements(value);
+        Vector2[] result = new Vector2[arr.Length];
+        for (int i = 0; i < arr.Length; i++)
+        {
+            result[i] = ParseVector2(arr[i]);
+        }
+        return result;
+    }
     public static Vector2Int ParseVector2Int(string value)
     {
         string[] splitValue = value.Split(',');
         return new Vector2Int(int.Parse(splitValue[0]), int.Parse(splitValue[1]));
+    }
+    public static Vector2Int[] ParseVector2IntArray(string value)
+    {
+        string[] arr = ParseArrayElements(value);
+        Vector2Int[] result = new Vector2Int[arr.Length];
+        for (int i = 0; i < arr.Length; i++)
+        {
+            result[i] = ParseVector2Int(arr[i]);
+        }
+        return result;
     }
     public static Vector3 ParseVector3(string value)
     {
@@ -128,24 +148,37 @@ public static class DataTableExtension
 
         return new Vector3(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]));
     }
+    public static Vector3[] ParseVector3Array(string value)
+    {
+        string[] arr = ParseArrayElements(value);
+        Vector3[] result = new Vector3[arr.Length];
+        for (int i = 0; i < arr.Length; i++)
+        {
+            result[i] = ParseVector3(arr[i]);
+        }
+        return result;
+    }
     public static Vector3Int ParseVector3Int(string value)
     {
         string[] splitValue = value.Split(',');
         return new Vector3Int(int.Parse(splitValue[0]), int.Parse(splitValue[1]), int.Parse(splitValue[2]));
     }
-    //public static LitJson.JsonData ParseJsonData(string value)
-    //{
-    //    return LitJson.JsonMapper.ToObject(value);
-    //}
-    //public static T ParseJsonData<T>(string value)
-    //{
-    //    return LitJson.JsonMapper.ToObject<T>(value);
-    //}
+    public static Vector3Int[] ParseVector3IntArray(string value)
+    {
+        string[] arr = ParseArrayElements(value);
+        Vector3Int[] result = new Vector3Int[arr.Length];
+        for (int i = 0; i < arr.Length; i++)
+        {
+            result[i] = ParseVector3Int(arr[i]);
+        }
+        return result;
+    }
     public static Vector4 ParseVector4(string value)
     {
         string[] splitValue = value.Split(',');
         return new Vector4(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]), float.Parse(splitValue[3]));
     }
+
     /// <summary>
     /// 解析数据表数组
     /// </summary>
@@ -183,7 +216,7 @@ public static class DataTableExtension
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            return new T[0][];
+            return null;
         }
         var mats = Regex.Matches(value, "\\[.+?\\]");
         if (mats.Count > 0)
@@ -194,6 +227,26 @@ public static class DataTableExtension
                 string vstr = mats[i].Value;
                 vstr = vstr.Substring(1, vstr.Length - 2);
                 arr[i] = ParseArray<T>(vstr);
+            }
+            return arr;
+        }
+        return null;
+    }
+
+    private static string[] ParseArrayElements(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+        var mats = Regex.Matches(value, "\\[.+?\\]");
+        if (mats.Count > 0)
+        {
+            string[] arr = new string[mats.Count];
+            for (int i = 0; i < mats.Count; i++)
+            {
+                string vstr = mats[i].Value;
+                arr[i] = vstr.Substring(1, vstr.Length - 2);
             }
             return arr;
         }

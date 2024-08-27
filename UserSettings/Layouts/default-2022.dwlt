@@ -120,7 +120,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 18
+  controlID: 135
   draggingID: 0
 --- !u!114 &6
 MonoBehaviour:
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 19
+  controlID: 27
   draggingID: 0
 --- !u!114 &7
 MonoBehaviour:
@@ -225,7 +225,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 56
+  controlID: 57
   draggingID: 0
 --- !u!114 &10
 MonoBehaviour:
@@ -444,7 +444,7 @@ MonoBehaviour:
       collapsed: 0
       displayed: 1
       snapOffset: {x: -166, y: -26}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: -8, y: 0}
       snapCorner: 3
       id: Tool Settings
       index: 0
@@ -966,7 +966,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 6adbffff26dcffffaadefffff4deffff1ef0ffffdaf0ffff92f3ffff0cfbffff
+      m_ExpandedIDs: 04fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1035,7 +1035,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/AAAGame/ScriptsBuiltin/ForEditor/Editor/EditorTools
+    - Assets/AAAGame/ScriptableAssets
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1043,16 +1043,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 55
   m_LastFolders:
-  - Assets/AAAGame/ScriptsBuiltin/ForEditor/Editor/EditorTools
+  - Assets/AAAGame/ScriptableAssets
   m_LastFoldersGridSize: 55
-  m_LastProjectPath: D:\Workspace\GF_HybridCLR
+  m_LastProjectPath: D:\GF_HybridCLR
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 311}
-    m_SelectedIDs: b4680000
-    m_LastClickedID: 26804
-    m_ExpandedIDs: 000000007e67000080670000826700008467000062680000aa680000ae68000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: 6c680000
+    m_LastClickedID: 26732
+    m_ExpandedIDs: 000000003a6800003c6800003e68000040680000426800004468000046680000486800004a6800004c68000080680000e268000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1080,7 +1080,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000007e670000806700008267000084670000
+    m_ExpandedIDs: 000000003a6800003c6800003e68000040680000426800004468000046680000486800004a6800004c680000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
