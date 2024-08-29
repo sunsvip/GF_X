@@ -39,7 +39,7 @@ Entity：使用 GF.Entity.ShowEntity()显示实体， GF.Entity.HideEntity()隐�
 
 Procedure：它拥有类似MonoBehaviour的生命周期，如OnEnter(进入流程)、OnUpdate(每帧刷新)、OnLeave(离开流程)，在流程内调用ChangeState()即可切换到其它流程
 
-GF_HybridCLR通过Procedure(流程)来走游戏逻辑，游戏入口流程为LaunchProcedure
+GF_X通过Procedure(流程)来走游戏逻辑，游戏入口流程为LaunchProcedure
 通过流程可以清晰地管理游戏逻辑，例如：本框架的基本流程为：
 
 1. LaunchProcedure(启动流程,主要处理初始化游戏设置,如语言，音效，震动等) => 完成后切换至CheckAndUpdateProcedure
