@@ -1,12 +1,12 @@
-# GF_HybridCLR
+# GF_X
 #### 介绍
-[GameFramework](https://github.com/EllanJiang/GameFramework) + [HybridCLR](https://github.com/focus-creative-games/hybridclr)，此框架主打一个原汁原味，不修改GameFramework源码。仅仅通过静态扩展方式，极度简化或扩展框架接口，并编写了大量自动化工具，主打一个工业化生产工作流，追求极致的开发效率。
+[GameFramework](https://github.com/EllanJiang/GameFramework) + [HybridCLR](https://github.com/focus-creative-games/hybridclr)，此框架主打一个原汁原味，不修改GameFramework源码。仅仅通过静态扩展方式，极度简化或扩展框架接口，并编写了大量自动化工具，主打一个工业化生产工作流，追求极致性能和开发效率。
 作为极其懒惰、从不加班的设计开发工程师，我的宗旨是拒绝一切高重复度工作，能自动的绝不手动。如果您拥有相同的观点，请和我一起维护完善此项目！
 
-框架功能详细说明文档：[https://blog.csdn.net/final5788](https://blog.csdn.net/final5788/article/details/138164034)
+框架详细功能说明文档：[【Unity自动化游戏框架】通用自动化游戏框架 爽到起飞的工作流 巨幅提升效率 质量 产能 功能展示](https://blog.csdn.net/final5788/article/details/138164034)
 #### 软件架构
 软件架构说明
-### GF_HybridCLR功能说明：
+### GF_X功能说明：
 1. 简化和扩展GameFramework接口，并支持GF所有异步加载的方法通过UniTask"同步"加载。
 2. 增加各种编辑器工具，简化工作流。如:生成数据表/配置表, 自动解决AB包重复依赖, 代码裁剪link.xml配置工具,语言国际化生成工具，一键切换单机/全热更/增量热更，一键打包/打热更工具。
 3. 支持A/B Test; 使用GF.Setting.SetABTestGroup("GroupName")对用户分配测试组，不同测试组会读取对应组的配置表/数据表。
