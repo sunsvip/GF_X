@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace UGF.EditorTools
 {
-    public class RightClickMenuExtension
+    public partial class RightClickMenuExtension
     {
         [MenuItem("Assets/GF Editor Tool/Log Asset Dependencies", priority = 1003)]
         static void LogAssetDependencies()
