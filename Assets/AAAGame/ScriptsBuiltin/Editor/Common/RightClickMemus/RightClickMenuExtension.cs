@@ -9,7 +9,7 @@ namespace UGF.EditorTools
 {
     public partial class RightClickMenuExtension
     {
-        [MenuItem("Assets/GF Editor Tool/Log Asset Dependencies", priority = 1003)]
+        [MenuItem("Assets/GF Tools/Log Asset Dependencies", priority = 1003)]
         static void LogAssetDependencies()
         {
             if (Selection.activeObject == null) return;
@@ -26,12 +26,12 @@ namespace UGF.EditorTools
             Debug.Log($"--------------------------------------------------");
         }
 
-        [MenuItem("Assets/GF Editor Tool/Copy Asset Path/Relative Path", priority = 1000)]
+        [MenuItem("Assets/GF Tools/Copy Asset Path/Relative Path", priority = 1000)]
         static void CopyAssetRelativePath()
         {
             CopyAssetsPath2Clipboard(Selection.objects, false);
         }
-        [MenuItem("Assets/GF Editor Tool/Copy Asset Path/Full Path", priority = 1001)]
+        [MenuItem("Assets/GF Tools/Copy Asset Path/Full Path", priority = 1001)]
         static void CopyAssetFullPath()
         {
             CopyAssetsPath2Clipboard(Selection.objects, true);

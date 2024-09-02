@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using TMPro;
-using TMPro.EditorUtilities;
 using UnityEditor;
 using UnityEditor.U2D.Sprites;
 using UnityEngine;
@@ -21,46 +20,48 @@ public partial class RightClickMenuExtension
             }
         }
     }
-
-    public static void SpriteAtlas2TmpSprite(SpriteAtlas atlas)
+    [MenuItem("Assets/GF Tools/2D/SpriteAtlas -> SpriteSheet", priority = 101)]
+    static void SpriteAtlas2SpriteSheetMenu()
     {
-        if (atlas == null || atlas.spriteCount == 0) return;
-
-        var getPreviewFunc = typeof(UnityEditor.U2D.SpriteAtlasExtensions).GetMethod("GetPreviewTextures", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-        if (null == getPreviewFunc) return;
-
-        Texture2D[] previews = getPreviewFunc.Invoke(null, new object[] { atlas }) as Texture2D[];
-        if (previews.Length != 1)
+        var objs = Selection.objects;
+        foreach (var item in objs)
         {
-            GFBuiltin.LogError($"SpriteAtlas转换为TMP_Sprite失败: 图集存在{previews.Length}个子图集,请修改MaxTextureSize以确保为单图集");
+            if (item is SpriteAtlas spAtlas)
+            {
+                SpriteAtlas2SpriteSheet(spAtlas);
+            }
+        }
+    }
+    public static void SpriteAtlas2SpriteSheet(SpriteAtlas atlas)
+    {
+        string srcFileName = AssetDatabase.GetAssetPath(atlas);
+        string srcFileDir = Path.GetDirectoryName(srcFileName);
+        string srcFileNameWithoutExtension = Path.GetFileNameWithoutExtension(srcFileName);
+        string textureFileName = UtilityBuiltin.AssetsPath.GetCombinePath(srcFileDir, srcFileNameWithoutExtension + "_sheet.png");
+        if (!SpriteAtlas2Texture(atlas, textureFileName, TextureImporterType.Sprite))
+        {
             return;
         }
+        TextureImporter texImporter = TextureImporter.GetAtPath(textureFileName) as TextureImporter;
+        var factory = new SpriteDataProviderFactories();
+        factory.Init();
+        var dataProvider = factory.GetSpriteEditorDataProviderFromObject(texImporter);
+        dataProvider.InitSpriteEditorDataProvider();
+        dataProvider.SetSpriteRects(GetSpriteRects(atlas));
+        dataProvider.Apply();
+        texImporter.SaveAndReimport();
+    }
+    public static void SpriteAtlas2TmpSprite(SpriteAtlas atlas)
+    {
         string srcFileName = AssetDatabase.GetAssetPath(atlas);
         string srcFileDir = Path.GetDirectoryName(srcFileName);
         string srcFileNameWithoutExtension = Path.GetFileNameWithoutExtension(srcFileName);
         string tmpSpriteAssetName = UtilityBuiltin.AssetsPath.GetCombinePath(srcFileDir, srcFileNameWithoutExtension + ".asset");
-
-        var atlasTex2d = previews[0];
-        RenderTexture rt = new RenderTexture(atlasTex2d.width, atlasTex2d.height, 0);
-        Graphics.Blit(atlasTex2d, rt);
-        RenderTexture.active = rt;
-
-        Texture2D readableAtlasTex = new Texture2D(rt.width, rt.height);
-        readableAtlasTex.alphaIsTransparency = true;
-        readableAtlasTex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
-        readableAtlasTex.Apply();
-        RenderTexture.active = null;
-        rt.Release();
-
         string textureFileName = UtilityBuiltin.AssetsPath.GetCombinePath(srcFileDir, srcFileNameWithoutExtension + ".png");
-        File.WriteAllBytes(textureFileName, readableAtlasTex.EncodeToPNG());
-
-        AssetDatabase.Refresh();
-        TextureImporter texImporter = AssetImporter.GetAtPath(textureFileName) as TextureImporter;
-        texImporter.textureType = TextureImporterType.Default;
-        texImporter.textureShape = TextureImporterShape.Texture2D;
-        texImporter.alphaIsTransparency = true;
-        texImporter.SaveAndReimport();
+        if (!SpriteAtlas2Texture(atlas, textureFileName, TextureImporterType.Default))
+        {
+            return;
+        }
 
         Sprite[] sprites = new Sprite[atlas.spriteCount];
         atlas.GetSprites(sprites);
@@ -186,5 +187,76 @@ public partial class RightClickMenuExtension
             texImporter.SaveAndReimport();
         }
         EditorUtility.ClearProgressBar();
+    }
+
+    private static bool SpriteAtlas2Texture(SpriteAtlas atlas, string outputFile, TextureImporterType texType = TextureImporterType.Default)
+    {
+        if (atlas == null || atlas.spriteCount == 0) return false;
+
+        var getPreviewFunc = typeof(UnityEditor.U2D.SpriteAtlasExtensions).GetMethod("GetPreviewTextures", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        if (null == getPreviewFunc) return false;
+
+        Texture2D[] previews = getPreviewFunc.Invoke(null, new object[] { atlas }) as Texture2D[];
+        if (previews.Length != 1)
+        {
+            GFBuiltin.LogError($"SpriteAtlas转换为TMP_Sprite失败: 图集存在{previews.Length}个子图集,请修改MaxTextureSize以确保为单图集");
+            return false;
+        }
+
+        var atlasTex2d = previews[0];
+        RenderTexture rt = new RenderTexture(atlasTex2d.width, atlasTex2d.height, 0);
+        Graphics.Blit(atlasTex2d, rt);
+        RenderTexture.active = rt;
+
+        Texture2D readableAtlasTex = new Texture2D(rt.width, rt.height);
+        readableAtlasTex.alphaIsTransparency = true;
+        readableAtlasTex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+        readableAtlasTex.Apply();
+        RenderTexture.active = null;
+        rt.Release();
+
+        try
+        {
+            File.WriteAllBytes(outputFile, readableAtlasTex.EncodeToPNG());
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogException(e);
+            return false;
+        }
+
+        AssetDatabase.Refresh();
+        TextureImporter texImporter = AssetImporter.GetAtPath(outputFile) as TextureImporter;
+        texImporter.textureType = texType;
+        if (texType == TextureImporterType.Sprite)
+        {
+            texImporter.spriteImportMode = SpriteImportMode.Multiple;
+            texImporter.isReadable = true;
+        }
+        texImporter.textureShape = TextureImporterShape.Texture2D;
+        texImporter.alphaIsTransparency = true;
+        texImporter.SaveAndReimport();
+        return true;
+    }
+
+    static SpriteRect[] GetSpriteRects(SpriteAtlas atlas)
+    {
+        if (atlas == null || atlas.spriteCount == 0) return null;
+
+        Sprite[] sprites = new Sprite[atlas.spriteCount];
+        atlas.GetSprites(sprites);
+
+        SpriteRect[] spriteRects = new SpriteRect[sprites.Length];
+        var spNameTrim = "(Clone)".ToCharArray();
+        for (int i = 0; i < sprites.Length; i++)
+        {
+            var sp = sprites[i];
+            spriteRects[i] = new SpriteRect()
+            {
+                name = sp.name.Trim(spNameTrim),
+                rect = sp.textureRect
+            };
+        }
+        return spriteRects;
     }
 }
