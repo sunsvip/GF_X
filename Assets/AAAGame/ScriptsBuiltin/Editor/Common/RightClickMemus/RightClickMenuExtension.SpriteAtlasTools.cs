@@ -1,17 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using TMPro.EditorUtilities;
 using UnityEditor;
-using UnityEditor.U2D;
+using UnityEditor.U2D.Sprites;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.U2D;
 
 public partial class RightClickMenuExtension
 {
-    [MenuItem("Assets/GF Editor Tool/2D/SpriteAtlas to TMP_Sprite", priority = 1001)]
+    [MenuItem("Assets/GF Tools/2D/SpriteAtlas -> TMP_SpriteAsset", priority = 100)]
     static void SpriteAtlas2TmpSpriteMenu()
     {
         var objs = Selection.objects;
@@ -77,6 +75,8 @@ public partial class RightClickMenuExtension
             AssetDatabase.CreateAsset(spriteAsset, tmpSpriteAssetName);
         }
         spriteAsset.spriteSheet = AssetDatabase.LoadAssetAtPath<Texture2D>(textureFileName);
+        spriteAsset.spriteCharacterTable.Clear();
+        spriteAsset.spriteGlyphTable.Clear();
         if (spriteAsset.material == null)
         {
             Material material = new Material(Shader.Find("TextMeshPro/Sprite"));
@@ -85,8 +85,7 @@ public partial class RightClickMenuExtension
             AssetDatabase.SaveAssetIfDirty(spriteAsset);
             spriteAsset.material = material;
         }
-        spriteAsset.spriteCharacterTable.Clear();
-        spriteAsset.spriteGlyphTable.Clear();
+        var spNameTrim = "(Clone)".ToCharArray();
         for (int i = 0; i < sprites.Length; i++)
         {
             var sp = sprites[i];
@@ -94,10 +93,98 @@ public partial class RightClickMenuExtension
             var glyph = new TMP_SpriteGlyph((uint)i, new UnityEngine.TextCore.GlyphMetrics(spUVRect.width, spUVRect.height, 0, spUVRect.height, spUVRect.width),
             new UnityEngine.TextCore.GlyphRect(spUVRect), 1, 0);
             spriteAsset.spriteGlyphTable.Add(glyph);
-
-            var spChar = new TMP_SpriteCharacter(0, glyph);
+            var spChar = new TMP_SpriteCharacter(0xFFFE, glyph);
+            spChar.name = sp.name.TrimEnd(spNameTrim);
             spriteAsset.spriteCharacterTable.Add(spChar);
         }
         AssetDatabase.SaveAssetIfDirty(spriteAsset);
+    }
+
+    /// <summary>
+    /// 导出Multiple类型的Sprite为碎图
+    /// </summary>
+    [MenuItem("Assets/GF Tools/2D/SpriteSheet -> sprites", priority = 101)]
+    static void ExportSpriteMultiple()
+    {
+        int selectAssetsCount = Selection.objects.Length;
+        EditorUtility.DisplayProgressBar($"拆分图集(0/{selectAssetsCount})", "Export sprite sheet to sprites...", 0);
+        List<string> slicedSpritesAssets = new List<string>();
+#if UNITY_2022_3_OR_NEWER
+        var texFact = new SpriteDataProviderFactories();
+        texFact.Init();
+#endif
+        for (int i = 0; i < selectAssetsCount; i++)
+        {
+            var selectObj = Selection.objects[i];
+            if (selectObj == null) continue;
+            var objType = selectObj.GetType();
+            if (objType != typeof(Sprite) && objType != typeof(Texture2D))
+            {
+                Debug.LogWarning($"导出碎图sprites失败! 你选择的资源不是Sprite或Texture2D类型");
+                continue;
+            }
+
+            var spFileName = AssetDatabase.GetAssetPath(Selection.objects[i]);
+            var spTex = AssetDatabase.LoadAssetAtPath<Texture2D>(spFileName);
+            if (spTex == null) continue;
+
+            var texImporter = AssetImporter.GetAtPath(spFileName) as TextureImporter;
+            if (texImporter.textureType != TextureImporterType.Sprite || texImporter.spriteImportMode != SpriteImportMode.Multiple)
+            {
+                Debug.LogWarning($"导出碎图sprites失败! 你选择的资源不是Sprite类型或SpriteMode不是Multiple类型:{spFileName}");
+                continue;
+            }
+            var texReadable = texImporter.isReadable;
+            if (!texReadable)
+            {
+                texImporter.isReadable = true;
+                texImporter.SaveAndReimport();
+            }
+            var outputDir = UtilityBuiltin.AssetsPath.GetCombinePath(Path.GetDirectoryName(spFileName), $"{Path.GetFileNameWithoutExtension(spFileName)}_sliced");
+
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+#if UNITY_2022_3_OR_NEWER
+            var texProvider = texFact.GetSpriteEditorDataProviderFromObject(spTex);
+            texProvider.InitSpriteEditorDataProvider();
+            var spRects = texProvider.GetSpriteRects();
+#else
+                var spRects = texImporter.spritesheet;
+#endif
+            int childrenSpCount = spRects.Length;
+            for (int spIndex = 0; spIndex < childrenSpCount; spIndex++)
+            {
+                var spDt = spRects[spIndex];
+                var tex = new Texture2D((int)spDt.rect.width, (int)spDt.rect.height);
+                tex.SetPixels(spTex.GetPixels((int)spDt.rect.x, (int)spDt.rect.y, tex.width, tex.height));
+                tex.Apply();
+                string fileName = UtilityBuiltin.AssetsPath.GetCombinePath(outputDir, $"{spDt.name}.png");
+                if (File.Exists(fileName))
+                {
+                    File.Delete(fileName);
+                }
+                EditorUtility.DisplayProgressBar($"拆分图集({i + 1}/{selectAssetsCount})", $"导出进度({spIndex}/{childrenSpCount}){System.Environment.NewLine}正在导出碎图{spDt}", (i + 1) / (float)selectAssetsCount);
+                File.WriteAllBytes(fileName, tex.EncodeToPNG());
+                slicedSpritesAssets.Add(fileName);
+            }
+            texImporter.isReadable = texReadable;
+            texImporter.SaveAndReimport();
+        }
+        AssetDatabase.Refresh();
+
+        foreach (var item in slicedSpritesAssets)
+        {
+            var texImporter = AssetImporter.GetAtPath(item) as TextureImporter;
+            if (texImporter == null) continue;
+            texImporter.textureType = TextureImporterType.Sprite;
+            texImporter.spriteImportMode = SpriteImportMode.Single;
+            texImporter.alphaIsTransparency = true;
+            texImporter.alphaSource = TextureImporterAlphaSource.FromInput;
+            texImporter.mipmapEnabled = false;
+            texImporter.SaveAndReimport();
+        }
+        EditorUtility.ClearProgressBar();
     }
 }
