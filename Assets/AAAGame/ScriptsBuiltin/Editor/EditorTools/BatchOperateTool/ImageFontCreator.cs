@@ -143,6 +143,7 @@ public class ImageFontCreator : UtilitySubToolBase
             var texDataProvider = texFact.GetSpriteEditorDataProviderFromObject(tex);
             texDataProvider.InitSpriteEditorDataProvider();
             m_SpriteRects = texDataProvider.GetSpriteRects();
+            SortSpriteRectsByName(m_SpriteRects);
         }
         if (m_SpriteRects == null || m_SpriteRects.Length < 1 || m_CacheUnicodes == null) return;
         for (int i = 0; i < m_SpriteRects.Length; i++)
@@ -168,6 +169,11 @@ public class ImageFontCreator : UtilitySubToolBase
                 GUI.Label(indexRect, $"'{(char)m_CacheUnicodes[i]}'", EditorStyles.whiteLargeLabel);
             }
         }
+    }
+
+    private void SortSpriteRectsByName(SpriteRect[] m_SpriteRects)
+    {
+        Array.Sort(m_SpriteRects, (x,y)=>x.name.CompareTo(y.name));
     }
 
     private IList<int> RefreshCharsUnicodes()
@@ -329,11 +335,12 @@ public class ImageFontCreator : UtilitySubToolBase
         }
         charsTexture = OwnerEditor.SelectObjectList[0] as Texture2D;
         var texSize = new Vector2Int(charsTexture.width, charsTexture.height);
-        var texFact = new SpriteDataProviderFactories();
-        texFact.Init();
-        var texDataProvider = texFact.GetSpriteEditorDataProviderFromObject(charsTexture);
-        texDataProvider.InitSpriteEditorDataProvider();
-        var spRects = texDataProvider.GetSpriteRects();
+        //var texFact = new SpriteDataProviderFactories();
+        //texFact.Init();
+        //var texDataProvider = texFact.GetSpriteEditorDataProviderFromObject(charsTexture);
+        //texDataProvider.InitSpriteEditorDataProvider();
+        //var spRects = texDataProvider.GetSpriteRects();
+        var spRects = m_SpriteRects;
         int count = Mathf.Min(unicodes.Count, spRects.Length);
         charInfoArr = new CharacterInfo[count];
         for (int i = 0; i < count; i++)
