@@ -8,7 +8,8 @@
         "UltimateJoystick",
         "Unity.RenderPipelines.Universal.Runtime",
         "Builtin.Runtime",
-        "UniTask"
+        "UniTask",
+        "GameFramework"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

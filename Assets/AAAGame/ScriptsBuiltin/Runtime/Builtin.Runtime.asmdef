@@ -5,7 +5,8 @@
         "Unity.TextMeshPro",
         "UnityGameFramework.Runtime",
         "ZString",
-        "HybridCLR.Runtime"
+        "HybridCLR.Runtime",
+        "GameFramework"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

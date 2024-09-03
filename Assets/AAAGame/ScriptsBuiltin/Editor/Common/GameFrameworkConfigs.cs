@@ -14,14 +14,14 @@ using UnityGameFramework.Editor.ResourceTools;
 public static class GameFrameworkConfigs
 {
     [BuildSettingsConfigPath]
-    public static string BuildSettingsConfig = Utility.Path.GetRegularPath(Path.Combine(Application.dataPath, "GameFramework/Configs/BuildSettings.xml"));
+    public static string BuildSettingsConfig = Utility.Path.GetRegularPath(Path.Combine(Application.dataPath, "Plugins/UnityGameFramework/Configs/BuildSettings.xml"));
 
     [ResourceCollectionConfigPath]
-    public static string ResourceCollectionConfig = Utility.Path.GetRegularPath(Path.Combine(Application.dataPath, "GameFramework/Configs/ResourceCollection.xml"));
+    public static string ResourceCollectionConfig = Utility.Path.GetRegularPath(Path.Combine(Application.dataPath, "Plugins/UnityGameFramework/Configs/ResourceCollection.xml"));
 
     [ResourceEditorConfigPath]
-    public static string ResourceEditorConfig = Utility.Path.GetRegularPath(Path.Combine(Application.dataPath, "GameFramework/Configs/ResourceEditor.xml"));
+    public static string ResourceEditorConfig = Utility.Path.GetRegularPath(Path.Combine(Application.dataPath, "Plugins/UnityGameFramework/Configs/ResourceEditor.xml"));
 
     [ResourceBuilderConfigPath]
-    public static string ResourceBuilderConfig = Utility.Path.GetRegularPath(Path.Combine(Application.dataPath, "GameFramework/Configs/ResourceBuilder.xml"));
+    public static string ResourceBuilderConfig = Utility.Path.GetRegularPath(Path.Combine(Application.dataPath, "Plugins/UnityGameFramework/Configs/ResourceBuilder.xml"));
 }

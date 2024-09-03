@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "3705ca6e1fd51256e23387fecbfb65b5783354a0"
+      "hash": "59bc259cc88898425620535d282192503ba99399"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
@@ -150,9 +150,9 @@
       "depth": 0,
       "source": "registry",
       "dependencies": {
+        "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.director": "1.0.0",
         "com.unity.modules.animation": "1.0.0",
-        "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.particlesystem": "1.0.0"
       },
       "url": "https://packages.unity.com"
