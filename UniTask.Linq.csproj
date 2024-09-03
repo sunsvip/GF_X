@@ -69,8 +69,8 @@
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\ToDictionary.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\Skip.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\SkipUntilCanceled.cs" />
-    <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\GroupBy.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\Average.cs" />
+    <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\GroupBy.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\Distinct.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\Buffer.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\ToObservable.cs" />
@@ -514,11 +514,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="dnlib">
-      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@3705ca6e1f\Plugins\dnlib.dll</HintPath>
+      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@59bc259cc8\Plugins\dnlib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="LZ4">
-      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@3705ca6e1f\Plugins\LZ4.dll</HintPath>
+      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@59bc259cc8\Plugins\LZ4.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
@@ -542,7 +542,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>Assets\GameFramework\Libraries\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>Assets\Plugins\UnityGameFramework\Libraries\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces">

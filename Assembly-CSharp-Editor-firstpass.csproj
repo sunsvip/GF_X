@@ -450,11 +450,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="dnlib">
-      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@3705ca6e1f\Plugins\dnlib.dll</HintPath>
+      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@59bc259cc8\Plugins\dnlib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="LZ4">
-      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@3705ca6e1f\Plugins\LZ4.dll</HintPath>
+      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@59bc259cc8\Plugins\LZ4.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
@@ -478,7 +478,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>Assets\GameFramework\Libraries\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>Assets\Plugins\UnityGameFramework\Libraries\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces">
@@ -1021,16 +1021,16 @@
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.AI.Navigation">
-      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.Burst">
       <HintPath>Library\ScriptAssemblies\Unity.Burst.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Burst.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Burst.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.AI.Navigation">
+      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.PlasticSCM.Editor">
@@ -1159,6 +1159,10 @@
       <Project>{AF484EF5-F8AE-3F97-C9DC-21F02F13B8A8}</Project>
       <Name>Builtin.Runtime</Name>
     </ProjectReference>
+    <ProjectReference Include="UnityGameFramework.Runtime.csproj">
+      <Project>{45115597-F98F-F656-0A5F-908468051CAF}</Project>
+      <Name>UnityGameFramework.Runtime</Name>
+    </ProjectReference>
     <ProjectReference Include="UniTask.Linq.csproj">
       <Project>{4EDCF828-ABB4-7DBD-2A26-4B673C7A8C8B}</Project>
       <Name>UniTask.Linq</Name>
@@ -1167,6 +1171,10 @@
       <Project>{682E6698-E307-7058-1B2F-3E39B3D52244}</Project>
       <Name>ZString</Name>
     </ProjectReference>
+    <ProjectReference Include="GameFramework.csproj">
+      <Project>{F7863CFC-CEFE-FF80-D327-62A809E8F293}</Project>
+      <Name>GameFramework</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityGameFramework.Editor.csproj">
       <Project>{A476E4CA-B406-617A-D564-B91D71761810}</Project>
       <Name>UnityGameFramework.Editor</Name>
@@ -1174,10 +1182,6 @@
     <ProjectReference Include="UniTask.csproj">
       <Project>{B77E8292-3612-124F-EEB4-483432C6E76B}</Project>
       <Name>UniTask</Name>
-    </ProjectReference>
-    <ProjectReference Include="UnityGameFramework.Runtime.csproj">
-      <Project>{45115597-F98F-F656-0A5F-908468051CAF}</Project>
-      <Name>UnityGameFramework.Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="UniTask.TextMeshPro.csproj">
       <Project>{84A2DE49-B9C0-30FC-4A73-B6E545472E5D}</Project>

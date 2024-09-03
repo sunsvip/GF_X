@@ -56,22 +56,31 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-    <Analyzer Include="D:\GF_HybridCLR\Assets\Plugins\UnityGameFramework\Libraries\ICSharpCode.SharpZipLib.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.44f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.44f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\AAAGame\Scripts\DataTable\EntityGroupTable.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Extension\VariablePool\VariablePoolComponent.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Procedures\GameOverProcedure.cs" />
     <Compile Include="Assets\AAAGame\Scripts\EventArgs\GFEventArgs.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Common\CameraFollower.cs" />
     <Compile Include="Assets\AAAGame\Scripts\DataTable\UIGroupTable.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Common\RefParams.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\ConfigExtension.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\StarRatingDialog.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Extension\AwaitExtension\DownloadResult.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\EntityExtension.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Entity\PlayerEntity.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\UI\UIVariables\GameUIForm.Variables.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Extension\AdSdkHelper.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\ToastTips.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Entity\EntityParams.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Procedures\MenuProcedure.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Entity\BillboardMonoBehaviour.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\UtilityExt.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\MenuUIForm.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Extension\DataModel\DataModelBase.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Procedures\PreloadProcedure.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\UIParams.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Common\Const.Groups.cs" />
@@ -82,56 +91,46 @@
     <Compile Include="Assets\AAAGame\Scripts\Extension\AwaitExtension\WebRequestResult.cs" />
     <Compile Include="Assets\AAAGame\Scripts\HotfixEntry.cs" />
     <Compile Include="Assets\AAAGame\Scripts\EventArgs\UserDataChangedEventArgs.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Common\Const.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Extension\ResourceExtension.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Procedures\ChangeSceneProcedure.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\GF.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Entity\BillboardEntity.cs" />
     <Compile Include="Assets\AAAGame\Scripts\EventArgs\PlayerEventArgs.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Extension\SettingExtension.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Entity\LevelEntity.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\LocalizationExtension.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\UIFormBase.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\GameOverUIForm.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\ApplovinMaxSdkHelper.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\DataModel\DataModelStorageBase.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\DataTable\SoundGroupTable.cs" />
     <Compile Include="Assets\AAAGame\Scripts\DataTable\CameraViewTable.cs" />
     <Compile Include="Assets\AAAGame\Scripts\DataTable\LevelTable.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Extension\Variable\VarFloat.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Entity\ParticleEntity.cs" />
     <Compile Include="Assets\AAAGame\Scripts\DataTable\ColorTable.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\DataModel\PlayerDataModel.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\AwaitExtension\AwaitParams.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\DataModel\DataModelComponent.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Extension\UIExtension.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Common\FlowLayoutGroup.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Common\LocalizationTextMesh.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\SettingDialog.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\DataTableExtension.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\CommonDialog.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\GameUIForm.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\UI\UIViews.cs" />
     <Compile Include="Assets\AAAGame\Scripts\ScriptableObject\AppConfigs.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\AwaitExtension\AwaitExtension.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\DataModel\TypeIdPair.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Extension\TransformExtension.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\DataNodeExtension.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\UI\ShopUIForm.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\UIVariables\MenuUIForm.Variables.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Entity\SampleEntity.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Procedures\GameProcedure.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\SoundExtension.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Extension\VariablePool\VariablePoolComponent.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Procedures\GameOverProcedure.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Common\CameraFollower.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Extension\AwaitExtension\DownloadResult.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Entity\PlayerEntity.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\UI\UIVariables\GameUIForm.Variables.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Extension\AdSdkHelper.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Procedures\MenuProcedure.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Entity\BillboardMonoBehaviour.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Extension\DataModel\DataModelBase.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Common\Const.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Extension\ResourceExtension.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Entity\BillboardEntity.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Extension\SettingExtension.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Entity\LevelEntity.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\DataTable\SoundGroupTable.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Extension\Variable\VarFloat.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\DataModel\PlayerDataModel.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Extension\UIExtension.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\UI\UIViews.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Extension\TransformExtension.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\UI\ShopUIForm.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\Entity\SampleEntity.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\StaticUIComponent.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -515,11 +514,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="dnlib">
-      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@3705ca6e1f\Plugins\dnlib.dll</HintPath>
+      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@59bc259cc8\Plugins\dnlib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="LZ4">
-      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@3705ca6e1f\Plugins\LZ4.dll</HintPath>
+      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@59bc259cc8\Plugins\LZ4.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">

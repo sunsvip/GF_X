@@ -56,7 +56,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-    <Analyzer Include="D:\GF_HybridCLR\Assets\Plugins\UnityGameFramework\Libraries\ICSharpCode.SharpZipLib.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.44f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.44f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
@@ -64,20 +63,20 @@
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Extension\DataTableBuiltinExtension.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\GFHelper\ZStringTextHelper.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Extension\BuiltinViewComponent.cs" />
+    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\GFHelper\CustomSoundAgentHelper.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\GFHelper\CustomUIGroupHelper.cs" />
+    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\GFHelper\NewtonsoftJsonHelper.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Extension\SettingBuiltinExtension.cs" />
+    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Common\ConstBuiltin.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\GFHelper\JsonLocalizationHelper.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Procedures\LoadHotfixDllProcedure.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Common\ScreenSizeFitter.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\ScriptableObject\AppSettings.cs" />
-    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Procedures\CheckResourceProcedure.cs" />
-    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Common\SkipUnityLogo.cs" />
-    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\GFHelper\CustomSoundAgentHelper.cs" />
-    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\GFHelper\NewtonsoftJsonHelper.cs" />
-    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Common\ConstBuiltin.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\EventArgs\LoadHotfixDllEventArgs.cs" />
+    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Procedures\CheckResourceProcedure.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Common\WebRequestCertNoValidate.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Extension\LocalizationExtension.cs" />
+    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Common\SkipUnityLogo.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Procedures\LunchProcedure.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Extension\GFBuiltin.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Extension\UtilityBuiltin.cs" />
@@ -463,11 +462,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="dnlib">
-      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@3705ca6e1f\Plugins\dnlib.dll</HintPath>
+      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@59bc259cc8\Plugins\dnlib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="LZ4">
-      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@3705ca6e1f\Plugins\LZ4.dll</HintPath>
+      <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@59bc259cc8\Plugins\LZ4.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
