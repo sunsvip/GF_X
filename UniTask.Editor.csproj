@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{E746A6D9-CED0-DAC6-4E56-53E79E643B5F}</ProjectGuid>
+    <ProjectGuid>{A4816316-1EE9-11F5-C097-58F542F0B991}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>UniTask.Editor</AssemblyName>
@@ -1015,7 +1015,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="UniTask.csproj">
-      <Project>{B77E8292-3612-124F-EEB4-483432C6E76B}</Project>
+      <Project>{49739DB4-5100-E825-207C-31AFCC4DBDF5}</Project>
       <Name>UniTask</Name>
     </ProjectReference>
   </ItemGroup>

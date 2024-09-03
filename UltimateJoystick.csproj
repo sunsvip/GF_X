@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{9DE3AE72-4F86-523B-B84C-66E001D160CD}</ProjectGuid>
+    <ProjectGuid>{1835FB8B-4BF2-F835-BB71-483807F0F8B5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>UltimateJoystick</AssemblyName>

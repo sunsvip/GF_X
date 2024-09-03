@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{682E6698-E307-7058-1B2F-3E39B3D52244}</ProjectGuid>
+    <ProjectGuid>{79165F85-04A5-CF99-0A12-B695E4867270}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>ZString</AssemblyName>

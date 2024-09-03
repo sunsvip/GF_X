@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{EDFD62EC-A6C1-87F3-F815-58C6A253F8C7}</ProjectGuid>
+    <ProjectGuid>{0876C798-CA0D-1DFF-A9EC-B3B3B05D050D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>UniTask.DOTween</AssemblyName>
@@ -997,7 +997,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="UniTask.csproj">
-      <Project>{B77E8292-3612-124F-EEB4-483432C6E76B}</Project>
+      <Project>{49739DB4-5100-E825-207C-31AFCC4DBDF5}</Project>
       <Name>UniTask</Name>
     </ProjectReference>
   </ItemGroup>

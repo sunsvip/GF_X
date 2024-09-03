@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{020B87C9-991D-2850-77D2-3F201C7CD272}</ProjectGuid>
+    <ProjectGuid>{95DB3940-3623-AEA9-F07A-75CD8A3BFF68}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
@@ -1231,59 +1231,59 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{EBE69C28-C522-129F-3904-B992EF31BC70}</Project>
+      <Project>{A66F3B87-B2AD-AB9C-0630-EABE71F4E211}</Project>
       <Name>Assembly-CSharp-firstpass</Name>
     </ProjectReference>
     <ProjectReference Include="Assembly-CSharp-Editor-firstpass.csproj">
-      <Project>{16B4D3DD-15B4-A996-4678-2ECB331F2EE6}</Project>
+      <Project>{5F1A09A7-6A05-B8FA-D24E-34948296DE77}</Project>
       <Name>Assembly-CSharp-Editor-firstpass</Name>
     </ProjectReference>
     <ProjectReference Include="UniTask.Addressables.csproj">
-      <Project>{678FCBA9-2302-95E2-831E-147189998BF5}</Project>
+      <Project>{6DA88AFC-1765-4A87-0A11-3F5E120B556B}</Project>
       <Name>UniTask.Addressables</Name>
     </ProjectReference>
     <ProjectReference Include="Builtin.Runtime.csproj">
-      <Project>{AF484EF5-F8AE-3F97-C9DC-21F02F13B8A8}</Project>
+      <Project>{61971509-D51C-9DED-6A8E-D32E5E7D79A2}</Project>
       <Name>Builtin.Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="UnityGameFramework.Runtime.csproj">
-      <Project>{45115597-F98F-F656-0A5F-908468051CAF}</Project>
+      <Project>{40A9B576-55E8-8DA4-3B0A-AA2D9EA6E9A5}</Project>
       <Name>UnityGameFramework.Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="UniTask.Linq.csproj">
-      <Project>{4EDCF828-ABB4-7DBD-2A26-4B673C7A8C8B}</Project>
+      <Project>{528769B7-9945-CC40-6DCE-99EA8B9B138E}</Project>
       <Name>UniTask.Linq</Name>
     </ProjectReference>
     <ProjectReference Include="ZString.csproj">
-      <Project>{682E6698-E307-7058-1B2F-3E39B3D52244}</Project>
+      <Project>{79165F85-04A5-CF99-0A12-B695E4867270}</Project>
       <Name>ZString</Name>
     </ProjectReference>
     <ProjectReference Include="GameFramework.csproj">
-      <Project>{F7863CFC-CEFE-FF80-D327-62A809E8F293}</Project>
+      <Project>{CE941710-9532-C64F-9929-009FDC35EE5D}</Project>
       <Name>GameFramework</Name>
     </ProjectReference>
     <ProjectReference Include="UnityGameFramework.Editor.csproj">
-      <Project>{A476E4CA-B406-617A-D564-B91D71761810}</Project>
+      <Project>{4E2FD91F-A0F5-958F-E9FF-2DC55ECCE1EE}</Project>
       <Name>UnityGameFramework.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="UniTask.csproj">
-      <Project>{B77E8292-3612-124F-EEB4-483432C6E76B}</Project>
+      <Project>{49739DB4-5100-E825-207C-31AFCC4DBDF5}</Project>
       <Name>UniTask</Name>
     </ProjectReference>
     <ProjectReference Include="UniTask.TextMeshPro.csproj">
-      <Project>{84A2DE49-B9C0-30FC-4A73-B6E545472E5D}</Project>
+      <Project>{1C71282C-BD0E-BD8F-FF10-C5F005BB5EFB}</Project>
       <Name>UniTask.TextMeshPro</Name>
     </ProjectReference>
     <ProjectReference Include="Hotfix.csproj">
-      <Project>{D4289CC1-183B-1B53-907D-2022E45FF528}</Project>
+      <Project>{49AE8BA1-0B5A-B611-8AC5-729F276E6CA6}</Project>
       <Name>Hotfix</Name>
     </ProjectReference>
     <ProjectReference Include="UniTask.DOTween.csproj">
-      <Project>{EDFD62EC-A6C1-87F3-F815-58C6A253F8C7}</Project>
+      <Project>{0876C798-CA0D-1DFF-A9EC-B3B3B05D050D}</Project>
       <Name>UniTask.DOTween</Name>
     </ProjectReference>
     <ProjectReference Include="UltimateJoystick.csproj">
-      <Project>{9DE3AE72-4F86-523B-B84C-66E001D160CD}</Project>
+      <Project>{1835FB8B-4BF2-F835-BB71-483807F0F8B5}</Project>
       <Name>UltimateJoystick</Name>
     </ProjectReference>
   </ItemGroup>

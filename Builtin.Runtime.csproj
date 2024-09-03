@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{AF484EF5-F8AE-3F97-C9DC-21F02F13B8A8}</ProjectGuid>
+    <ProjectGuid>{61971509-D51C-9DED-6A8E-D32E5E7D79A2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Builtin.Runtime</AssemblyName>
@@ -1024,15 +1024,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="UnityGameFramework.Runtime.csproj">
-      <Project>{45115597-F98F-F656-0A5F-908468051CAF}</Project>
+      <Project>{40A9B576-55E8-8DA4-3B0A-AA2D9EA6E9A5}</Project>
       <Name>UnityGameFramework.Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="ZString.csproj">
-      <Project>{682E6698-E307-7058-1B2F-3E39B3D52244}</Project>
+      <Project>{79165F85-04A5-CF99-0A12-B695E4867270}</Project>
       <Name>ZString</Name>
     </ProjectReference>
     <ProjectReference Include="GameFramework.csproj">
-      <Project>{F7863CFC-CEFE-FF80-D327-62A809E8F293}</Project>
+      <Project>{CE941710-9532-C64F-9929-009FDC35EE5D}</Project>
       <Name>GameFramework</Name>
     </ProjectReference>
   </ItemGroup>

@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{F7863CFC-CEFE-FF80-D327-62A809E8F293}</ProjectGuid>
+    <ProjectGuid>{CE941710-9532-C64F-9929-009FDC35EE5D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>GameFramework</AssemblyName>
