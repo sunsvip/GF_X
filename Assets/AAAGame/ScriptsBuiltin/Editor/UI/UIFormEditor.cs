@@ -13,6 +13,7 @@ using System.IO;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEditor.Events;
+using UnityGameFramework.Runtime;
 
 namespace UGF.EditorTools
 {
@@ -29,18 +30,26 @@ namespace UGF.EditorTools
         static bool addToFieldToggle;
         static bool removeToFieldToggle;
         ReorderableList[] mReorderableList;
-        static UIFormBase uiForm;
-        static SerializedObject cachedSerializedObj;
+        UIFormBase uiForm;
         int mCurFieldIdx;
 
         int mCurFoldoutItemIdx = -1;
         static int varPrefixIndex = -1;
         static bool mShowSelectTypeMenu;
+        static bool mHasChanged = false;//标记是否需要生成代码
 
         GUIContent prefixContent;
         GUIContent typeContent;
-        GUIStyle openCodeBtStyle;
-        static bool m_DirtyFlag = false;
+        static GUIStyle varLabelGUIStyle;
+        private GUIContent bindVarBtTitle;
+        private GUIContent generateVarBtTitle;
+        private GUIContent openVarCodeBtTitle;
+        private GUIContent openUiLogicBtTitle;
+
+        private GUIStyle highlightBtStyle;
+        const string helpTitle = "使用说明";
+        const string helpDoc = "1.打开UI界面预制体.\n2.右键节点'[Add/Remove] UI Variable'添加/移除变量.\n3.在Inspector面板点击功能按钮生成变量代码.";
+
         #region #右键菜单
 
         const string REFRESH_BIND = "UI_REFRESH_BIND";
@@ -48,13 +57,14 @@ namespace UGF.EditorTools
         [InitializeOnLoadMethod]
         static void InitEditor()
         {
-            PrefabStage.prefabStageClosing -= OnPrefabClosing;
-            PrefabStage.prefabStageClosing += OnPrefabClosing;
+            PrefabStage.prefabStageClosing -= OnUIFormPrefabClosing;
+            PrefabStage.prefabStageClosing += OnUIFormPrefabClosing;
             Selection.selectionChanged = () =>
             {
                 addToFieldToggle = false;
                 removeToFieldToggle = false;
             };
+
             EditorApplication.hierarchyWindowItemOnGUI = delegate (int id, Rect rect)
             {
                 OpenSelectComponentMenuListener(rect);
@@ -86,15 +96,39 @@ namespace UGF.EditorTools
                 }
                 if (drawItem != null)
                 {
+                    if (varLabelGUIStyle == null)
+                    {
+                        varLabelGUIStyle = new GUIStyle(EditorStyles.helpBox);
+                        varLabelGUIStyle.stretchWidth = false;
+                        varLabelGUIStyle.stretchHeight = false;
+                        varLabelGUIStyle.normal.textColor = Color.white * 0.88f;
+                        varLabelGUIStyle.fontStyle = FontStyle.Bold;
+                        varLabelGUIStyle.hover.textColor = Color.cyan;
+                    }
+
                     var displayContent = EditorGUIUtility.TrTextContent(Utility.Text.Format("{0} {1} {2}", GetVarPrefix(drawItem.VarPrefix), GetDisplayVarTypeName(drawItem.VarType), drawItem.VarName));
-                    var itemLabelRect = GUILayoutUtility.GetRect(displayContent, EditorStyles.selectionRect);
+                    var itemLabelRect = GUILayoutUtility.GetRect(displayContent, varLabelGUIStyle);
                     itemLabelRect.y = rect.y;
+                    itemLabelRect.width = Mathf.Min(rect.width * 0.4f, itemLabelRect.width);
                     itemLabelRect.x = rect.xMax - itemLabelRect.width;
-                    itemLabelRect.height = EditorGUIUtility.singleLineHeight;
-                    GUI.Label(itemLabelRect, displayContent, EditorStyles.selectionRect);
+                    if (itemLabelRect.width > 100)
+                    {
+                        GUI.Label(itemLabelRect, displayContent, varLabelGUIStyle);
+                    }
                 }
 
             };
+        }
+
+        private static void OnUIFormPrefabClosing(PrefabStage stage)
+        {
+            if (mHasChanged)
+            {
+                if (EditorUtility.DisplayDialog("提示", "存在修改, 请重新生成UI代码。", "是", "否"))
+                {
+                    PrefabStageUtility.OpenPrefab(stage.assetPath);
+                }
+            }
         }
 
         private static string GetVarPrefix(int idx)
@@ -111,26 +145,26 @@ namespace UGF.EditorTools
             }
             return varFullTypeName;
         }
-        [MenuItem("GameObject/UIForm Fields Tool/Add private", false, priority = 1002)]
+        [MenuItem("GameObject/UIForm Tools/Add private", false, priority = 1002)]
         private static void AddPrivateVariable2UIForm()
         {
             varPrefixIndex = 0;
             mShowSelectTypeMenu = true;
         }
-        [MenuItem("GameObject/UIForm Fields Tool/Add protected", false, priority = 1003)]
+        [MenuItem("GameObject/UIForm Tools/Add protected", false, priority = 1003)]
         private static void AddProtectedVariable2UIForm()
         {
             varPrefixIndex = 1;
             mShowSelectTypeMenu = true;
         }
-        [MenuItem("GameObject/UIForm Fields Tool/Add public", false, priority = 1004)]
+        [MenuItem("GameObject/UIForm Tools/Add multiple", false, priority = 1004)]
         private static void AddPublicVariable2UIForm()
         {
             varPrefixIndex = 2;
             mShowSelectTypeMenu = true;
         }
 
-        [MenuItem("GameObject/UIForm Fields Tool/Remove", false, priority = 1005)]
+        [MenuItem("GameObject/UIForm Tools/Remove", false, priority = 1005)]
         private static void RemoveUIFormVariable()
         {
             if (removeToFieldToggle)
@@ -177,18 +211,43 @@ namespace UGF.EditorTools
             EditorUtility.SetDirty(uiForm);
             removeToFieldToggle = true;
             addToFieldToggle = false;
-            m_DirtyFlag = true;
+            mHasChanged = true;
         }
-        [MenuItem("GameObject/UIForm Fields Tool/Add Button OnClick(string)", false, priority = 1101)]
-        static void AddClickButtonStringEvent()
+        [MenuItem("GameObject/UIForm Tools/Add Button OnClick(string)", false, priority = 1101)]
+        static void AddClickButtonEventString()
         {
+            //添加参数为string的按钮事件
             AddClickButtonEvent<string>();
         }
-        [MenuItem("GameObject/UIForm Fields Tool/Add Button OnClick(Button)", false, priority = 1102)]
-        static void AddClickButtonObjectEvent()
+        [MenuItem("GameObject/UIForm Tools/Add Button OnClick(Button)", false, priority = 1102)]
+        static void AddClickButtonEventButton()
         {
+            //添加参数为按钮本身的按钮事件
             AddClickButtonEvent<UnityEngine.UI.Button>();
         }
+        [MenuItem("GameObject/UIForm Tools/Add Localization Key", false, priority = 1103)]
+        static void AddLocalizationKey()
+        {
+            if (Selection.count == 0) return;
+            var uiForm = GetPrefabRootComponent<UIFormBase>();
+            if (uiForm == null)
+            {
+                Debug.LogWarning("UIForm Script is not exist.");
+                return;
+            }
+            bool dirty = false;
+            foreach (var item in Selection.gameObjects)
+            {
+                if (item == null) continue;
+                if (item.GetComponent<TMPro.TextMeshProUGUI>() != null || item.GetComponent<UnityEngine.UI.Text>() != null || item.GetComponent<TMPro.TextMeshPro>() != null)
+                {
+                    item.GetOrAddComponent<UIStringKey>().Key = Utility.Text.Format("{0}.{1}", uiForm.name, item.name);
+                    dirty = true;
+                }
+            }
+            if (dirty) EditorUtility.SetDirty(uiForm);
+        }
+
         private static void AddClickButtonEvent<T>()
         {
             if (Selection.count <= 0) return;
@@ -199,36 +258,32 @@ namespace UGF.EditorTools
                 Debug.LogWarning("UIForm Script is not exist.");
                 return;
             }
+            var paramsType = typeof(T);
             bool hasChanged = false;
-            var typeOfT = typeof(T);
             foreach (var item in Selection.gameObjects)
             {
                 if (item == null || !item.TryGetComponent<Button>(out var buttonCom)) continue;
 
                 var m_OnClick = buttonCom.GetType().GetField("m_OnClick", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(buttonCom) as UnityEvent;
+                var btnEvent = UnityEngine.Events.UnityAction.CreateDelegate(typeof(UnityAction<T>), uiForm, KEY_BUTTON_ONCLICK) as UnityAction<T>;
                 for (int i = m_OnClick.GetPersistentEventCount() - 1; i >= 0; i--)
                 {
                     UnityEventTools.RemovePersistentListener(m_OnClick, i);
                 }
-                if (typeOfT == typeof(string))
+                if (paramsType == typeof(string))
                 {
-                    var btnEvent = UnityEngine.Events.UnityAction.CreateDelegate(typeof(UnityAction<string>), uiForm, KEY_BUTTON_ONCLICK) as UnityAction<string>;
-                    UnityEventTools.AddStringPersistentListener(m_OnClick, btnEvent, buttonCom.name);
+                    UnityEventTools.AddStringPersistentListener(m_OnClick, btnEvent as UnityAction<string>, buttonCom.name);
                 }
-                else if (typeOfT == typeof(UnityEngine.UI.Button))
+                else if (paramsType == typeof(UnityEngine.UI.Button))
                 {
-                    var btnEvent = UnityEngine.Events.UnityAction.CreateDelegate(typeof(UnityAction<UnityEngine.UI.Button>), uiForm, KEY_BUTTON_ONCLICK) as UnityAction<UnityEngine.UI.Button>;
-                    UnityEventTools.AddObjectPersistentListener(m_OnClick, btnEvent, buttonCom);
+                    UnityEventTools.AddObjectPersistentListener<UnityEngine.UI.Button>(m_OnClick, btnEvent as UnityAction<UnityEngine.UI.Button>, buttonCom);
                 }
-                else
-                {
-                    Debug.LogWarningFormat("UIFormEditor Add Button Event, type:{0} invalid", typeOfT);
-                }
+                //如需支持其它事件参数类型,可参考如上代码追加
                 hasChanged = true;
             }
             if (hasChanged) EditorUtility.SetDirty(uiForm);
         }
-        [MenuItem("GameObject/UIForm Fields Tool/Add Close Button Event", false, priority = 1102)]
+        [MenuItem("GameObject/UIForm Tools/Add Close Button Event", false, priority = 1102)]
         private static void AddCloseButtonEvent()
         {
             if (Selection.count <= 0) return;
@@ -242,8 +297,7 @@ namespace UGF.EditorTools
             bool hasChanged = false;
             foreach (var item in Selection.gameObjects)
             {
-                var buttonCom = item?.GetComponent<Button>();
-                if (buttonCom == null) continue;
+                if (item == null || !item.TryGetComponent<Button>(out var buttonCom)) continue;
 
                 var m_OnClick = buttonCom.GetType().GetField("m_OnClick", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(buttonCom) as UnityEvent;
                 var btnEvent = UnityEngine.Events.UnityAction.CreateDelegate(typeof(UnityAction), uiForm, KEY_BUTTON_ONCLOSE) as UnityAction;
@@ -293,17 +347,31 @@ namespace UGF.EditorTools
             var fieldsProperties = uiForm.GetFieldsProperties();
             if (fieldsProperties == null) fieldsProperties = new SerializeFieldData[0];
             Undo.RecordObject(uiForm, uiForm.name);
-            SerializeFieldData field = new SerializeFieldData(GenerateFieldName(fieldsProperties, targets), targets);
-            field.VarType = varType;
-            //field.VarSampleType = GetSampleType(field.VarType).Name;
-            field.VarPrefix = varPrefix;
 
-            ArrayUtility.Add(ref fieldsProperties, field);
+            if (varPrefix != 2)
+            {
+                var field = new SerializeFieldData(GenerateFieldName(fieldsProperties, targets), targets);
+                field.VarPrefix = varPrefix;
+                field.VarType = varType;
+                ArrayUtility.Add(ref fieldsProperties, field);
+            }
+            else
+            {
+                foreach (var item in targets)
+                {
+                    GameObject[] elements = new GameObject[] { item };
+                    var field = new SerializeFieldData(GenerateFieldName(fieldsProperties, elements), elements);
+                    field.VarPrefix = 1; //默认protect
+                    field.VarType = varType;
+                    ArrayUtility.Add(ref fieldsProperties, field);
+                }
+            }
+
             uiForm.ModifyFieldsProperties(fieldsProperties);
             EditorUtility.SetDirty(uiForm);
             addToFieldToggle = true;
             removeToFieldToggle = false;
-            m_DirtyFlag = true;
+            mHasChanged = true;
         }
         private static GameObject[] GetTargetsFromSelectedNodes(GameObject[] selectedList)
         {
@@ -319,11 +387,18 @@ namespace UGF.EditorTools
 
         private void OnEnable()
         {
+            highlightBtStyle = new GUIStyle(EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene).button);
+            highlightBtStyle.normal.background = EditorGUIUtility.FindTexture("sv_label_3");
+            highlightBtStyle.hover.background = EditorGUIUtility.FindTexture("sv_label_2");
+            highlightBtStyle.active.background = EditorGUIUtility.FindTexture("sv_label_1");
+            highlightBtStyle.fontStyle = FontStyle.Bold;
+            highlightBtStyle.fontSize += 2;
+            bindVarBtTitle = new GUIContent("绑定变量", "bind components to variables");
+            generateVarBtTitle = new GUIContent("生成变量代码", "generate or update variables code");
+            openVarCodeBtTitle = new GUIContent("查看变量代码", "open variables code in editor");
+            openUiLogicBtTitle = new GUIContent("编辑UI代码", "open ui logic code in editor");
             prefixContent = new GUIContent();
             typeContent = new GUIContent();
-            openCodeBtStyle = new GUIStyle(EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene).button);
-            openCodeBtStyle.normal.textColor = openCodeBtStyle.hover.textColor = openCodeBtStyle.active.textColor = Color.green;
-            openCodeBtStyle.fontStyle = FontStyle.Bold;
             varPrefixIndex = 0;
             mShowSelectTypeMenu = false;
             uiForm = (target as UIFormBase);
@@ -331,12 +406,10 @@ namespace UGF.EditorTools
             {
                 uiForm.ModifyFieldsProperties(new SerializeFieldData[0]);
             }
-            cachedSerializedObj = serializedObject;
             mFields = serializedObject.FindProperty("_fields");
             mReorderableList = new ReorderableList[mFields.arraySize];
             EditorApplication.update += OnEditorUpdate;
         }
-
         private void OnDisable()
         {
             EditorApplication.update -= OnEditorUpdate;
@@ -344,7 +417,7 @@ namespace UGF.EditorTools
         private void OnEditorUpdate()
         {
             if (EditorApplication.isUpdating || EditorApplication.isCompiling) return;
-            if (EditorToolSettings.Instance.UIFieldToolUseSerializeMode && EditorPrefs.GetBool(REFRESH_BIND, false))
+            if (EditorPrefs.GetBool(REFRESH_BIND, false))
             {
                 SerializeFieldProperties(serializedObject, uiForm.GetFieldsProperties());
             }
@@ -354,18 +427,6 @@ namespace UGF.EditorTools
         {
             EditorToolSettings.Save();
         }
-
-        private static void OnPrefabClosing(PrefabStage stage)
-        {
-            if (!m_DirtyFlag || uiForm == null || cachedSerializedObj == null) return;
-
-            if (EditorUtility.DisplayDialog("提示", "存在改动,需要生成变量代码", "好的", "取消"))
-            {
-                PrefabStageUtility.OpenPrefab(stage.assetPath);
-                GenerateUIFormVariables(uiForm, cachedSerializedObj);
-            }
-        }
-
         private static void OpenSelectComponentMenuListener(Rect rect)
         {
             if (mShowSelectTypeMenu)
@@ -401,23 +462,23 @@ namespace UGF.EditorTools
             EditorGUILayout.BeginHorizontal();
             EditorGUI.BeginDisabledGroup(disableAct);
             var btnHeight = GUILayout.Height(30);
-            if (GUILayout.Button("生成代码", btnHeight)) //生成脚本
+            if (GUILayout.Button(generateVarBtTitle, highlightBtStyle, btnHeight)) //生成脚本
             {
                 GenerateUIFormVariables(uiForm, serializedObject);
             }
 
-            if (EditorToolSettings.Instance.UIFieldToolUseSerializeMode && GUILayout.Button("绑定变量", btnHeight)) //绑定变量
+            if (GUILayout.Button(bindVarBtTitle, btnHeight)) //绑定变量
             {
                 SerializeFieldProperties(serializedObject, uiForm.GetFieldsProperties());
             }
 
-            if (GUILayout.Button("变量代码", btnHeight))
+            if (GUILayout.Button(openVarCodeBtTitle, btnHeight))
             {
                 var uiFormClassName = uiForm.GetType().Name;
                 string scriptFile = UtilityBuiltin.AssetsPath.GetCombinePath(ConstEditor.UISerializeFieldDir, Utility.Text.Format("{0}.Variables.cs", uiFormClassName));
                 InternalEditorUtility.OpenFileAtLineExternal(scriptFile, 0);
             }
-            if (GUILayout.Button("编辑代码", openCodeBtStyle, btnHeight))
+            if (GUILayout.Button(openUiLogicBtTitle, highlightBtStyle, btnHeight))
             {
                 var monoScript = MonoScript.FromMonoBehaviour(uiForm);
                 string scriptFile = AssetDatabase.GetAssetPath(monoScript);
@@ -425,26 +486,16 @@ namespace UGF.EditorTools
             }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal("box");
-
-            EditorGUI.BeginChangeCheck();
+            if (EditorGUILayout.LinkButton(helpTitle))
             {
-                EditorToolSettings.Instance.UIFieldToolUseSerializeMode = EditorGUILayout.ToggleLeft("启用序列化模式", EditorToolSettings.Instance.UIFieldToolUseSerializeMode, GUILayout.MaxWidth(115));
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                    EditorToolSettings.Save();
-                }
-            }
-            GUILayout.FlexibleSpace();
-            if (EditorGUILayout.LinkButton("使用说明"))
-            {
-                EditorUtility.DisplayDialog("使用说明", "1.打开UI界面预制体.\n2.右键节点'[Add/Remove] UI Variable'添加/移除变量.\n3.在Inspector面板点击功能按钮生成变量代码.", "OK");
+                EditorUtility.DisplayDialog(helpTitle, helpDoc, "OK");
                 GUIUtility.ExitGUI();
             }
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("Clear All"))
             {
                 mFields.ClearArray();
+                mHasChanged = true;
             }
             EditorGUILayout.EndHorizontal();
 
@@ -538,10 +589,10 @@ namespace UGF.EditorTools
         /// </summary>
         /// <param name="uiForm"></param>
         /// <param name="uiFormSerializer"></param>
-        private static void GenerateUIFormVariables(UIFormBase uiForm, SerializedObject uiFormSerializer)
+        private void GenerateUIFormVariables(UIFormBase uiForm, SerializedObject uiFormSerializer)
         {
             if (uiForm == null) return;
-            m_DirtyFlag = false;
+
             var monoScript = MonoScript.FromMonoBehaviour(uiForm);
             var uiFormClassName = monoScript.GetClass().Name;
             string scriptFile = UtilityBuiltin.AssetsPath.GetCombinePath(ConstEditor.UISerializeFieldDir, Utility.Text.Format("{0}.Variables.cs", uiFormClassName));
@@ -552,7 +603,7 @@ namespace UGF.EditorTools
                 {
                     File.Delete(scriptFile);
                 }
-                var metaFile = scriptFile + ".meta";
+                var metaFile = Utility.Text.Format("{0}.meta", scriptFile);
                 if (File.Exists(metaFile))
                 {
                     File.Delete(metaFile);
@@ -588,7 +639,7 @@ namespace UGF.EditorTools
                 bool isArray = field.Targets.Length > 1;
 
                 var varPrefix = GetVarPrefix(field.VarPrefix);
-                string serializeFieldPrefix = EditorToolSettings.Instance.UIFieldToolUseSerializeMode ? "[SerializeField] " : "";
+                string serializeFieldPrefix = "[SerializeField] ";
                 string fieldLine;
                 if (isArray)
                 {
@@ -603,7 +654,7 @@ namespace UGF.EditorTools
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("//---------------------------------");
             stringBuilder.AppendLine("//此文件由工具自动生成,请勿手动修改");
-            stringBuilder.AppendLine($"//更新自:{CloudProjectSettings.userName}");
+            stringBuilder.AppendLine($"//更新自:{UnityEngine.SystemInfo.deviceName}");
             //stringBuilder.AppendLine($"//更新时间:{DateTime.Now}");
             stringBuilder.AppendLine("//---------------------------------");
             foreach (var item in nameSpaceList)
@@ -619,56 +670,19 @@ namespace UGF.EditorTools
             }
             stringBuilder.AppendLine(Utility.Text.Format("public partial class {0}", uiFormClassName));
             stringBuilder.AppendLine("{");
-            if (EditorToolSettings.Instance.UIFieldToolUseSerializeMode)
-            {
-                stringBuilder.AppendLine("\t[Space(10)]");
-                stringBuilder.AppendLine("\t[Header(\"UI Variables:\")]");
-            }
+            stringBuilder.AppendLine("\t[Space(10)]");
+            stringBuilder.AppendLine("\t[Header(\"UI Variables:\")]");
             foreach (var item in fieldList)
             {
                 stringBuilder.AppendLine("\t" + item);
             }
-            //不使用Serialize模式时直接生成获取组件的代码
-            if (!EditorToolSettings.Instance.UIFieldToolUseSerializeMode)
-            {
-                GeneratePropertiesUseGetComponent(stringBuilder, fields);
-            }
+
             stringBuilder.AppendLine("}");
             if (hasNameSpace) stringBuilder.AppendLine("}");
 
             File.WriteAllText(scriptFile, stringBuilder.ToString());
-            if (EditorToolSettings.Instance.UIFieldToolUseSerializeMode)
-            {
-                EditorPrefs.SetBool(REFRESH_BIND, true);
-            }
+            EditorPrefs.SetBool(REFRESH_BIND, true);
             AssetDatabase.Refresh();
-        }
-        private static void GeneratePropertiesUseGetComponent(StringBuilder stringBuilder, SerializeFieldData[] fields)
-        {
-            stringBuilder.AppendLine("\tprotected override void InitUIProperties()");
-            stringBuilder.AppendLine("\t{");
-            stringBuilder.AppendLine("\t\tvar fields = this.GetFieldsProperties();");
-            for (int i = 0; i < fields.Length; i++)
-            {
-                var field = fields[i];
-                bool isArray = field.Targets.Length > 1;
-                bool isGameObject = field.VarType.CompareTo(typeof(GameObject).FullName) == 0;
-                if (isArray)
-                {
-                    if (isGameObject)
-                        stringBuilder.AppendLine(Utility.Text.Format("\t\t{0} = fields[{1}].Targets;", field.VarName, i));
-                    else
-                        stringBuilder.AppendLine(Utility.Text.Format("\t\t{0} = fields[{1}].GetComponents<{2}>();", field.VarName, i, field.VarType));
-                }
-                else
-                {
-                    if (isGameObject)
-                        stringBuilder.AppendLine(Utility.Text.Format("\t\t{0} = fields[{1}].Targets[0];", field.VarName, i));
-                    else
-                        stringBuilder.AppendLine(Utility.Text.Format("\t\t{0} = fields[{1}].GetComponent<{2}>(0);", field.VarName, i, field.VarType));
-                }
-            }
-            stringBuilder.AppendLine("\t}");
         }
         private void SerializeFieldProperties(SerializedObject serializedObject, SerializeFieldData[] fields)
         {
@@ -688,8 +702,13 @@ namespace UGF.EditorTools
                 if (property == null) continue;
                 if (item.Targets.Length <= 1)
                 {
-                    var firstTarget = item.Targets[0];
-                    property.objectReferenceValue = isGameObject ? firstTarget : firstTarget.GetComponent(GetSampleType(varType));
+                    var itemGo = item.Targets[0];
+                    if (itemGo == null)
+                    {
+                        GFBuiltin.LogWarning(Utility.Text.Format("######检测到变量:{0}, GameObject引用丢失!########", varName));
+                        continue;
+                    }
+                    property.objectReferenceValue = isGameObject ? itemGo : itemGo.GetComponent(GetSampleType(varType));
                 }
                 else if (property.isArray)
                 {
@@ -700,8 +719,13 @@ namespace UGF.EditorTools
                         {
                             property.InsertArrayElementAtIndex(i);
                         }
-                        var firstTarget = item.Targets[0];
-                        property.GetArrayElementAtIndex(i).objectReferenceValue = isGameObject ? firstTarget : firstTarget.GetComponent(GetSampleType(varType));
+                        var itemGo = item.Targets[i];
+                        if (itemGo == null)
+                        {
+                            GFBuiltin.LogWarning(Utility.Text.Format("######检测到变量:{0},索引为{1}的GameObject引用丢失!########", varName, i));
+                            continue;
+                        }
+                        property.GetArrayElementAtIndex(i).objectReferenceValue = isGameObject ? itemGo : itemGo.GetComponent(GetSampleType(varType));
                     }
                 }
             }
@@ -749,14 +773,14 @@ namespace UGF.EditorTools
                     lastVarName.stringValue += idx.ToString();
                 }
             }
-            m_DirtyFlag = true;
+            mHasChanged = true;
         }
         private void RemoveField(int idx)
         {
             Undo.RecordObject(uiForm, uiForm.name);
             mFields.DeleteArrayElementAtIndex(idx);
             ArrayUtility.RemoveAt(ref mReorderableList, idx);
-            m_DirtyFlag = true;
+            mHasChanged = true;
         }
         private void DrawVariableTargets(Rect rect, int index, bool isActive, bool isFocused)
         {

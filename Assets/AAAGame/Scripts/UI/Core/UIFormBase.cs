@@ -65,7 +65,6 @@ public class UIFormBase : UIFormLogic
     protected override void OnInit(object userData)
     {
         base.OnInit(userData);
-        InitUIProperties();
         Array.Clear(_fields, 0, _fields.Length);
         UICanvas = gameObject.GetOrAddComponent<Canvas>();
         canvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
@@ -100,7 +99,6 @@ public class UIFormBase : UIFormLogic
         this._fields = modified;
     }
 
-    protected virtual void InitUIProperties() { }
     protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
     {
         base.OnUpdate(elapseSeconds, realElapseSeconds);
@@ -119,7 +117,7 @@ public class UIFormBase : UIFormLogic
         }
         base.OnClose(isShutdown, userData);
     }
-    protected void InitLocalization()
+    public virtual void InitLocalization()
     {
         UIStringKey[] texts = GetComponentsInChildren<UIStringKey>(true);
         foreach (var t in texts)
