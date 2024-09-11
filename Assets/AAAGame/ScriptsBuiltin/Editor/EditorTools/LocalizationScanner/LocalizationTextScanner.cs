@@ -44,7 +44,7 @@ namespace UGF.EditorTools
 
         const string BAIDU_TRANS_URL = "https://fanyi-api.baidu.com/api/trans/vip/translate?";//百度在线翻译url
         const string TRANS_SPLIT_TAG = "↕";//通过此符号分割多个翻译
-        const string EXCEL_I18N_TAG = "i18n";//把Excel表备注行标识为i18n的列扫描到多语言Excel
+        public const string EXCEL_I18N_TAG = "i18n";//把Excel表备注行标识为i18n的列扫描到多语言Excel
         public static void Save2LanguagesExcel(List<LocalizationText> mainLangList, Action<string, int, int> onSaveProgress = null)
         {
             if (mainLangList == null || EditorToolSettings.Instance.LanguagesSupport == null || EditorToolSettings.Instance.LanguagesSupport.Count < 1) return;

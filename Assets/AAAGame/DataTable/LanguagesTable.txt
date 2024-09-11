@@ -1,0 +1,9 @@
+﻿#	LanguagesTable				
+#	ID		LanguageKey	LanguageDisplay	LanguageIcon
+#	int		string	string	string
+#		备注	多语言文件名	用于显示的语言名	语言图标
+	1		ChineseSimplified	中文(简体)	UI/Flags/Icon_Flag_chn.png
+	2		ChineseTraditional	中文(繁體)	UI/Flags/Icon_Flag_chn.png
+	3		English	English	UI/Flags/Icon_Flag_eng.png
+	4		Japanese	にほんご	UI/Flags/Icon_Flag_jpn.png
+#	5		Korean	한국어	UI/Flags/Icon_Flag_kor.png

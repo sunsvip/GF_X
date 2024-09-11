@@ -115,13 +115,18 @@ namespace UGF.EditorTools
                     {
                         var listValidation = sheet.DataValidations.AddListValidation("D3:Z3");
                         listValidation.AllowBlank = false;
-                        listValidation.ShowErrorMessage = true;
-                        listValidation.ShowInputMessage = true;
+                        listValidation.Formula.Values.Clear();
+                        //listValidation.ShowErrorMessage = true;
+                        //listValidation.ShowInputMessage = true;
                         foreach (var typeName in m_DataTableVarTypes)
                         {
                             listValidation.Formula.Values.Add(typeName);
                         }
                     }
+                    var i18nValidation = sheet.DataValidations.AddListValidation("D1:Z1");
+                    i18nValidation.AllowBlank = true;
+                    i18nValidation.Formula.Values.Clear();
+                    i18nValidation.Formula.Values.Add(LocalizationTextScanner.EXCEL_I18N_TAG);
                     excel.Save();
                 }
                 return true;

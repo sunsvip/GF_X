@@ -28,7 +28,7 @@ public class GameProcedure : ProcedureBase
         procedureOwner.RemoveData("LevelEntity");
         Level.StartGame();
 
-        var uiParms = UIParams.Acquire();
+        var uiParms = UIParams.Create();
         uiParms.ButtonClickCallback = (sender, btId) =>
         {
             switch (btId)

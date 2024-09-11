@@ -39,7 +39,7 @@ public class EntityParams : RefParams
     /// <param name="eulerAngles"></param>
     /// <param name="localScale"></param>
     /// <returns></returns>
-    public static EntityParams Acquire(Vector3? position = null, Vector3? eulerAngles = null, Vector3? localScale = null)
+    public static EntityParams Create(Vector3? position = null, Vector3? eulerAngles = null, Vector3? localScale = null)
     {
         var eParams = ReferencePool.Acquire<EntityParams>();
         eParams.CreateRoot();

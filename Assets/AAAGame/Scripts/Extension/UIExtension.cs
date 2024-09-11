@@ -5,9 +5,44 @@ using UnityGameFramework.Runtime;
 using UnityEngine.U2D;
 using DG.Tweening;
 using System;
+using UnityEngine.UI;
 
 public static class UIExtension
 {
+    /// <summary>
+    /// 异步加载并设置Sprite
+    /// </summary>
+    /// <param name="image"></param>
+    /// <param name="spriteName"></param>
+    public static void SetSprite(this Image image, string spriteName, bool resize = false)
+    {
+        spriteName = UtilityBuiltin.AssetsPath.GetSpritesPath(spriteName);
+        GF.UI.LoadSprite(spriteName, sp =>
+        {
+            if (sp != null)
+            {
+                image.sprite = sp;
+                if (resize) image.SetNativeSize();
+            }
+        });
+    }
+    /// <summary>
+    /// 异步加载并设置Texture
+    /// </summary>
+    /// <param name="rawImage"></param>
+    /// <param name="spriteName"></param>
+    public static void SetTexture(this RawImage rawImage, string spriteName, bool resize = false)
+    {
+        spriteName = UtilityBuiltin.AssetsPath.GetTexturePath(spriteName);
+        GF.UI.LoadTexture(spriteName, tex =>
+        {
+            if (tex != null)
+            {
+                rawImage.texture = tex;
+                if (resize) rawImage.SetNativeSize();
+            }
+        });
+    }
     /// <summary>
     /// 判断是否点击在UI上
     /// </summary>
@@ -16,7 +51,7 @@ public static class UIExtension
     /// <returns></returns>
     public static bool IsPointerOverUIObject(this UIComponent uiCom, Vector3 mousePosition)
     {
-        return UtilityExt.IsPointerOverUIObject(mousePosition);
+        return UtilityEx.IsPointerOverUIObject(mousePosition);
     }
     /// <summary>
     /// 加载Sprite图集
@@ -96,33 +131,21 @@ public static class UIExtension
     /// 显示Toast提示
     /// </summary>
     /// <param name="ui"></param>
-    /// <param name="content"></param>
+    /// <param name="text"></param>
     /// <param name="duration"></param>
-    public static void ShowToast(this UIComponent ui, string content, float duration = 2)
+    public static void ShowToast(this UIComponent ui, string text, ToastStyle style = ToastStyle.Blue, float duration = 2)
     {
-        if (string.IsNullOrEmpty(content))
+        if (string.IsNullOrEmpty(text))
         {
             return;
         }
-        var uiParams = UIParams.Acquire();
-        uiParams.Set<VarString>("content", content);
-        uiParams.Set<VarFloat>("duration", duration);
-
+        var uiParams = UIParams.Create();
+        uiParams.Set<VarString>(ToastTips.P_Text, text);
+        uiParams.Set<VarFloat>(ToastTips.P_Duration, duration);
+        uiParams.Set<VarUInt32>(ToastTips.P_Style, (uint)style);
         ui.OpenUIForm(UIViews.ToastTips, uiParams);
     }
-    /// <summary>
-    /// 显示提示对话框
-    /// </summary>
-    /// <param name="ui"></param>
-    /// <param name="title"></param>
-    /// <param name="content"></param>
-    public static void ShowTips(this UIComponent ui, string title, string content)
-    {
-        var uiParams = UIParams.Acquire();
-        uiParams.Set<VarString>("title", title);
-        uiParams.Set<VarString>("content", content);
-        ui.OpenUIForm(UIViews.TipsDialog, uiParams);
-    }
+
     /// <summary>
     /// 打开UI界面
     /// </summary>
@@ -147,7 +170,7 @@ public static class UIExtension
             if (parms != null) GF.VariablePool.ClearVariables(parms.Id);
             return -1;
         }
-        parms ??= UIParams.Acquire();
+        parms ??= UIParams.Create();
         parms.AllowEscapeClose ??= uiRow.EscapeClose;
         parms.SortOrder ??= uiRow.SortOrder;
         if (parms.AnimationOpen == UIFormAnimationType.Default)
@@ -167,7 +190,7 @@ public static class UIExtension
     /// </summary>
     /// <param name="uiCom"></param>
     /// <param name="ui"></param>
-    public static void CloseUIFormWithAnim(this UIComponent uiCom, UIForm ui)
+    public static void CloseUIFormWithAnim(this UIComponent uiCom, GameFramework.UI.IUIForm ui)
     {
         CloseUIFormWithAnim(uiCom, ui.SerialId);
     }
@@ -279,8 +302,25 @@ public static class UIExtension
 
         foreach (var item in uIForms)
         {
-            uiCom.CloseUIForm(item.SerialId);
+            uiCom.CloseUIFormWithAnim(item.SerialId);
         }
+    }
+    /// <summary>
+    /// 刷新所有UI的多语言文本(当语言切换时需调用),用于即时改变多语言文本
+    /// </summary>
+    /// <param name="uiCom"></param>
+    public static void UpdateLocalizationTexts(this UIComponent uiCom)
+    {
+        //foreach (var item in Resources.FindObjectsOfTypeAll<TMPro.TMP_FontAsset>())
+        //{
+        //    item.ClearFontAssetData();
+        //}
+        foreach (UIForm uiForm in uiCom.GetAllLoadedUIForms())
+        {
+            (uiForm.Logic as UIFormBase).InitLocalization();
+        }
+        var uiObjectPool = GF.ObjectPool.GetObjectPool(pool => pool.FullName == "GameFramework.UI.UIManager+UIFormInstanceObject.UI Instance Pool");
+        uiObjectPool?.ReleaseAllUnused();
     }
     /// <summary>
     /// 获取当前顶层的UI界面id
@@ -311,7 +351,7 @@ public static class UIExtension
         var richText = "<sprite name=USD_0>";
         for (int i = 0; i < num; i++)
         {
-            var animPrams = EntityParams.Acquire(centerPos, Vector3.zero, Vector3.one);
+            var animPrams = EntityParams.Create(centerPos, Vector3.zero, Vector3.one);
             animPrams.OnShowCallback = moneyEntity =>
             {
                 moneyEntity.GetComponent<TMPro.TextMeshPro>().text = richText;
@@ -341,5 +381,13 @@ public static class UIExtension
             };
             GF.Entity.ShowEntity<SampleEntity>("Effect/EffectMoney", Const.EntityGroup.Effect, animPrams);
         }
+    }
+    public enum ToastStyle : uint
+    {
+        Blue = 0,
+        Yellow = 1,
+        Green = 2,
+        Red = 3,
+        White = 4
     }
 }

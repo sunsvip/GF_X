@@ -10,7 +10,7 @@ public class UIParams : RefParams
     public GameFrameworkAction<UIFormLogic> OpenCallback { get; set; } = null;
     public GameFrameworkAction<UIFormLogic> CloseCallback { get; set; } = null;
     public GameFrameworkAction<object, string> ButtonClickCallback { get; set; } = null;
-    public static UIParams Acquire(bool? allowEscape = null, int? sortOrder = null, UIFormAnimationType animOpen = UIFormAnimationType.Default, UIFormAnimationType animClose = UIFormAnimationType.Default)
+    public static UIParams Create(bool? allowEscape = null, int? sortOrder = null, UIFormAnimationType animOpen = UIFormAnimationType.Default, UIFormAnimationType animClose = UIFormAnimationType.Default)
     {
         var uiParms = ReferencePool.Acquire<UIParams>();
         uiParms.CreateRoot();

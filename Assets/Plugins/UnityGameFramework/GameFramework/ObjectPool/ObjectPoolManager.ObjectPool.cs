@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GameFramework.ObjectPool
 {
@@ -316,7 +317,17 @@ namespace GameFramework.ObjectPool
                     throw new GameFrameworkException(Utility.Text.Format("Can not find target in object pool '{0}', target type is '{1}', target value is '{2}'.", new TypeNamePair(typeof(T), Name), target.GetType().FullName, target));
                 }
             }
-
+            /// <summary>
+            /// 回收全部对象
+            /// </summary>
+            public void UnspawnAll()
+            {
+                var targets = m_ObjectMap.Keys.ToArray();
+                for (int i = targets.Length - 1; i >= 0; i--)
+                {
+                    Unspawn(targets[i]);
+                }
+            }
             /// <summary>
             /// 设置对象是否被加锁。
             /// </summary>

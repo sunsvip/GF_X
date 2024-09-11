@@ -18,7 +18,7 @@ public static class SettingExtension
     /// <returns></returns>
     public static string GetABTestGroup(this SettingComponent com)
     {
-        return com.GetString(ConstBuiltin.Setting.ABTestGroup);
+        return com.GetString(ConstBuiltin.Setting.ABTestGroup, string.Empty);
     }
     /// <summary>
     /// 设置语言
@@ -28,7 +28,7 @@ public static class SettingExtension
     public static void SetLanguage(this SettingComponent com, GameFramework.Localization.Language lan, bool saveSetting = true)
     {
         GFBuiltin.Localization.Language = lan;
-        GFBuiltin.Setting.SetString(ConstBuiltin.Setting.Language, lan.ToString());
+        com.SetString(ConstBuiltin.Setting.Language, lan.ToString());
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public static class SettingExtension
     /// <returns></returns>
     public static GameFramework.Localization.Language GetLanguage(this SettingComponent com)
     {
-        string lan = GFBuiltin.Setting.GetString(ConstBuiltin.Setting.Language, string.Empty);
+        string lan = com.GetString(ConstBuiltin.Setting.Language, string.Empty);
         if (string.IsNullOrEmpty(lan))
         {
             return GameFramework.Localization.Language.Unspecified;
@@ -51,32 +51,34 @@ public static class SettingExtension
     }
 
     /// <summary>
-    /// 开启或关闭音乐/音效/震动
+    /// 获取音乐/音效/震动是否被静音
     /// </summary>
     /// <param name="com"></param>
     /// <param name="group"></param>
     /// <param name="isMute"></param>
-    public static void SetMediaMute(this SettingComponent com, Const.SoundGroup group, bool isMute)
+    public static void SetMediaMute(this SettingComponent com, Const.SoundGroup group, bool isOn)
     {
         string groupName = group.ToString();
-        
+        string key = Utility.Text.Format("Sound.{0}.Mute", groupName);
         var mediaGp = GF.Sound.GetSoundGroup(groupName);
         if (null == mediaGp)
         {
             return;
         }
-        mediaGp.Mute = isMute;
-        GF.Setting.SetBool(groupName, isMute);
+        mediaGp.Mute = isOn;
+        com.SetBool(key, isOn);
     }
     /// <summary>
-    /// 获取音乐/音效/震动开启状态
+    /// 获取音乐/音效/震动是否静音
     /// </summary>
     /// <param name="com"></param>
     /// <param name="group"></param>
+    /// <param name="defaultValue">默认值</param>
     /// <returns></returns>
-    public static bool GetMediaMute(this SettingComponent com, Const.SoundGroup group)
+    public static bool GetMediaMute(this SettingComponent com, Const.SoundGroup group, bool defaultValue = true)
     {
-        return GF.Setting.GetBool(group.ToString(), false);
+        string key = Utility.Text.Format("Sound.{0}.Mute", group);
+        return com.GetBool(key, defaultValue);
     }
     /// <summary>
     /// 设置音乐/音效音量
@@ -87,23 +89,27 @@ public static class SettingExtension
     public static void SetMediaVolume(this SettingComponent com, Const.SoundGroup group, float volume)
     {
         string groupName = group.ToString();
+        string key = Utility.Text.Format("Sound.{0}.Volume", groupName);
         var soundGp = GF.Sound.GetSoundGroup(groupName);
         if (null == soundGp)
         {
             return;
         }
         soundGp.Volume = volume;
-        GF.Setting.SetFloat(Utility.Text.Format("{0}.Volume",groupName), soundGp.Volume);
+        com.SetFloat(key, soundGp.Volume);
     }
     /// <summary>
     /// 获取音乐/音效音量
     /// </summary>
     /// <param name="com"></param>
     /// <param name="group"></param>
+    /// <param name="defaultVolume">默认音量0-1</param>
     /// <returns></returns>
-    public static float GetMediaVolume(this SettingComponent com, Const.SoundGroup group)
+    public static float GetMediaVolume(this SettingComponent com, Const.SoundGroup group, float defaultVolume = 1f)
     {
-        return GF.Setting.GetFloat(Utility.Text.Format("{0}.Volume", group.ToString()), 1);
+        string key = Utility.Text.Format("Sound.{0}.Volume", group.ToString());
+
+        return com.GetFloat(key, defaultVolume);
     }
 
 }

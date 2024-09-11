@@ -73,7 +73,7 @@ public class MenuProcedure : ProcedureBase
         GF.Entity.HideAllLoadedEntities();
 
         //异步打开主菜单UI
-        var uiParms = UIParams.Acquire();//用于给UI传递各种参数
+        var uiParms = UIParams.Create();//用于给UI传递各种参数
         uiParms.OpenCallback = uiLogic =>
         {
             menuUIForm = uiLogic as MenuUIForm;
@@ -85,7 +85,7 @@ public class MenuProcedure : ProcedureBase
         var playerMd = GF.DataModel.GetOrCreate<PlayerDataModel>();
         var lvRow = lvTb.GetDataRow(playerMd.GAME_LEVEL);
 
-        var lvParams = EntityParams.Acquire(Vector3.zero, Vector3.zero, Vector3.one);
+        var lvParams = EntityParams.Create(Vector3.zero, Vector3.zero, Vector3.one);
         lvParams.Set(LevelEntity.P_LevelData, lvRow);
         lvParams.Set(LevelEntity.P_LevelReadyCallback, (GameFrameworkAction)OnLevelAllReady);
         levelEntityId = GF.Entity.ShowEntity<LevelEntity>(lvRow.LvPfbName, Const.EntityGroup.Level, lvParams);

@@ -24,6 +24,7 @@ public class GFBuiltin : MonoBehaviour
     public static SettingComponent Setting { get; private set; }
     public static SoundComponent Sound { get; private set; }
     public static UIComponent UI { get; private set; }
+    public static ObjectPoolComponent ObjectPool { get; private set; }
     public static WebRequestComponent WebRequest { get; private set; }
     public static BuiltinViewComponent BuiltinView { get; private set; }
     public static Camera UICamera { get; private set; }
@@ -67,6 +68,7 @@ public class GFBuiltin : MonoBehaviour
         GFBuiltin.Setting = GameEntry.GetComponent<SettingComponent>();
         GFBuiltin.Sound = GameEntry.GetComponent<SoundComponent>();
         GFBuiltin.UI = GameEntry.GetComponent<UIComponent>();
+        GFBuiltin.ObjectPool = GameEntry.GetComponent<ObjectPoolComponent>();
         GFBuiltin.WebRequest = GameEntry.GetComponent<WebRequestComponent>();
         GFBuiltin.BuiltinView = GameEntry.GetComponent<BuiltinViewComponent>();
 

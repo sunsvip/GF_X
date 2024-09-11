@@ -40,7 +40,7 @@ public class LevelEntity : EntityBase
 
     private void SpawnAllEntity()
     {
-        var playerParams = EntityParams.Acquire(playerSpawnPoint.position, playerSpawnPoint.eulerAngles, playerSpawnPoint.localScale);
+        var playerParams = EntityParams.Create(playerSpawnPoint.position, playerSpawnPoint.eulerAngles, playerSpawnPoint.localScale);
 
         mPlayerId = GF.Entity.ShowEntity<PlayerEntity>("MyPlayer", Const.EntityGroup.Player, playerParams);
         loadEntityTaskList.Add(mPlayerId);
@@ -78,7 +78,7 @@ public class LevelEntity : EntityBase
         for (int i = 0; i < spawnCount; i++)
         {
             var randomPos = UnityEngine.Random.insideUnitCircle * 5;
-            var enemyParams = EntityParams.Acquire();
+            var enemyParams = EntityParams.Create();
             enemyParams.position = player.transform.position + new Vector3(randomPos.x, 0, randomPos.y);
             enemyParams.eulerAngles = Vector3.up * UnityEngine.Random.value * 360f;
             var enemyId = GF.Entity.ShowEntity<SampleEntity>("MyPlayer", Const.EntityGroup.Player, enemyParams);

@@ -45,7 +45,7 @@ public class PlayerEntity : SampleEntity
         if (Time.time - lastFireTime > fireInterval)
         {
             lastFireTime = Time.time;
-            var fireParms = EntityParams.Acquire(firePoint.position, firePoint.eulerAngles);
+            var fireParms = EntityParams.Create(firePoint.position, firePoint.eulerAngles);
             fireParms.Set<VarFloat>(BulletEntity.LIFE_TIME, 3f);
             GF.Entity.ShowEntity<BulletEntity>("Bullet", Const.EntityGroup.Effect, fireParms);
         }

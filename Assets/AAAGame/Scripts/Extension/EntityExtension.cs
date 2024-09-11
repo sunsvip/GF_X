@@ -19,13 +19,13 @@ public static class EntityExtension
     /// <returns></returns>
     public static int ShowParticle(this EntityComponent eCom, string fxName, Vector3 spawnPos, float lifeTime = 3)
     {
-        var fxParms = EntityParams.Acquire(spawnPos);
+        var fxParms = EntityParams.Create(spawnPos);
         fxParms.Set<VarFloat>("LifeTime", lifeTime);
         return eCom.ShowEntity<ParticleEntity>(Utility.Text.Format("Effect/{0}", fxName), Const.EntityGroup.Effect, fxParms);
     }
     public static void ShowPopEmoji(this EntityComponent eCom, string emojiName, Vector3 startPos, Vector3 endPos, float duration = 2)
     {
-        var effectParms = EntityParams.Acquire(startPos, Vector3.zero, Vector3.one);
+        var effectParms = EntityParams.Create(startPos, Vector3.zero, Vector3.one);
         VarObject onShowCb = ReferencePool.Acquire<VarObject>();
         onShowCb.Value = new GameFrameworkAction<EntityLogic>(entity =>
         {
@@ -50,7 +50,7 @@ public static class EntityExtension
         var vPos = Camera.main.WorldToViewportPoint(startWorldPos);
         var sPos = GF.UICamera.ViewportToWorldPoint(vPos);
         var ePos = sPos + Vector3.up * popDistance;
-        var effectParms = EntityParams.Acquire(sPos, Vector3.zero, Vector3.one);
+        var effectParms = EntityParams.Create(sPos, Vector3.zero, Vector3.one);
         VarObject onShowCb = ReferencePool.Acquire<VarObject>();
         onShowCb.Value = new GameFrameworkAction<EntityLogic>((EntityLogic entity) =>
         {
@@ -78,7 +78,7 @@ public static class EntityExtension
     }
     public static void ShowPopText(this EntityComponent eCom, Vector3 startPos, Vector3 endPos, string content, float duration = 1f, float fontSize = 10f)
     {
-        var effectParms = EntityParams.Acquire(startPos, Vector3.zero, Vector3.one);
+        var effectParms = EntityParams.Create(startPos, Vector3.zero, Vector3.one);
         var onShowCb = ReferencePool.Acquire<VarObject>();
         onShowCb.Value = new GameFrameworkAction<EntityLogic>(eLogic =>
         {

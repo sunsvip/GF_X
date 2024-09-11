@@ -143,7 +143,10 @@ namespace GameFramework.ObjectPool
         /// </summary>
         /// <param name="target">要回收的对象。</param>
         void Unspawn(object target);
-
+        /// <summary>
+        /// 回收所有对象
+        /// </summary>
+        void UnspawnAll();
         /// <summary>
         /// 设置对象是否被加锁。
         /// </summary>

@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
-using GameFramework;
 using UnityGameFramework.Runtime;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 public class StaticUIComponent : GameFrameworkComponent
 {
@@ -19,26 +18,24 @@ public class StaticUIComponent : GameFrameworkComponent
             if (value)
             {
                 mJoystick.EnableJoystick();
-                StartCoroutine(RefreshJoystickPosition());
+                mJoystick.UpdatePositioning();
             }
             else
             {
                 mJoystick.DisableJoystick();
             }
-            mJoystick.disableVisuals = !value;
         }
     }
     public UltimateJoystick Joystick { get { return mJoystick; } }
 
-    private void OnEnable()
+    private async void Start()
     {
-        waitingView.SetActive(false);
-    }
-    private void Start()
-    {
-        mJoystick.disableVisuals = true;
         UpdateCanvasScaler();
+        waitingView.SetActive(false);
+        await UniTask.DelayFrame(1);
+        JoystickEnable = false;
     }
+
     public void UpdateCanvasScaler()
     {
         var uiRootCanvas = GFBuiltin.RootCanvas;
@@ -55,6 +52,6 @@ public class StaticUIComponent : GameFrameworkComponent
         canvasScaler.screenMatchMode = uiRootScaler.screenMatchMode;
         canvasScaler.matchWidthOrHeight = uiRootScaler.matchWidthOrHeight;
         canvasScaler.referencePixelsPerUnit = uiRootScaler.referencePixelsPerUnit;
+        canvasScaler.referenceResolution = uiRootScaler.referenceResolution;
     }
-    IEnumerator RefreshJoystickPosition() { yield return new WaitForEndOfFrame(); mJoystick.UpdatePositioning(); }
 }

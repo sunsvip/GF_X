@@ -1,10 +1,11 @@
 ﻿
 using UnityEngine;
-using GameFramework;
 using GameFramework.Event;
 using GameFramework.Procedure;
 using UnityGameFramework.Runtime;
 using GameFramework.Fsm;
+using System.Collections.Generic;
+using GameFramework;
 
 public class PreloadProcedure : ProcedureBase
 {
@@ -13,6 +14,7 @@ public class PreloadProcedure : ProcedureBase
     private float smoothProgress;
     private bool preloadAllCompleted;
     private float progressSmoothSpeed = 10f;
+    private int m_DataTablesCount;
     protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
     {
         base.OnEnter(procedureOwner);
@@ -24,6 +26,7 @@ public class PreloadProcedure : ProcedureBase
         GF.Event.Subscribe(LoadDictionaryFailureEventArgs.EventId, OnLoadDicFailure);
         GF.BuiltinView.ShowLoadingProgress();
         GF.LogInfo("进入HybridCLR热更流程! 预加载游戏数据...");
+
         InitAppSettings();
         PreloadAndInitData();
     }
@@ -46,7 +49,7 @@ public class PreloadProcedure : ProcedureBase
         base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
         if (totalProgress <= 0 || preloadAllCompleted) return;
 
-        smoothProgress = Mathf.Lerp(smoothProgress, loadedProgress / totalProgress, elapseSeconds * progressSmoothSpeed);
+        smoothProgress = Mathf.Lerp(smoothProgress, loadedProgress / (float)totalProgress, elapseSeconds * progressSmoothSpeed);
 
         GF.BuiltinView.SetLoadingProgress(smoothProgress);
         //预加载完成 切换场景
@@ -65,32 +68,12 @@ public class PreloadProcedure : ProcedureBase
         {
             GF.Setting.SetABTestGroup("B");//设置A/B测试组; 应由服务器分配该新用户所属测试组
         }
-        //初始化语言
-        GameFramework.Localization.Language language;
-#if UNITY_EDITOR
-        language = GF.Base.EditorLanguage;
-#else
-        language = GF.Setting.GetLanguage();
-#endif
-
-        if (language == GameFramework.Localization.Language.Unspecified)
-        {
-            language = GFBuiltin.Localization.SystemLanguage;//默认语言跟随用户操作系统语言
-        }
-        var languageJson = UtilityBuiltin.AssetsPath.GetLanguagePath(language.ToString());
-        if (GF.Resource.HasAsset(languageJson) == GameFramework.Resource.HasAssetResult.NotExist)
-        {
-            language = GameFramework.Localization.Language.English;//不支持的语言默认用英文
-        }
-        GF.Setting.SetLanguage(language, false);
-        GF.LogInfo($"初始化游戏设置. 语言:{language}");
     }
     /// <summary>
     /// 预加载完成之后需要处理的事情
     /// </summary>
     private void InitGameFrameworkSettings()
     {
-        GF.StaticUI.JoystickEnable = false;
         //初始化EntityGroup
         var entityGroupTb = GF.DataTable.GetDataTable<EntityGroupTable>();
         foreach (var tb in entityGroupTb.GetAllDataRows())
@@ -106,10 +89,15 @@ public class PreloadProcedure : ProcedureBase
             }
             GF.Entity.AddEntityGroup(tb.Name, tb.ReleaseInterval, tb.Capacity, tb.ExpireTime, tb.Priority);
         }
+        Dictionary<string, SoundGroupTable> defaultSoundGroupData = new Dictionary<string, SoundGroupTable>();
         //初始化SoundGroup
         var soundGroupTb = GF.DataTable.GetDataTable<SoundGroupTable>();
         foreach (var tb in soundGroupTb.GetAllDataRows())
         {
+            if (!defaultSoundGroupData.ContainsKey(tb.Name))
+            {
+                defaultSoundGroupData.Add(tb.Name, tb);
+            }
             if (GF.Sound.HasSoundGroup(tb.Name))
             {
                 var group = GF.Sound.GetSoundGroup(tb.Name);
@@ -135,13 +123,13 @@ public class PreloadProcedure : ProcedureBase
 
 
         //初始化音效
-        GF.Setting.SetMediaMute(Const.SoundGroup.Music, GF.Setting.GetMediaMute(Const.SoundGroup.Music));
-        GF.Setting.SetMediaMute(Const.SoundGroup.Sound, GF.Setting.GetMediaMute(Const.SoundGroup.Sound));
-        GF.Setting.SetMediaMute(Const.SoundGroup.Vibrate, GF.Setting.GetMediaMute(Const.SoundGroup.Vibrate));
-        GF.Setting.SetMediaMute(Const.SoundGroup.Joystick, GF.Setting.GetMediaMute(Const.SoundGroup.Joystick));
+        GF.Setting.SetMediaMute(Const.SoundGroup.Music, GF.Setting.GetMediaMute(Const.SoundGroup.Music, defaultSoundGroupData[Const.SoundGroup.Music.ToString()].Mute));
+        GF.Setting.SetMediaMute(Const.SoundGroup.Sound, GF.Setting.GetMediaMute(Const.SoundGroup.Sound, defaultSoundGroupData[Const.SoundGroup.Sound.ToString()].Mute));
+        GF.Setting.SetMediaMute(Const.SoundGroup.Vibrate, GF.Setting.GetMediaMute(Const.SoundGroup.Vibrate, defaultSoundGroupData[Const.SoundGroup.Vibrate.ToString()].Mute));
+        GF.Setting.SetMediaMute(Const.SoundGroup.Joystick, GF.Setting.GetMediaMute(Const.SoundGroup.Joystick, defaultSoundGroupData[Const.SoundGroup.Joystick.ToString()].Mute));
 
-        GF.Setting.SetMediaVolume(Const.SoundGroup.Music, GF.Setting.GetMediaVolume(Const.SoundGroup.Music));
-        GF.Setting.SetMediaVolume(Const.SoundGroup.Sound, GF.Setting.GetMediaVolume(Const.SoundGroup.Sound));
+        GF.Setting.SetMediaVolume(Const.SoundGroup.Music, GF.Setting.GetMediaVolume(Const.SoundGroup.Music, defaultSoundGroupData[Const.SoundGroup.Music.ToString()].Volume));
+        GF.Setting.SetMediaVolume(Const.SoundGroup.Sound, GF.Setting.GetMediaVolume(Const.SoundGroup.Sound, defaultSoundGroupData[Const.SoundGroup.Sound.ToString()].Volume));
     }
     /// <summary>
     /// 预加载数据表、游戏配置,以及初始化游戏数据
@@ -152,15 +140,15 @@ public class PreloadProcedure : ProcedureBase
         smoothProgress = 0;
         totalProgress = 0;
         loadedProgress = 0;
-
+        m_DataTablesCount = -1;
         var appConfig = await AppConfigs.GetInstanceSync();
         totalProgress = appConfig.DataTables.Length + appConfig.Configs.Length + 2;//2是加载多语言和创建框架扩展
         CreateGFExtension();
     }
-    private async void LoadOthers()
+    private async void LoadConfigsAndDataTables()
     {
-        LoadLanguage();
         var appConfig = await AppConfigs.GetInstanceSync();
+        m_DataTablesCount = appConfig.DataTables.Length;
         foreach (var item in appConfig.Configs)
         {
             LoadConfig(item);
@@ -172,7 +160,7 @@ public class PreloadProcedure : ProcedureBase
     }
     private void CreateGFExtension()
     {
-        GF.Resource.LoadAsset(UtilityBuiltin.AssetsPath.GetPrefab("GFExtension"), typeof(GameObject), new GameFramework.Resource.LoadAssetCallbacks(OnLoadGFExtensionSuccess));
+        GF.Resource.LoadAsset(UtilityBuiltin.AssetsPath.GetPrefab("Core/GFExtension"), typeof(GameObject), new GameFramework.Resource.LoadAssetCallbacks(OnLoadGFExtensionSuccess));
     }
     /// <summary>
     /// 加载配置
@@ -191,9 +179,31 @@ public class PreloadProcedure : ProcedureBase
         GF.DataTable.LoadDataTable(name, this);
     }
 
-    private void LoadLanguage()
+    private void InitAndLoadLanguage()
     {
-        GF.Localization.LoadLanguage(GF.Localization.Language.ToString(), this);
+        //初始化语言
+        GameFramework.Localization.Language language;
+#if UNITY_EDITOR
+        language = GF.Base.EditorLanguage;
+#else
+        language = GF.Setting.GetLanguage();
+#endif
+
+        if (language == GameFramework.Localization.Language.Unspecified)
+        {
+            language = GFBuiltin.Localization.SystemLanguage;//默认语言跟随用户操作系统语言
+        }
+        var languageName = language.ToString();
+        var langTb = GF.DataTable.GetDataTable<LanguagesTable>();
+
+        if (!langTb.HasDataRow(row => row.LanguageKey == languageName))
+        {
+            language = GameFramework.Localization.Language.English;//不支持的语言默认用英文
+        }
+        GF.Setting.SetLanguage(language, false);
+        GF.LogInfo(Utility.Text.Format("初始化游戏设置. 游戏语言:{0},系统语言:{1}", language, GFBuiltin.Localization.SystemLanguage));
+
+        GF.Localization.LoadLanguage(languageName, this);
     }
 
     private void OnLoadGFExtensionSuccess(string assetName, object asset, float duration, object userData)
@@ -203,7 +213,7 @@ public class PreloadProcedure : ProcedureBase
         {
             GF.LogInfo("GF框架扩展成功!");
             loadedProgress++;
-            LoadOthers();
+            LoadConfigsAndDataTables();
         }
     }
     private void OnLoadDicSuccess(object sender, GameEventArgs e)
@@ -230,7 +240,12 @@ public class PreloadProcedure : ProcedureBase
         var args = e as LoadDataTableSuccessEventArgs;
         if (args.UserData != this) return;
         loadedProgress++;
+        m_DataTablesCount--;
         Log.Info("Load DataTable Success:{0}", args.DataTableAssetName);
+        if (m_DataTablesCount == 0)
+        {
+            InitAndLoadLanguage();
+        }
     }
 
     private void OnLoadDicFailure(object sender, GameEventArgs e)

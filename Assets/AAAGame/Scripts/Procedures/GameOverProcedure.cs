@@ -37,7 +37,7 @@ public class GameOverProcedure : ProcedureBase
     {
         DOTween.Sequence().AppendInterval(delay).onComplete = () =>
         {
-            var gameoverParms = UIParams.Acquire();
+            var gameoverParms = UIParams.Create();
             gameoverParms.Set<VarBoolean>(GameOverUIForm.P_IsWin, isWin);
             GF.UI.OpenUIForm(UIViews.GameOverUIForm, gameoverParms);
         };
