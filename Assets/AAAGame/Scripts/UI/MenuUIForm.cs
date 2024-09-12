@@ -36,9 +36,6 @@ public partial class MenuUIForm : UIFormBase
         base.OnButtonClick(sender, btId);
         switch (btId)
         {
-            case "SHOP":
-                GF.UI.OpenUIForm(UIViews.ShopUIForm);
-                break;
             case "SETTING":
                 GF.UI.OpenUIForm(UIViews.SettingDialog);
                 break;

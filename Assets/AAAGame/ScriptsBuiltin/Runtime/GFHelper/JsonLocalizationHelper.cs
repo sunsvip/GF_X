@@ -14,9 +14,9 @@ public class JsonLocalizationHelper : DefaultLocalizationHelper
         {
             return false;
         }
-        foreach (KeyValuePair<string,string> item in dic)
+        foreach (KeyValuePair<string, string> item in dic)
         {
-            localizationManager.AddRawString(item.Key, item.Value);
+            localizationManager.AddRawString(item.Key, System.Text.RegularExpressions.Regex.Unescape(item.Value));
         }
         return true;
     }

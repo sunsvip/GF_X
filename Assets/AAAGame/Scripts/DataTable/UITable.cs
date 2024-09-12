@@ -46,7 +46,7 @@ public class UITable : DataRowBase
         }
 
         /// <summary>
-        /// 
+        /// 同组被覆盖是否暂停
         /// </summary>
         public bool PauseCoveredUI
         {
@@ -55,7 +55,7 @@ public class UITable : DataRowBase
         }
 
         /// <summary>
-        /// 
+        /// UI组
         /// </summary>
         public string UIGroup
         {
@@ -64,7 +64,7 @@ public class UITable : DataRowBase
         }
 
         /// <summary>
-        /// 
+        /// 返回键触发关闭界面
         /// </summary>
         public bool EscapeClose
         {

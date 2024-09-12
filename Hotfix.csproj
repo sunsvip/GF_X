@@ -72,15 +72,17 @@
     <Compile Include="Assets\AAAGame\Scripts\UI\Core\UIItemObject.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\ConfigExtension.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Entity\Core\EntityBase.cs" />
-    <Compile Include="Assets\AAAGame\Scripts\UI\StarRatingDialog.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\AwaitExtension\DownloadResult.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\UtilityEx.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\EntityExtension.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Extension\Variable\VarAction.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Entity\PlayerEntity.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\UIVariables\GameUIForm.Variables.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\UI\UIVariables\LanguagesDialog.Variables.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\AdSdkHelper.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\ToastTips.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Procedures\MenuProcedure.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\UI\LanguagesDialog.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\Core\UIViews.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Entity\BillboardMonoBehaviour.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\MenuUIForm.cs" />
@@ -114,6 +116,7 @@
     <Compile Include="Assets\AAAGame\Scripts\Extension\Variable\VarFloat.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Entity\ParticleEntity.cs" />
     <Compile Include="Assets\AAAGame\Scripts\DataTable\ColorTable.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\UI\RatingDialog.cs" />
     <Compile Include="Assets\AAAGame\Scripts\DataModel\PlayerDataModel.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\AwaitExtension\AwaitParams.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\DataModel\DataModelComponent.cs" />
@@ -124,11 +127,14 @@
     <Compile Include="Assets\AAAGame\Scripts\Extension\DataTableExtension.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\CommonDialog.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\GameUIForm.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\UI\UIVariables\SettingDialog.Variables.cs" />
     <Compile Include="Assets\AAAGame\Scripts\ScriptableObject\AppConfigs.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\AwaitExtension\AwaitExtension.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\DataModel\TypeIdPair.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\TransformExtension.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Extension\DataNodeExtension.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\Extension\Variable\VarVector3Array.cs" />
+    <Compile Include="Assets\AAAGame\Scripts\UI\UIVariables\RatingDialog.Variables.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\ShopUIForm.cs" />
     <Compile Include="Assets\AAAGame\Scripts\UI\UIVariables\MenuUIForm.Variables.cs" />
     <Compile Include="Assets\AAAGame\Scripts\Entity\SampleEntity.cs" />
@@ -1101,6 +1107,10 @@
     <ProjectReference Include="GameFramework.csproj">
       <Project>{CE941710-9532-C64F-9929-009FDC35EE5D}</Project>
       <Name>GameFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="DOTween.Extension.csproj">
+      <Project>{4C9C9C2C-4873-449E-2BD1-82CC13255841}</Project>
+      <Name>DOTween.Extension</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

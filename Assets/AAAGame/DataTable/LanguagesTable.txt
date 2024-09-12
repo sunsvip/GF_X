@@ -6,4 +6,4 @@
 	2		ChineseTraditional	中文(繁體)	UI/Flags/Icon_Flag_chn.png
 	3		English	English	UI/Flags/Icon_Flag_eng.png
 	4		Japanese	にほんご	UI/Flags/Icon_Flag_jpn.png
-#	5		Korean	한국어	UI/Flags/Icon_Flag_kor.png
+	5		Korean	한국어	UI/Flags/Icon_Flag_kor.png

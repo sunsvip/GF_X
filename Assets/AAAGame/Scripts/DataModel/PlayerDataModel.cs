@@ -90,7 +90,7 @@ public class PlayerDataModel : DataModelBase
     }
     internal void CheckAndShowRating(float ratio)
     {
-        if (GF.UI.HasUIForm(UIViews.StarRateDialog) || GF.Setting.GetBool("RATED_FIVE", false))
+        if (GF.UI.HasUIForm(UIViews.RatingDialog) || GF.Setting.GetBool("RATED_FIVE", false))
         {
             return;
         }
@@ -102,7 +102,7 @@ public class PlayerDataModel : DataModelBase
         }
 
         GF.Setting.SetInt(Const.UserData.SHOW_RATING_COUNT, ++show_count);
-        GF.UI.OpenUIForm(UIViews.StarRateDialog);
+        GF.UI.OpenUIForm(UIViews.RatingDialog);
     }
     /// <summary>
     /// 触发用户数据改变事件

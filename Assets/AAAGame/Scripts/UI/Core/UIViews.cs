@@ -1,12 +1,13 @@
+/**此代码由工具自动生成,请勿手动修改!**/
 public enum UIViews : int
 {
 	GameUIForm = 1,
 	SettingDialog = 2,
-	StarRateDialog = 3,
-	TipsDialog = 4,
+	RatingDialog = 3,
+	TermsOfServiceDialog = 4,
 	CommonDialog = 5,
 	ToastTips = 6,
 	GameOverUIForm = 7,
 	MenuUIForm = 8,
-	ShopUIForm = 9
+	LanguagesDialog = 9
 }

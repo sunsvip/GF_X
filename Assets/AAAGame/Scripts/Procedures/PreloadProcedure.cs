@@ -182,16 +182,14 @@ public class PreloadProcedure : ProcedureBase
     private void InitAndLoadLanguage()
     {
         //初始化语言
-        GameFramework.Localization.Language language;
-#if UNITY_EDITOR
-        language = GF.Base.EditorLanguage;
-#else
-        language = GF.Setting.GetLanguage();
-#endif
-
+        GameFramework.Localization.Language language = GF.Setting.GetLanguage();
         if (language == GameFramework.Localization.Language.Unspecified)
         {
+#if UNITY_EDITOR
+            language = GF.Base.EditorLanguage;
+#else
             language = GFBuiltin.Localization.SystemLanguage;//默认语言跟随用户操作系统语言
+#endif
         }
         var languageName = language.ToString();
         var langTb = GF.DataTable.GetDataTable<LanguagesTable>();

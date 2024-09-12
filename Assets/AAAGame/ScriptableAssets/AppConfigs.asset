@@ -27,6 +27,8 @@ MonoBehaviour:
   - ChineseSimplified
   - ChineseTraditional
   - English
+  - Japanese
+  - Korean
   mProcedures:
   - ChangeSceneProcedure
   - GameOverProcedure

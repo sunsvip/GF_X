@@ -1230,10 +1230,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{A66F3B87-B2AD-AB9C-0630-EABE71F4E211}</Project>
-      <Name>Assembly-CSharp-firstpass</Name>
-    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp-Editor-firstpass.csproj">
       <Project>{5F1A09A7-6A05-B8FA-D24E-34948296DE77}</Project>
       <Name>Assembly-CSharp-Editor-firstpass</Name>
@@ -1265,6 +1261,10 @@
     <ProjectReference Include="UnityGameFramework.Editor.csproj">
       <Project>{4E2FD91F-A0F5-958F-E9FF-2DC55ECCE1EE}</Project>
       <Name>UnityGameFramework.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="DOTween.Extension.csproj">
+      <Project>{4C9C9C2C-4873-449E-2BD1-82CC13255841}</Project>
+      <Name>DOTween.Extension</Name>
     </ProjectReference>
     <ProjectReference Include="UniTask.csproj">
       <Project>{49739DB4-5100-E825-207C-31AFCC4DBDF5}</Project>

@@ -114,7 +114,7 @@ namespace UGF.EditorTools
                     EditorGUILayout.BeginHorizontal();
                     {
                         EditorGUILayout.LabelField("APP ID:", titleWidth);
-                        EditorToolSettings.Instance.BaiduTransAppId = EditorGUILayout.PasswordField(EditorToolSettings.Instance.BaiduTransAppId);
+                        EditorToolSettings.Instance.BaiduTransAppId = EditorGUILayout.TextField(EditorToolSettings.Instance.BaiduTransAppId);
                         EditorGUILayout.EndHorizontal();
                     }
                     EditorGUILayout.BeginHorizontal();

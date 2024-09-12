@@ -9,7 +9,8 @@
         "Unity.RenderPipelines.Universal.Runtime",
         "Builtin.Runtime",
         "UniTask",
-        "GameFramework"
+        "GameFramework",
+        "DOTween.Extension"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

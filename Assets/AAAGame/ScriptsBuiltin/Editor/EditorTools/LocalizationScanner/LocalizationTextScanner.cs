@@ -455,7 +455,11 @@ namespace UGF.EditorTools
         public static void TranslateAllLanguages(bool forceAll = false, Action<string, int, int> onProgressUpdate = null)
         {
             if (EditorToolSettings.Instance.LanguagesSupport == null || EditorToolSettings.Instance.LanguagesSupport.Count < 2) return;
-
+            if (string.IsNullOrWhiteSpace(EditorToolSettings.Instance.BaiduTransAppId) || string.IsNullOrWhiteSpace(EditorToolSettings.Instance.BaiduTransSecretKey))
+            {
+                GFBuiltin.LogError("百度翻译AppID/密钥无效, 请重新设置!");
+                return;
+            }
             var mainLanguage = (Language)EditorToolSettings.Instance.LanguagesSupport[0];//母语
             var mainLangTexts = new List<LocalizationText>();
             LoadLanguageExcelTexts(mainLanguage, ref mainLangTexts);
