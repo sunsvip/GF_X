@@ -3,14 +3,15 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System;
+using System.Collections.Generic;
 
 namespace UGF.EditorTools
 {
     public static partial class DataTableUpdater
     {
-        static string[] tableFileChangedList;
-        static string[] configFileChangedList;
-        static string[] languageFileChangedList;
+        static IList<string> tableFileChangedList;
+        static IList<string> configFileChangedList;
+        static IList<string> languageFileChangedList;
 
         static bool isInitialized = false;
         static AppConfigs appConfigs = null;
@@ -18,11 +19,12 @@ namespace UGF.EditorTools
         private static void Init()
         {
             if (isInitialized) return;
-            tableFileChangedList = new string[0];
-            configFileChangedList = new string[0];
-            languageFileChangedList = new string[0];
+            tableFileChangedList = new List<string>();
+            configFileChangedList = new List<string>();
+            languageFileChangedList = new List<string>();
             EditorApplication.update += OnUpdate;
             var tbWatcher = new FileSystemWatcher(ConstEditor.DataTableExcelPath, "*.xlsx");
+            tbWatcher.IncludeSubdirectories = true;
 
             tbWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName;
             tbWatcher.EnableRaisingEvents = true;
@@ -33,6 +35,7 @@ namespace UGF.EditorTools
             tbWatcher.Renamed += fileRenameCb;
 
             var cfgWatcher = new FileSystemWatcher(ConstEditor.ConfigExcelPath, "*.xlsx");
+            cfgWatcher.IncludeSubdirectories = true;
             cfgWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName;
             cfgWatcher.EnableRaisingEvents = true;
             var cfgFileChangedCb = new FileSystemEventHandler(OnConfigChanged);
@@ -42,6 +45,7 @@ namespace UGF.EditorTools
             cfgWatcher.Renamed += cfgFileRenameCb;
 
             var langWatcher = new FileSystemWatcher(ConstEditor.LanguageExcelPath, "*.xlsx");
+            langWatcher.IncludeSubdirectories = true;
             langWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
             langWatcher.EnableRaisingEvents = true;
             var langFileChangedCb = new FileSystemEventHandler(OnLanguageChanged);
@@ -56,18 +60,18 @@ namespace UGF.EditorTools
         {
             if (!isInitialized) return;
 
-            if (tableFileChangedList.Length > 0)
+            if (tableFileChangedList.Count > 0)
             {
                 var changedFiles = GetMainExcelFiles(GameDataType.DataTable, appConfigs.DataTables, tableFileChangedList);
                 GameDataGenerator.RefreshAllDataTable(changedFiles);
-                if (ArrayUtility.Contains(changedFiles, ConstEditor.UITableExcelFullPath))
+                if (changedFiles.Contains(ConstEditor.UITableExcelFullPath))
                 {
                     GameDataGenerator.GenerateUIViewScript();
                 }
-                if (ArrayUtility.Contains(changedFiles, ConstEditor.EntityGroupTableExcelFullPath) ||
-                        ArrayUtility.Contains(changedFiles, ConstEditor.SoundGroupTableExcelFullPath) ||
-                        ArrayUtility.Contains(changedFiles, ConstEditor.UIGroupTableExcelFullPath) ||
-                        ArrayUtility.Contains(changedFiles, ConstEditor.EntityGroupTableExcelFullPath))
+                if (changedFiles.Contains(ConstEditor.EntityGroupTableExcelFullPath) ||
+                        changedFiles.Contains(ConstEditor.SoundGroupTableExcelFullPath) ||
+                        changedFiles.Contains(ConstEditor.UIGroupTableExcelFullPath) ||
+                        changedFiles.Contains(ConstEditor.EntityGroupTableExcelFullPath))
                 {
                     GameDataGenerator.GenerateGroupEnumScript();
                 }
@@ -75,9 +79,9 @@ namespace UGF.EditorTools
                 {
                     GFBuiltin.LogInfo($"-----------------自动刷新DataTable:{item}-----------------");
                 }
-                ArrayUtility.Clear(ref tableFileChangedList);
+                tableFileChangedList.Clear();
             }
-            if (configFileChangedList.Length > 0)
+            if (configFileChangedList.Count > 0)
             {
                 var changedFiles = GetMainExcelFiles(GameDataType.Config, appConfigs.Configs, configFileChangedList);
                 GameDataGenerator.RefreshAllConfig(changedFiles);
@@ -85,9 +89,9 @@ namespace UGF.EditorTools
                 {
                     GFBuiltin.LogInfo($"-----------------自动刷新Config:{item}-----------------");
                 }
-                ArrayUtility.Clear(ref configFileChangedList);
+                configFileChangedList.Clear();
             }
-            if (languageFileChangedList.Length > 0)
+            if (languageFileChangedList.Count > 0)
             {
                 var changedFiles = GetMainExcelFiles(GameDataType.Language, appConfigs.Languages, languageFileChangedList);
                 GameDataGenerator.RefreshAllLanguage(changedFiles);
@@ -95,7 +99,7 @@ namespace UGF.EditorTools
                 {
                     GFBuiltin.LogInfo($"-----------------自动刷新Language:{item}-----------------");
                 }
-                ArrayUtility.Clear(ref languageFileChangedList);
+                languageFileChangedList.Clear();
             }
         }
         /// <summary>
@@ -105,9 +109,9 @@ namespace UGF.EditorTools
         /// <param name="relativeMainFiles"></param>
         /// <param name="changedFiles"></param>
         /// <returns></returns>
-        private static string[] GetMainExcelFiles(GameDataType tp, string[] relativeMainFiles, string[] changedFiles)
+        private static IList<string> GetMainExcelFiles(GameDataType tp, IList<string> relativeMainFiles, IList<string> changedFiles)
         {
-            string[] result = new string[0];
+            IList<string> result = new List<string>();
             foreach (var changedFile in changedFiles)
             {
                 var relativePathNoExt = GameDataGenerator.GetGameDataExcelRelativePath(tp, changedFile);
@@ -116,9 +120,9 @@ namespace UGF.EditorTools
                     if (relativePathNoExt.CompareTo(mainName) == 0 || relativePathNoExt.StartsWith(mainName + ConstBuiltin.AB_TEST_TAG))
                     {
                         var mainExcelFullPath = GameDataGenerator.GameDataExcelRelative2FullPath(tp, mainName);
-                        if (!ArrayUtility.Contains(result, mainExcelFullPath))
+                        if (!result.Contains(mainExcelFullPath))
                         {
-                            ArrayUtility.Add(ref result, mainExcelFullPath);
+                            result.Add(mainExcelFullPath);
                         }
                     }
                 }
@@ -129,26 +133,26 @@ namespace UGF.EditorTools
         private static void OnConfigChanged(object sender, FileSystemEventArgs e)
         {
             var fName = Path.GetFileNameWithoutExtension(e.Name);
-            if (!fName.StartsWith('~'))
+            if (!fName.StartsWith("~$"))
             {
-                ArrayUtility.Add(ref configFileChangedList, e.FullPath);
+                configFileChangedList.Add(e.FullPath);
             }
         }
         private static void OnDataTableChanged(object sender, FileSystemEventArgs e)
         {
             var fName = Path.GetFileNameWithoutExtension(e.Name);
-            if (!fName.StartsWith('~'))
+            if (!fName.StartsWith("~$"))
             {
-                ArrayUtility.Add(ref tableFileChangedList, e.FullPath);
+                tableFileChangedList.Add(e.FullPath);
             }
         }
 
         private static void OnLanguageChanged(object sender, FileSystemEventArgs e)
         {
             var fName = Path.GetFileNameWithoutExtension(e.Name);
-            if (!fName.StartsWith('~'))
+            if (!fName.StartsWith("~$"))
             {
-                ArrayUtility.Add(ref languageFileChangedList, e.FullPath);
+                languageFileChangedList.Add(e.FullPath);
             }
         }
     }

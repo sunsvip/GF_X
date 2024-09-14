@@ -31,7 +31,7 @@ public static class DataTableExtension
             return;
         }
 
-        string dataRowClassName = splitNames[0];
+        string dataRowClassName = System.IO.Path.GetFileName(splitNames[0]);
 
         Type dataRowType = Type.GetType(dataRowClassName);
         if (dataRowType == null)

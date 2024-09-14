@@ -12,19 +12,19 @@ namespace UGF.EditorTools
         public const bool AutoScriptUTF8 = true;//新建脚本时自动修改脚本编码方式为utf-8以支持中文
         public const string UIViewScriptFile = "Assets/AAAGame/Scripts/UI/Core/UIViews.cs";
         public const string UISerializeFieldDir = "Assets/AAAGame/Scripts/UI/UIVariables";//生成UI变量代码目录
-        public const string UITableExcel = "UITable.xlsx";
+        public const string UITableExcel = "Core/UITable.xlsx";
         public static string UITableExcelFullPath => UtilityBuiltin.AssetsPath.GetCombinePath(DataTableExcelPath, UITableExcel);
 
-        public const string EntityGroupTableExcel = "EntityGroupTable.xlsx";
+        public const string EntityGroupTableExcel = "Core/EntityGroupTable.xlsx";
         public static string EntityGroupTableExcelFullPath => UtilityBuiltin.AssetsPath.GetCombinePath(DataTableExcelPath, EntityGroupTableExcel);
 
-        public const string SoundGroupTableExcel = "SoundGroupTable.xlsx";
+        public const string SoundGroupTableExcel = "Core/SoundGroupTable.xlsx";
         public static string SoundGroupTableExcelFullPath => UtilityBuiltin.AssetsPath.GetCombinePath(DataTableExcelPath, SoundGroupTableExcel);
 
-        public const string UIGroupTableExcel = "UIGroupTable.xlsx";
+        public const string UIGroupTableExcel = "Core/UIGroupTable.xlsx";
         public static string UIGroupTableExcelFullPath => UtilityBuiltin.AssetsPath.GetCombinePath(DataTableExcelPath, UIGroupTableExcel);
 
-        public const string ConstGroupScriptFileFullName = "Assets/AAAGame/Scripts/Common/Const.Groups.cs";
+        public const string ConstGroupScriptFileFullName = "Assets/AAAGame/Scripts/Common/Core/Const.Groups.cs";
 
         public static readonly string PrefabsPath = "Assets/AAAGame/Prefabs";
         public static readonly string ScenePath = "Assets/AAAGame/Scene";

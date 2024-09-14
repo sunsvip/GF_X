@@ -431,7 +431,11 @@ namespace GameFramework.Editor.DataTableTools
                 {
                     m_CodeGenerator(this, stringBuilder, userData);
                 }
-
+                var outputDir = Path.GetDirectoryName(outputFileName);
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
                 using (FileStream fileStream = new FileStream(outputFileName, FileMode.Create, FileAccess.Write))
                 {
                     using (StreamWriter stream = new StreamWriter(fileStream, encoding))

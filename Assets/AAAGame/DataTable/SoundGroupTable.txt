@@ -1,8 +1,0 @@
-﻿#	SoundGroup						
-#	ID		Name	SoundAgentCount	AvoidBeingReplacedBySamePriority	Mute	Volume
-#	int		string	int	bool	bool	float
-#		备注					
-	1	背景音乐	Music	1	False	False	1
-	2	音效	Sound	1	False	False	1
-	3	震动	Vibrate	1	False	False	1
-	4	摇杆	Joystick	1	False	False	1

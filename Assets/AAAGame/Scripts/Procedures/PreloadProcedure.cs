@@ -193,15 +193,16 @@ public class PreloadProcedure : ProcedureBase
         }
         var languageName = language.ToString();
         var langTb = GF.DataTable.GetDataTable<LanguagesTable>();
-
-        if (!langTb.HasDataRow(row => row.LanguageKey == languageName))
+        var langRow = langTb.GetDataRow(row=>row.LanguageKey == languageName);
+        if (langRow == null)
         {
             language = GameFramework.Localization.Language.English;//不支持的语言默认用英文
+            langRow = langTb.GetDataRow(row => row.LanguageKey == language.ToString());
         }
         GF.Setting.SetLanguage(language, false);
         GF.LogInfo(Utility.Text.Format("初始化游戏设置. 游戏语言:{0},系统语言:{1}", language, GFBuiltin.Localization.SystemLanguage));
 
-        GF.Localization.LoadLanguage(languageName, this);
+        GF.Localization.LoadLanguage(langRow.AssetName, this);
     }
 
     private void OnLoadGFExtensionSuccess(string assetName, object asset, float duration, object userData)

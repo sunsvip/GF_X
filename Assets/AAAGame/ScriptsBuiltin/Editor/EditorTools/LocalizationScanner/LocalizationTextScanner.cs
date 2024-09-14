@@ -326,13 +326,13 @@ namespace UGF.EditorTools
             var appConfig = AppConfigs.GetInstanceEditor();
             var mainTbFullFiles = GameDataGenerator.GameDataExcelRelative2FullPath(GameDataType.DataTable, appConfig.DataTables);
             var tbFullFiles = GameDataGenerator.GetGameDataExcelWithABFiles(GameDataType.DataTable, mainTbFullFiles);//同时扫描AB测试表
-            for (int i = 0; i < tbFullFiles.Length; i++)
+            for (int i = 0; i < tbFullFiles.Count; i++)
             {
                 var excelFile = tbFullFiles[i];
                 var fileInfo = new FileInfo(excelFile);
                 if (!fileInfo.Exists) continue;
 
-                onProgressUpdate?.Invoke(excelFile, tbFullFiles.Length, i);
+                onProgressUpdate?.Invoke(excelFile, tbFullFiles.Count, i);
                 string tmpExcelFile = UtilityBuiltin.AssetsPath.GetCombinePath(fileInfo.Directory.FullName, GameFramework.Utility.Text.Format("{0}.temp", fileInfo.Name));
                 try
                 {

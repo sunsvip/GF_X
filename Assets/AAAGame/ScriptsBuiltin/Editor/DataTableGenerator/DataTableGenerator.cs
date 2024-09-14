@@ -66,7 +66,7 @@ namespace GameFramework.Editor.DataTableTools
 
         private static void DataTableCodeGenerator(DataTableProcessor dataTableProcessor, StringBuilder codeContent, object userData)
         {
-            string dataTableName = (string)userData;
+            string dataTableName = Path.GetFileName((string)userData);
 
             // codeContent.Replace("__DATA_TABLE_CREATE_TIME__", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
             //codeContent.Replace("__DATA_TABLE_NAME_SPACE__", "StarForce");

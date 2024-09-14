@@ -14,8 +14,8 @@ namespace UGF.EditorTools
     [Flags]
     public enum GameDataExcelFileType
     {
-        MainFile = 1 << 0,
-        ABTestFile = 1 << 1
+        MainFile = 1,
+        ABTestFile = 2
     }
     public class GameDataGenerator
     {
@@ -276,14 +276,9 @@ namespace UGF.EditorTools
             int curIndex = 0;
             foreach (KeyValuePair<int, string> uiItem in uiViewDic)
             {
-                if (curIndex < uiViewDic.Count - 1)
-                {
-                    sBuilder.AppendLine(Utility.Text.Format("\t{0} = {1},", uiItem.Value, uiItem.Key));
-                }
-                else
-                {
-                    sBuilder.AppendLine(Utility.Text.Format("\t{0} = {1}", uiItem.Value, uiItem.Key));
-                }
+                string uiViewName = Path.GetFileName(uiItem.Value);
+                bool isLast = curIndex == uiViewDic.Count - 1;
+                sBuilder.AppendLine(Utility.Text.Format("\t{0} = {1}{2}", uiViewName, uiItem.Key, isLast ? "" : ","));
                 curIndex++;
             }
             sBuilder.AppendLine("}");
@@ -364,6 +359,11 @@ namespace UGF.EditorTools
                             excelTxt.AppendLine();
                         }
                     }
+                    var outTxtDir = Path.GetDirectoryName(outTxtFile);
+                    if (!Directory.Exists(outTxtDir))
+                    {
+                        Directory.CreateDirectory(outTxtDir);
+                    }
                     File.WriteAllText(outTxtFile, excelTxt.ToString(), Encoding.UTF8);
                     result = true;
                 }
@@ -384,9 +384,9 @@ namespace UGF.EditorTools
         /// 从多语言Excel文件导出数据到工程
         /// </summary>
         /// <param name="files"></param>
-        public static void RefreshAllLanguage(string[] files = null)
+        public static void RefreshAllLanguage(IList<string> files = null)
         {
-            string[] excelFiles;
+            IList<string> excelFiles;
             if (files == null)
             {
                 excelFiles = GetAllGameDataExcels(GameDataType.Language, GameDataExcelFileType.MainFile | GameDataExcelFileType.ABTestFile);
@@ -395,7 +395,7 @@ namespace UGF.EditorTools
             {
                 excelFiles = GetGameDataExcelWithABFiles(GameDataType.Language, files);
             }
-            int totalExcelCount = excelFiles.Length;
+            int totalExcelCount = excelFiles.Count;
             for (int i = 0; i < totalExcelCount; i++)
             {
                 var excelFileName = excelFiles[i];
@@ -410,9 +410,9 @@ namespace UGF.EditorTools
             AssetDatabase.Refresh();
         }
         //[MenuItem("Game Framework/GameTools/Refresh All GameConfigs")]
-        public static void RefreshAllConfig(string[] files = null)
+        public static void RefreshAllConfig(IList<string> files = null)
         {
-            string[] excelFiles;
+            IList<string> excelFiles;
             if (files == null)
             {
                 excelFiles = GetAllGameDataExcels(GameDataType.Config, GameDataExcelFileType.MainFile | GameDataExcelFileType.ABTestFile);
@@ -421,7 +421,7 @@ namespace UGF.EditorTools
             {
                 excelFiles = GetGameDataExcelWithABFiles(GameDataType.Config, files);
             }
-            int totalExcelCount = excelFiles.Length;
+            int totalExcelCount = excelFiles.Count;
             for (int i = 0; i < totalExcelCount; i++)
             {
                 var excelFileName = excelFiles[i];
@@ -437,10 +437,10 @@ namespace UGF.EditorTools
             EditorUtility.ClearProgressBar();
             AssetDatabase.Refresh();
         }
-        public static void RefreshAllDataTable(string[] fullPathFiles = null)
+        public static void RefreshAllDataTable(IList<string> fullPathFiles = null)
         {
             var appConfig = AppConfigs.GetInstanceEditor();
-            string[] excelFiles;
+            IList<string> excelFiles;
             if (fullPathFiles == null)
             {
                 excelFiles = GetAllGameDataExcels(GameDataType.DataTable, GameDataExcelFileType.MainFile | GameDataExcelFileType.ABTestFile);
@@ -449,7 +449,7 @@ namespace UGF.EditorTools
             {
                 excelFiles = GetGameDataExcelWithABFiles(GameDataType.DataTable, fullPathFiles);
             }
-            int totalExcelCount = excelFiles.Length;
+            int totalExcelCount = excelFiles.Count;
             for (int i = 0; i < totalExcelCount; i++)
             {
                 var excelFileName = excelFiles[i];
@@ -487,8 +487,8 @@ namespace UGF.EditorTools
             string outputExtension = GetGameDataExcelOutputFileExtension(GameDataType.DataTable);
             for (int i = 0; i < dataTbCount; i++)
             {
-                var dataTableName = Path.GetFileNameWithoutExtension(appConfig.DataTables[i]);
-                string tbTxtFile = UtilityBuiltin.AssetsPath.GetCombinePath(outputDir, appConfig.DataTables[i] + outputExtension);
+                var dataTableName = appConfig.DataTables[i];
+                string tbTxtFile = UtilityBuiltin.AssetsPath.GetCombinePath(outputDir, dataTableName + outputExtension);
                 EditorUtility.DisplayProgressBar($"进度:({i}/{dataTbCount})", $"生成DataTable代码:{dataTableName}", i / (float)dataTbCount);
                 if (!File.Exists(tbTxtFile))
                 {
@@ -514,13 +514,13 @@ namespace UGF.EditorTools
         /// <param name="tp"></param>
         /// <param name="files"></param>
         /// <returns></returns>
-        public static string[] GetGameDataExcelWithABFiles(GameDataType tp, string[] mainFiles)
+        public static IList<string> GetGameDataExcelWithABFiles(GameDataType tp, IList<string> mainFiles)
         {
-            string[] result = new string[0];
+            List<string> result = new List<string>();
             foreach (var mainFile in mainFiles)
             {
                 var files = GetGameDataExcelWithABFiles(tp, mainFile);
-                ArrayUtility.AddRange(ref result, files);
+                result.AddRange(files);
             }
             return result;
         }
@@ -530,15 +530,16 @@ namespace UGF.EditorTools
         /// <param name="tp"></param>
         /// <param name="mainFile"></param>
         /// <returns></returns>
-        private static string[] GetGameDataExcelWithABFiles(GameDataType tp, string mainExcelFile)
+        private static IList<string> GetGameDataExcelWithABFiles(GameDataType tp, string mainExcelFile)
         {
-            string[] result = new string[] { mainExcelFile };
-            var allAbFiles = GetAllGameDataExcels(tp, GameDataExcelFileType.ABTestFile);
+            List<string> result = new List<string> { mainExcelFile };
+            var excelName = Path.GetFileNameWithoutExtension(mainExcelFile);
+            var allAbFiles = GetAllGameDataExcels(tp, GameDataExcelFileType.ABTestFile, excelName);
             foreach (var item in allAbFiles)
             {
                 if (IsABTestFile(item, mainExcelFile))
                 {
-                    ArrayUtility.Add(ref result, item);
+                    result.Add(item);
                 }
             }
             return result;
@@ -567,15 +568,7 @@ namespace UGF.EditorTools
         public static string GameDataExcelRelative2FullPath(GameDataType tp, string relativeExcelPath)
         {
             var excelDir = GetGameDataExcelDir(tp);
-
-            var fileName = Path.GetFileName(relativeExcelPath);
-            fileName = fileName.EndsWith(".xlsx") ? fileName : fileName + ".xlsx";
-            var fullDir = Utility.Path.GetRegularPath(Path.GetDirectoryName(relativeExcelPath));
-            if (fullDir.StartsWith(excelDir))
-            {
-                return UtilityBuiltin.AssetsPath.GetCombinePath(fullDir, fileName);
-            }
-            return UtilityBuiltin.AssetsPath.GetCombinePath(excelDir, fileName);
+            return UtilityBuiltin.AssetsPath.GetCombinePath(excelDir, relativeExcelPath + ".xlsx");
         }
         public static string GetGameDataExcelOutputFile(GameDataType tp, string excelFile)
         {
@@ -646,24 +639,24 @@ namespace UGF.EditorTools
             return excelDir;
         }
 
-        public static string[] GetAllGameDataExcels(GameDataType dtTp, GameDataExcelFileType tps)
+        public static IList<string> GetAllGameDataExcels(GameDataType dtTp, GameDataExcelFileType tps, string mainExcelName = null)
         {
-            string[] result = new string[0];
+            List<string> result = new List<string>();
 
             if (dtTp.HasFlag(GameDataType.DataTable))
             {
-                var files = GetGameDataExcelAtDir(GetGameDataExcelDir(GameDataType.DataTable), tps);
-                if (files != null && files.Length > 0) ArrayUtility.AddRange(ref result, files);
+                var files = GetGameDataExcelAtDir(GetGameDataExcelDir(GameDataType.DataTable), tps, mainExcelName);
+                result.AddRange(files);
             }
             if (dtTp.HasFlag(GameDataType.Language))
             {
-                var files = GetGameDataExcelAtDir(GetGameDataExcelDir(GameDataType.Language), tps);
-                if (files != null && files.Length > 0) ArrayUtility.AddRange(ref result, files);
+                var files = GetGameDataExcelAtDir(GetGameDataExcelDir(GameDataType.Language), tps, mainExcelName);
+                result.AddRange(files);
             }
             if (dtTp.HasFlag(GameDataType.Config))
             {
-                var files = GetGameDataExcelAtDir(GetGameDataExcelDir(GameDataType.Config), tps);
-                if (files != null && files.Length > 0) ArrayUtility.AddRange(ref result, files);
+                var files = GetGameDataExcelAtDir(GetGameDataExcelDir(GameDataType.Config), tps, mainExcelName);
+                result.AddRange(files);
             }
             return result;
         }
@@ -673,26 +666,25 @@ namespace UGF.EditorTools
         /// <param name="excelDir"></param>
         /// <param name="tps"></param>
         /// <returns></returns>
-        private static string[] GetGameDataExcelAtDir(string excelDir, GameDataExcelFileType tps)
+        private static IList<string> GetGameDataExcelAtDir(string excelDir, GameDataExcelFileType tps, string mainExcelName)
         {
-            string[] result = new string[0];
+            List<string> result = new List<string>();
             if (string.IsNullOrWhiteSpace(excelDir) || !Directory.Exists(excelDir))
             {
                 Debug.LogWarning($"获取GameData Excel失败, 给定路径为空或不存在:{excelDir}");
                 return result;
             }
-            string[] excelFiles = GetFiles(excelDir, "*.xlsx", SearchOption.AllDirectories);
-
+            IList<string> excelFiles = GetFiles(excelDir, "*.xlsx", SearchOption.AllDirectories, mainExcelName);
             foreach (var item in excelFiles)
             {
                 bool isABFile = IsABTestFile(item);
                 if (tps.HasFlag(GameDataExcelFileType.MainFile) && !isABFile)
                 {
-                    ArrayUtility.Add(ref result, item);
+                    result.Add(item);
                 }
                 if (tps.HasFlag(GameDataExcelFileType.ABTestFile) && isABFile)
                 {
-                    ArrayUtility.Add(ref result, item);
+                    result.Add(item);
                 }
             }
             return result;
@@ -704,9 +696,33 @@ namespace UGF.EditorTools
         /// <param name="searchPattern"></param>
         /// <param name="option"></param>
         /// <returns></returns>
-        private static string[] GetFiles(string path, string searchPattern, SearchOption option)
+        private static IList<string> GetFiles(string path, string searchPattern, SearchOption option, string mainExcelName)
         {
-            return Directory.GetFiles(path, searchPattern, option).Where(fName => !fName.StartsWith('~')).ToArray();
+            var excels = Directory.GetFiles(path, searchPattern, option);
+            List<string> result = new List<string>();
+            if (!string.IsNullOrEmpty(mainExcelName))
+            {
+                var abTestPrefixName = mainExcelName + ConstBuiltin.AB_TEST_TAG;
+                foreach (var item in excels)
+                {
+                    var nameNoExt = Path.GetFileNameWithoutExtension(item);
+                    if (nameNoExt.StartsWith("~$")) continue;
+
+                    if (nameNoExt.StartsWith(abTestPrefixName))
+                    {
+                        result.Add(item);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var item in excels)
+                {
+                    if (Path.GetFileNameWithoutExtension(item).StartsWith("~$")) continue;
+                    result.Add(item);
+                }
+            }
+            return result;
         }
         /// <summary>
         /// 判断是否为AB测试表
@@ -716,11 +732,7 @@ namespace UGF.EditorTools
         public static bool IsABTestFile(string excelFile)
         {
             var fileName = Path.GetFileNameWithoutExtension(excelFile);
-            for (int i = fileName.Length - 1; i >= 0; i--)
-            {
-                if (fileName[i] == ConstBuiltin.AB_TEST_TAG) return true;
-            }
-            return false;
+            return Regex.IsMatch(fileName, Utility.Text.Format("{0}\\p{{L}}$", ConstBuiltin.AB_TEST_TAG));
         }
         /// <summary>
         /// 判断excel文件是否是给定主文件的AB测试文件, AB测试文件命名规则: [主文件名] + [#] + [测试组名]

@@ -14,9 +14,9 @@ namespace UGF.EditorTools
     [Flags]
     public enum GameDataType
     {
-        DataTable = 1 << 0,
-        Config = 1 << 1,
-        Language = 1 << 2
+        DataTable = 1,
+        Config = 2,
+        Language = 4
     }
 
     [CustomEditor(typeof(AppConfigs))]
@@ -188,6 +188,7 @@ namespace UGF.EditorTools
                 {
                     case GameDataType.DataTable:
                         GameDataGenerator.RefreshAllDataTable(GameDataGenerator.GameDataExcelRelative2FullPath(CfgType, GetGameDataList()));
+                        GameDataGenerator.GenerateUIViewScript();
                         break;
                     case GameDataType.Config:
                         GameDataGenerator.RefreshAllConfig(GameDataGenerator.GameDataExcelRelative2FullPath(CfgType, GetGameDataList()));
@@ -375,15 +376,13 @@ namespace UGF.EditorTools
                     cfg.GetType().GetField("mLanguages", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(cfg, svData.GetSelectedItems());
                 }
             }
-            string[] selectedProcedures = new string[0];
+            List<string> selectedProcedures = new List<string>();
             foreach (var item in procedures)
             {
-                if (item.isOn)
-                {
-                    ArrayUtility.Add(ref selectedProcedures, item.excelName);
-                }
+                if (!item.isOn) continue;
+                selectedProcedures.Add(item.excelName);
             }
-            cfg.GetType().GetField("mProcedures", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(cfg, selectedProcedures);
+            cfg.GetType().GetField("mProcedures", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(cfg, selectedProcedures.ToArray());
             EditorUtility.SetDirty(cfg);
         }
         private void ReloadScrollView(AppConfigs cfg)
