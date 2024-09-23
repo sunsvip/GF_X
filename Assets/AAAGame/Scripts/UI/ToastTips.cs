@@ -36,7 +36,7 @@ public partial class ToastTips : UIFormBase
         UniTask.Delay(TimeSpan.FromSeconds(m_Duration)).ContinueWith(() =>
         {
             if (GF.UI.IsValidUIForm(this.UIForm))
-                GF.UI.CloseUIFormWithAnim(this.UIForm);
+                GF.UI.Close(this.UIForm);
         }).Forget();
     }
 }

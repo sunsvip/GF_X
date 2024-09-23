@@ -173,15 +173,6 @@ public static class UIExtension
         parms ??= UIParams.Create();
         parms.AllowEscapeClose ??= uiRow.EscapeClose;
         parms.SortOrder ??= uiRow.SortOrder;
-        if (parms.AnimationOpen == UIFormAnimationType.Default)
-        {
-            parms.AnimationOpen = Enum.Parse<UIFormAnimationType>(uiRow.OpenAnimType);
-        }
-        if (parms.AnimationClose == UIFormAnimationType.Default)
-        {
-            parms.AnimationClose = Enum.Parse<UIFormAnimationType>(uiRow.CloseAnimType);
-        }
-
         return uiCom.OpenUIForm(uiName, uiRow.UIGroup, uiRow.PauseCoveredUI, parms);
     }
 
@@ -190,16 +181,16 @@ public static class UIExtension
     /// </summary>
     /// <param name="uiCom"></param>
     /// <param name="ui"></param>
-    public static void CloseUIFormWithAnim(this UIComponent uiCom, GameFramework.UI.IUIForm ui)
+    public static void Close(this UIComponent uiCom, UIForm ui)
     {
-        CloseUIFormWithAnim(uiCom, ui.SerialId);
+        Close(uiCom, ui.SerialId);
     }
     /// <summary>
     /// 关闭UI界面(关闭前播放UI界面关闭动画)
     /// </summary>
     /// <param name="uiCom"></param>
     /// <param name="uiFormId"></param>
-    public static void CloseUIFormWithAnim(this UIComponent uiCom, int uiFormId)
+    public static void Close(this UIComponent uiCom, int uiFormId)
     {
         if (uiCom.IsLoadingUIForm(uiFormId))
         {
@@ -212,7 +203,7 @@ public static class UIExtension
         }
         var uiForm = uiCom.GetUIForm(uiFormId);
         UIFormBase logic = uiForm.Logic as UIFormBase;
-        logic.CloseUIWithAnim();
+        logic.CloseWithAnimation();
     }
     /// <summary>
     /// 关闭整个UI组的所有UI界面
@@ -302,7 +293,7 @@ public static class UIExtension
 
         foreach (var item in uIForms)
         {
-            uiCom.CloseUIFormWithAnim(item.SerialId);
+            uiCom.Close(item.SerialId);
         }
     }
     /// <summary>
@@ -320,7 +311,10 @@ public static class UIExtension
             (uiForm.Logic as UIFormBase).InitLocalization();
         }
         var uiObjectPool = GF.ObjectPool.GetObjectPool(pool => pool.FullName == "GameFramework.UI.UIManager+UIFormInstanceObject.UI Instance Pool");
-        uiObjectPool?.ReleaseAllUnused();
+        if (uiObjectPool != null)
+        {
+            uiObjectPool.ReleaseAllUnused();
+        }
     }
     /// <summary>
     /// 获取当前顶层的UI界面id
@@ -382,6 +376,61 @@ public static class UIExtension
             GF.Entity.ShowEntity<SampleEntity>("Effect/EffectMoney", Const.EntityGroup.Effect, animPrams);
         }
     }
+
+
+    #region Unity UI Extension
+    public static void SetAnchoredPositionX(this RectTransform rectTransform, float anchoredPositionX)
+    {
+        var value = rectTransform.anchoredPosition;
+        value.x = anchoredPositionX;
+        rectTransform.anchoredPosition = value;
+    }
+    public static void SetAnchoredPositionY(this RectTransform rectTransform, float anchoredPositionY)
+    {
+        var value = rectTransform.anchoredPosition;
+        value.y = anchoredPositionY;
+        rectTransform.anchoredPosition = value;
+    }
+    public static void SetAnchoredPosition3DZ(this RectTransform rectTransform, float anchoredPositionZ)
+    {
+        var value = rectTransform.anchoredPosition3D;
+        value.z = anchoredPositionZ;
+        rectTransform.anchoredPosition3D = value;
+    }
+    public static void SetColorAlpha(this UnityEngine.UI.Graphic graphic, float alpha)
+    {
+        var value = graphic.color;
+        value.a = alpha;
+        graphic.color = value;
+    }
+    public static void SetFlexibleSize(this LayoutElement layoutElement, Vector2 flexibleSize)
+    {
+        layoutElement.flexibleWidth = flexibleSize.x;
+        layoutElement.flexibleHeight = flexibleSize.y;
+    }
+    public static Vector2 GetFlexibleSize(this LayoutElement layoutElement)
+    {
+        return new Vector2(layoutElement.flexibleWidth, layoutElement.flexibleHeight);
+    }
+    public static void SetMinSize(this LayoutElement layoutElement, Vector2 size)
+    {
+        layoutElement.minWidth = size.x;
+        layoutElement.minHeight = size.y;
+    }
+    public static Vector2 GetMinSize(this LayoutElement layoutElement)
+    {
+        return new Vector2(layoutElement.minWidth, layoutElement.minHeight);
+    }
+    public static void SetPreferredSize(this LayoutElement layoutElement, Vector2 size)
+    {
+        layoutElement.preferredWidth = size.x;
+        layoutElement.preferredHeight = size.y;
+    }
+    public static Vector2 GetPreferredSize(this LayoutElement layoutElement)
+    {
+        return new Vector2(layoutElement.preferredWidth, layoutElement.preferredHeight);
+    }
+    #endregion
     public enum ToastStyle : uint
     {
         Blue = 0,

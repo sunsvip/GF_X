@@ -44,7 +44,7 @@ public partial class RatingDialog : UIFormBase
             {
                 GF.UI.ShowToast(GF.Localization.GetString("RatingDialog.LowRatingTips"));
             }
-            GF.UI.CloseUIFormWithAnim(this.UIForm);
+            GF.UI.Close(this.UIForm);
         }
     }
 

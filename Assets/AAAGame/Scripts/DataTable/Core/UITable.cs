@@ -46,7 +46,7 @@ public class UITable : DataRowBase
         }
 
         /// <summary>
-        /// 同组被覆盖是否暂停
+        /// 同组界面被覆盖时是否隐藏
         /// </summary>
         public bool PauseCoveredUI
         {
@@ -72,24 +72,6 @@ public class UITable : DataRowBase
             private set;
         }
 
-        /// <summary>
-        /// Custom,None,FadeIn,FadeOut,ScaleIn,ScaleOut
-        /// </summary>
-        public string OpenAnimType
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Custom,None,FadeIn,FadeOut,ScaleIn,ScaleOut
-        /// </summary>
-        public string CloseAnimType
-        {
-            get;
-            private set;
-        }
-
         public override bool ParseDataRow(string dataRowString, object userData)
         {
             string[] columnStrings = dataRowString.Split(DataTableExtension.DataSplitSeparators);
@@ -107,8 +89,6 @@ public class UITable : DataRowBase
             PauseCoveredUI = bool.Parse(columnStrings[index++]);
             UIGroup = columnStrings[index++];
             EscapeClose = bool.Parse(columnStrings[index++]);
-            OpenAnimType = columnStrings[index++];
-            CloseAnimType = columnStrings[index++];
 
             return true;
         }
@@ -125,8 +105,6 @@ public class UITable : DataRowBase
                     PauseCoveredUI = binaryReader.ReadBoolean();
                     UIGroup = binaryReader.ReadString();
                     EscapeClose = binaryReader.ReadBoolean();
-                    OpenAnimType = binaryReader.ReadString();
-                    CloseAnimType = binaryReader.ReadString();
                 }
             }
 

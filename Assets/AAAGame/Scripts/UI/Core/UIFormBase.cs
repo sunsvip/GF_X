@@ -32,19 +32,18 @@ public class SerializeFieldData
         return result;
     }
 }
-public enum UIFormAnimationType
-{
-    Default = -1, //使用UIForm表配置的默认动画类型
-    None,       //无动画
-    FadeIn,     //透明淡入
-    FadeOut,    //透明淡出
-    ScaleIn,    //缩放淡入
-    ScaleOut    //缩放淡出
-}
+
 public class UIFormBase : UIFormLogic
 {
     [HideInInspector][SerializeField] SerializeFieldData[] _fields = new SerializeFieldData[0];
-    [SerializeField] protected RectTransform topBar;
+    [SerializeField] protected RectTransform topBar = null;
+    /// <summary>
+    /// UI打开动画
+    /// </summary>
+    [HideInInspector][SerializeField] DOTweenSequence m_OpenAnimation = null;
+    /// <summary>    /// UI关闭动画, 若为空,默认使用UI打开动画倒放
+    /// </summary>
+    [HideInInspector][SerializeField] DOTweenSequence m_CloseAnimation = null;
     public UIParams Params { get; private set; }
     public int Id => this.UIForm.SerialId;
     public bool Interactable
@@ -62,6 +61,10 @@ public class UIFormBase : UIFormLogic
     protected Canvas UICanvas { get; private set; }
     private bool isOnEscape;
     IList<KeyValuePair<Type, string>> m_ItemPools = null;
+    /// <summary>
+    /// 子UI界面, 会随着父界面关闭而关闭
+    /// </summary>
+    IList<int> m_SubUIForms = null;
     protected override void OnInit(object userData)
     {
         base.OnInit(userData);
@@ -87,17 +90,10 @@ public class UIFormBase : UIFormLogic
         cvs.sortingOrder = Params.SortOrder ?? 0;
         Interactable = false;
         isOnEscape = Params.AllowEscapeClose ?? false;
-        PlayUIAnimation(Params.AnimationOpen, OnOpenAnimationComplete);
+        PlayUIAnimation(true, OnOpenAnimationComplete);
         Params.OpenCallback?.Invoke(this);
     }
-    public SerializeFieldData[] GetFieldsProperties()
-    {
-        return _fields;
-    }
-    public void ModifyFieldsProperties(SerializeFieldData[] modified)
-    {
-        this._fields = modified;
-    }
+
 
     protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
     {
@@ -107,25 +103,68 @@ public class UIFormBase : UIFormLogic
             this.OnClickClose();
         }
     }
-    protected override void OnResume()
-    {
-        base.OnResume();
-        PlayUIAnimation(Params.AnimationOpen, null);
-    }
+
     protected override void OnClose(bool isShutdown, object userData)
     {
-        DOTween.Kill(this);
         if (!isShutdown)
         {
             Params.CloseCallback?.Invoke(this);
             ReferencePool.Release(Params);
+            CloseAllSubUIForms();
         }
         UnspawnAllItemObjects();
         base.OnClose(isShutdown, userData);
     }
+
     private void OnDestroy()
     {
         DestroyAllItemPool();
+    }
+    /// <summary>
+    /// 打开子UI Form
+    /// </summary>
+    /// <param name="viewName"></param>
+    /// <param name="params"></param>
+    /// <returns></returns>
+    public int OpenSubUIForm(UIViews viewName, UIParams @params = null)
+    {
+        if (m_SubUIForms == null) m_SubUIForms = new List<int>(2);
+        if (@params == null)
+        {
+            @params = UIParams.Create();
+        }
+        @params.SortOrder = Params.SortOrder + m_SubUIForms.Count + 1;
+        var uiformId = GF.UI.OpenUIForm(viewName, @params);
+        m_SubUIForms.Add(uiformId);
+        return uiformId;
+    }
+    /// <summary>
+    /// 关闭子UI Form
+    /// </summary>
+    /// <param name="uiformId"></param>
+    public void CloseSubUIForm(int uiformId)
+    {
+        if (!m_SubUIForms.Contains(uiformId)) return;
+        m_SubUIForms.Remove(uiformId);
+        GF.UI.CloseUIForm(uiformId);
+    }
+    private void CloseAllSubUIForms()
+    {
+        if (m_SubUIForms != null)
+        {
+            for (int i = m_SubUIForms.Count - 1; i >= 0; i--)
+            {
+                CloseSubUIForm(m_SubUIForms[i]);
+            }
+        }
+    }
+    public SerializeFieldData[] GetFieldsProperties()
+    {
+        return _fields;
+    }
+    public void ModifyFieldsProperties(SerializeFieldData[] modified)
+    {
+        this._fields = modified;
     }
     private void UnspawnAllItemObjects()
     {
@@ -209,8 +248,7 @@ public class UIFormBase : UIFormLogic
         pool.Unspawn(itemInstance);
     }
     /// <summary>
-    /// 界面首次打开 或语言设置变更时回调, 用于实时更新界面中静态文本的多语言文字
-    /// 对于动态修改的文本, 可override此方法在方法内设置文本
+    /// 更新界面中静态文本的多语言文字
     /// </summary>
     public virtual void InitLocalization()
     {
@@ -248,45 +286,50 @@ public class UIFormBase : UIFormLogic
         pos.y = -topSpace;
         topBar.anchoredPosition = pos;
     }
-    private void PlayUIAnimation(UIFormAnimationType animType, GameFrameworkAction onAnimComplete)
+    private void PlayUIAnimation(bool isOpen, GameFrameworkAction onAnimComplete)
     {
-        if (null == canvasGroup)
+        if (isOpen)
         {
-            onAnimComplete.Invoke();
-            return;
+            if (m_OpenAnimation != null)
+            {
+                m_OpenAnimation.DOPlay().OnComplete(onAnimComplete.Invoke);
+            }
+            else
+            {
+                DoFadeAnim(0, 1, 0.25f, onAnimComplete);
+            }
         }
-        switch (animType)
+        else
         {
-            case UIFormAnimationType.None:
-                onAnimComplete?.Invoke();
-                break;
-            case UIFormAnimationType.FadeIn:
-                DoFadeAnim(0, 1, 0.4f, onAnimComplete);
-                break;
-            case UIFormAnimationType.FadeOut:
-                DoFadeAnim(1, 0, 0.2f, onAnimComplete);
-                break;
-                //case UIFormAnimationType.ScaleIn:
-                //    break;
-                //case UIFormAnimationType.ScaleOut:
-                //    break;
+            //如果关闭动画未配置, 默认将打开动画倒放作为关闭动画
+            if (m_CloseAnimation != null)
+            {
+                m_CloseAnimation.DOPlay().OnComplete(onAnimComplete.Invoke);
+            }
+            else
+            {
+                if (m_OpenAnimation != null)
+                {
+                    m_OpenAnimation.DORewind().OnComplete(onAnimComplete.Invoke);
+                }
+                else
+                {
+                    DoFadeAnim(1, 0, 0.25f, onAnimComplete);
+                }
+            }
         }
     }
-    public void CloseUIWithAnim()
+    public void CloseWithAnimation()
     {
-        if (null == canvasGroup)
-        {
-            return;
-        }
         Interactable = false;
-        PlayUIAnimation(Params.AnimationClose, OnCloseAnimationComplete);
+        PlayUIAnimation(false, OnCloseAnimationComplete);
     }
 
 
     public virtual void OnClickClose()
     {
         GF.Sound.PlayEffect("ui/ui_click.wav");
-        GF.UI.CloseUIFormWithAnim(this.UIForm);
+        GF.UI.Close(this.UIForm);
     }
 
     public void ClickUIButton(string bt_tag)
@@ -312,7 +355,6 @@ public class UIFormBase : UIFormLogic
     protected virtual void OnOpenAnimationComplete()
     {
         Interactable = true;
-
     }
     /// <summary>
     /// UI关闭动画完成时回调
@@ -323,20 +365,18 @@ public class UIFormBase : UIFormLogic
     }
 
     #region 默认UI动画
-    private void DoFadeAnim(float s, float e, float time, GameFrameworkAction onComplete = null)
+    private void DoFadeAnim(float s, float e, float time, GameFrameworkAction onComplete)
     {
         canvasGroup.alpha = s;
         var fade = canvasGroup.DOFade(e, time);
-        fade.SetEase(Ease.InOutFlash);
-        fade.SetTarget(this);
-        fade.SetUpdate(true);
-        fade.onComplete = () =>
+        fade.SetEase(DG.Tweening.Ease.InOutFlash).SetTarget(this).SetUpdate(true);
+        fade.OnComplete(() =>
         {
             if (onComplete != null && GF.UI.IsValidUIForm(this.UIForm))
             {
                 onComplete.Invoke();
             }
-        };
+        });
     }
     #endregion
 }

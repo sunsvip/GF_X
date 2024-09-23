@@ -50,6 +50,8 @@ namespace UGF.EditorTools
         const string helpTitle = "使用说明";
         const string helpDoc = "1.打开UI界面预制体.\n2.右键节点'[Add/Remove] UI Variable'添加/移除变量.\n3.在Inspector面板点击功能按钮生成变量代码.";
 
+        SerializedProperty m_UIOpenAnim;
+        SerializedProperty m_UICloseAnim;
         #region #右键菜单
 
         const string REFRESH_BIND = "UI_REFRESH_BIND";
@@ -407,6 +409,8 @@ namespace UGF.EditorTools
                 uiForm.ModifyFieldsProperties(new SerializeFieldData[0]);
             }
             mFields = serializedObject.FindProperty("_fields");
+            m_UIOpenAnim = serializedObject.FindProperty("m_OpenAnimation");
+            m_UICloseAnim = serializedObject.FindProperty("m_CloseAnimation");
             mReorderableList = new ReorderableList[mFields.arraySize];
             EditorApplication.update += OnEditorUpdate;
         }
@@ -577,13 +581,27 @@ namespace UGF.EditorTools
                     reorderableList.DoLayoutList();
                 }
             }
+            EditorGUILayout.Space(10);
+            EditorGUILayout.PrefixLabel("UI Animations:");
+            EditorGUILayout.PropertyField(m_UIOpenAnim);
 
-            serializedObject.ApplyModifiedProperties();
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(m_UICloseAnim);
+            if (EditorGUI.EndChangeCheck())
+            {
+                //一个节点上挂多个DOTweenSequence, 把第二个作为Close动画
+                if (m_UICloseAnim.objectReferenceValue != null)
+                {
+                    var tweens = (m_UICloseAnim.objectReferenceValue as DOTweenSequence).GetComponents<DOTweenSequence>();
+                    if (tweens.Length > 1 && m_UIOpenAnim.objectReferenceValue == tweens[0]) m_UICloseAnim.objectReferenceValue = tweens[1];
+                }
+            }
+
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.EndVertical();
+            serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
         }
-
         /// <summary>
         /// 生成UI脚本.cs
         /// </summary>

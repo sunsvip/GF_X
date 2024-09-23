@@ -1044,5 +1044,7 @@ MonoBehaviour:
     VarType: TMPro.TextMeshProUGUI
     VarPrefix: 0
   topBar: {fileID: 5324967232595930154}
+  m_OpenAnimation: {fileID: 0}
+  m_CloseAnimation: {fileID: 0}
   showLvSwitch: 0
   moneyText: {fileID: 6340830591993899600}
