@@ -50,6 +50,7 @@ namespace UGF.EditorTools
         const string helpTitle = "使用说明";
         const string helpDoc = "1.打开UI界面预制体.\n2.右键节点'[Add/Remove] UI Variable'添加/移除变量.\n3.在Inspector面板点击功能按钮生成变量代码.";
 
+        private GUIContent dropdownBtContent;
         SerializedProperty m_UIOpenAnim;
         SerializedProperty m_UICloseAnim;
         #region #右键菜单
@@ -408,6 +409,7 @@ namespace UGF.EditorTools
             {
                 uiForm.ModifyFieldsProperties(new SerializeFieldData[0]);
             }
+            dropdownBtContent = new GUIContent("选择动效", "select DOTweenSequence component");
             mFields = serializedObject.FindProperty("_fields");
             m_UIOpenAnim = serializedObject.FindProperty("m_OpenAnimation");
             m_UICloseAnim = serializedObject.FindProperty("m_CloseAnimation");
@@ -583,24 +585,44 @@ namespace UGF.EditorTools
             }
             EditorGUILayout.Space(10);
             EditorGUILayout.PrefixLabel("UI Animations:");
-            EditorGUILayout.PropertyField(m_UIOpenAnim);
-
-            EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(m_UICloseAnim);
-            if (EditorGUI.EndChangeCheck())
+            EditorGUILayout.BeginHorizontal();
             {
-                //一个节点上挂多个DOTweenSequence, 把第二个作为Close动画
-                if (m_UICloseAnim.objectReferenceValue != null)
+                EditorGUILayout.PropertyField(m_UIOpenAnim);
+                if (EditorGUILayout.DropdownButton(dropdownBtContent, FocusType.Passive, GUILayout.Width(100)))
                 {
-                    var tweens = (m_UICloseAnim.objectReferenceValue as DOTweenSequence).GetComponents<DOTweenSequence>();
-                    if (tweens.Length > 1 && m_UIOpenAnim.objectReferenceValue == tweens[0]) m_UICloseAnim.objectReferenceValue = tweens[1];
+                    ShowDOTweenSequenceDP(m_UIOpenAnim);
                 }
+                EditorGUILayout.EndHorizontal();
             }
-
-            EditorGUI.EndDisabledGroup();
+            EditorGUILayout.BeginHorizontal();
+            {
+                EditorGUILayout.PropertyField(m_UICloseAnim);
+                if (EditorGUILayout.DropdownButton(dropdownBtContent, FocusType.Passive, GUILayout.Width(100)))
+                {
+                    ShowDOTweenSequenceDP(m_UICloseAnim);
+                }
+                EditorGUILayout.EndHorizontal();
+            }
             EditorGUILayout.EndVertical();
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
+        }
+        private void ShowDOTweenSequenceDP(SerializedProperty property)
+        {
+            if (property.objectReferenceValue == null) return;
+            var currentSeq = (property.objectReferenceValue as DOTweenSequence);
+            var seqArr = currentSeq.GetComponents<DOTweenSequence>();
+            var dropdownMenu = new GenericMenu();
+            for (var menuIndex = 0; menuIndex < seqArr.Length; menuIndex++)
+            {
+                var item = seqArr[menuIndex];
+                dropdownMenu.AddItem(new GUIContent(Utility.Text.Format("DOTweenSequence {0}", menuIndex)), currentSeq == item, () =>
+                {
+                    property.objectReferenceValue = item;
+                    serializedObject.ApplyModifiedProperties();
+                });
+            }
+            dropdownMenu.ShowAsContext();
         }
         /// <summary>
         /// 生成UI脚本.cs
