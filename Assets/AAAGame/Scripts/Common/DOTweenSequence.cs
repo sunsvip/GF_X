@@ -136,32 +136,34 @@ public class SequenceTweenMoveDrawer : PropertyDrawer
                 target.objectReferenceValue = fixedComType;
             }
         }
+
         if (target.objectReferenceValue != null && null == GetFixedComponentType(target.objectReferenceValue as Component, (DOTweenType)tweenType.enumValueIndex))
         {
             lastRect.y += EditorGUIUtility.singleLineHeight;
             EditorGUI.HelpBox(lastRect, string.Format("{0}不支持{1}", target.objectReferenceValue == null ? "Target" : target.objectReferenceValue.GetType().Name, tweenType.enumDisplayNames[tweenType.enumValueIndex]), MessageType.Error);
         }
-
+        const float itemWidth = 110;
+        const float setBtnWidth = 30;
         //Delay, Snapping
         lastRect.y += EditorGUIUtility.singleLineHeight;
         var horizontalRect = lastRect;
-        horizontalRect.width -= 115;
+        horizontalRect.width -= setBtnWidth + itemWidth;
         EditorGUI.PropertyField(horizontalRect, delay);
-        horizontalRect.x += horizontalRect.width;
-        horizontalRect.width = 115;
+        horizontalRect.x += setBtnWidth + horizontalRect.width;
+        horizontalRect.width = itemWidth;
         snapping.boolValue = EditorGUI.ToggleLeft(horizontalRect, "Snapping", snapping.boolValue);
 
         //From Value
         lastRect.y += EditorGUIUtility.singleLineHeight;
         horizontalRect = lastRect;
-        horizontalRect.width -= 115;
+        horizontalRect.width -= setBtnWidth + itemWidth;
 
 
 
         //ToTarget
         lastRect.y += EditorGUIUtility.singleLineHeight;
         var toRect = lastRect;
-        toRect.width -= 115;
+        toRect.width -= setBtnWidth + itemWidth;
 
         //To Value
         var dotweenTp = (DOTweenType)tweenType.enumValueIndex;
@@ -245,43 +247,54 @@ public class SequenceTweenMoveDrawer : PropertyDrawer
                 EditorGUI.HelpBox(lastRect, "To target cannot be null.", MessageType.Error);
             }
         }
-
         horizontalRect.x += horizontalRect.width;
-        horizontalRect.width = 115;
+        horizontalRect.width = setBtnWidth;
+        if (useFromValue.boolValue && GUI.Button(horizontalRect, "Set"))
+        {
+            SetValueFromTarget(dotweenTp, target, fromValue);
+        }
+        horizontalRect.x += setBtnWidth;
+        horizontalRect.width = itemWidth;
         useFromValue.boolValue = EditorGUI.ToggleLeft(horizontalRect, "Enable", useFromValue.boolValue);
 
         toRect.x += toRect.width;
-        toRect.width = 115;
+        toRect.width = setBtnWidth;
+        if (!useToTarget.boolValue && GUI.Button(toRect, "Set"))
+        {
+            SetValueFromTarget(dotweenTp, target, toValue);
+        }
+        toRect.x += setBtnWidth;
+        toRect.width = itemWidth;
         useToTarget.boolValue = EditorGUI.ToggleLeft(toRect, "ToTarget", useToTarget.boolValue);
 
         //Duration
         lastRect.y += EditorGUIUtility.singleLineHeight;
         horizontalRect = lastRect;
-        horizontalRect.width -= 115;
+        horizontalRect.width -= setBtnWidth + itemWidth;
         EditorGUI.PropertyField(horizontalRect, duration);
-        horizontalRect.x += horizontalRect.width;
-        horizontalRect.width = 115;
+        horizontalRect.x += setBtnWidth + horizontalRect.width;
+        horizontalRect.width = itemWidth;
         speedBased.boolValue = EditorGUI.ToggleLeft(horizontalRect, "Use Speed", speedBased.boolValue);
 
         //Ease
         lastRect.y += EditorGUIUtility.singleLineHeight;
         horizontalRect = lastRect;
-        horizontalRect.width -= 115;
+        horizontalRect.width -= setBtnWidth + itemWidth;
         if (customEase.boolValue)
             EditorGUI.PropertyField(horizontalRect, easeCurve);
         else
             EditorGUI.PropertyField(horizontalRect, ease);
-        horizontalRect.x += horizontalRect.width;
-        horizontalRect.width = 115;
+        horizontalRect.x += setBtnWidth + horizontalRect.width;
+        horizontalRect.width = itemWidth;
         customEase.boolValue = EditorGUI.ToggleLeft(horizontalRect, "Use Curve", customEase.boolValue);
 
         //Loops
         lastRect.y += EditorGUIUtility.singleLineHeight;
         horizontalRect = lastRect;
-        horizontalRect.width -= 115;
+        horizontalRect.width -= setBtnWidth + itemWidth;
         EditorGUI.PropertyField(horizontalRect, loops);
-        horizontalRect.x += horizontalRect.width;
-        horizontalRect.width = 115;
+        horizontalRect.x += setBtnWidth + horizontalRect.width;
+        horizontalRect.width = itemWidth;
         EditorGUI.BeginDisabledGroup(loops.intValue == 1);
         loopType.enumValueIndex = (int)(LoopType)EditorGUI.EnumPopup(horizontalRect, (LoopType)loopType.enumValueIndex);
         EditorGUI.EndDisabledGroup();
@@ -309,6 +322,187 @@ public class SequenceTweenMoveDrawer : PropertyDrawer
 
         EditorGUI.indentLevel--;
         EditorGUI.EndProperty();
+    }
+
+    private void SetValueFromTarget(DOTweenType tweenType, SerializedProperty target, SerializedProperty value)
+    {
+        if (target.objectReferenceValue == null) return;
+        var targetCom = target.objectReferenceValue;
+        switch (tweenType)
+        {
+            case DOTweenType.DOMove:
+                {
+                    value.vector4Value = (targetCom as Transform).position;
+                    break;
+                }
+            case DOTweenType.DOMoveX:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as Transform).position.x;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DOMoveY:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as Transform).position.y;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DOMoveZ:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as Transform).position.z;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DOLocalMove:
+                {
+                    value.vector4Value = (targetCom as Transform).localPosition;
+                    break;
+                }
+            case DOTweenType.DOLocalMoveX:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as Transform).localPosition.x;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DOLocalMoveY:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as Transform).localPosition.y;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DOLocalMoveZ:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as Transform).localPosition.z;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DOAnchorPos:
+                {
+                    value.vector4Value = (targetCom as RectTransform).anchoredPosition;
+                    break;
+                }
+            case DOTweenType.DOAnchorPosX:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as RectTransform).anchoredPosition.x;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DOAnchorPosY:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as RectTransform).anchoredPosition.y;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DOAnchorPosZ:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as RectTransform).anchoredPosition3D.z;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DOAnchorPos3D:
+                {
+                    value.vector4Value = (targetCom as RectTransform).anchoredPosition3D;
+                    break;
+                }
+            case DOTweenType.DOColor:
+                {
+                    value.vector4Value = (targetCom as UnityEngine.UI.Graphic).color;
+                    break;
+                }
+            case DOTweenType.DOFade:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as UnityEngine.UI.Graphic).color.a;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DOCanvasGroupFade:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as UnityEngine.CanvasGroup).alpha;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DOValue:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as UnityEngine.UI.Slider).value;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DOSizeDelta:
+                {
+                    value.vector4Value = (targetCom as RectTransform).sizeDelta;
+                    break;
+                }
+            case DOTweenType.DOFillAmount:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as UnityEngine.UI.Image).fillAmount;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DOFlexibleSize:
+                {
+                    value.vector4Value = (targetCom as LayoutElement).GetFlexibleSize();
+                    break;
+                }
+            case DOTweenType.DOMinSize:
+                {
+                    value.vector4Value = (targetCom as LayoutElement).GetMinSize();
+                    break;
+                }
+            case DOTweenType.DOPreferredSize:
+                {
+                    value.vector4Value = (targetCom as LayoutElement).GetPreferredSize();
+                    break;
+                }
+            case DOTweenType.DOScale:
+                {
+                    value.vector4Value = (targetCom as Transform).localScale;
+                    break;
+                }
+            case DOTweenType.DOScaleX:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as Transform).localScale.x;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DOScaleY:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as Transform).localScale.y;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DOScaleZ:
+                {
+                    var tmpValue = value.vector4Value;
+                    tmpValue.x = (targetCom as Transform).localScale.z;
+                    value.vector4Value = tmpValue;
+                    break;
+                }
+            case DOTweenType.DORotate:
+                {
+                    value.vector4Value = (targetCom as Transform).eulerAngles;
+                    break;
+                }
+            case DOTweenType.DOLocalRotate:
+                {
+                    value.vector4Value = (targetCom as Transform).localEulerAngles;
+                    break;
+                }
+        }
     }
 
     private static Component GetFixedComponentType(Component com, DOTweenType tweenType)
