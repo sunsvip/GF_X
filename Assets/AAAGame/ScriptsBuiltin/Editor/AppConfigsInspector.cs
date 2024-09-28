@@ -8,6 +8,9 @@ using GameFramework;
 using GameFramework.Procedure;
 using UnityEditorInternal;
 using System;
+using UnityEditor.SceneManagement;
+using UnityGameFramework.Runtime;
+using UnityEngine.UI;
 
 namespace UGF.EditorTools
 {
@@ -273,6 +276,8 @@ namespace UGF.EditorTools
         GUIContent procedureTitleContent;
         GUIContent editorConstSettingsContent;
         //GUIContent gameDataSaveModeContent;
+        GUIContent designResolutionContent;
+        GUIContent designResolutionBtnContent;
         private void OnEnable()
         {
             appConfig = target as AppConfigs;
@@ -283,6 +288,8 @@ namespace UGF.EditorTools
 
             procedureTitleContent = new GUIContent("流程(Procedures)", "勾选的流程在有限状态机中有效");
             editorConstSettingsContent = EditorGUIUtility.TrTextContentWithIcon("Path Settings [设置DataTable/Config导入/导出路径]", "Settings");
+            designResolutionContent = new GUIContent("UI设计分辨率:");
+            designResolutionBtnContent = new GUIContent("确认修改");
             //gameDataSaveModeContent = new GUIContent("DataTable bytes mode:", "数据表文件存储为二进制");
             svDataArr = new GameDataScrollView[] { new GameDataScrollView(appConfig, GameDataType.DataTable), new GameDataScrollView(appConfig, GameDataType.Config), new GameDataScrollView(appConfig, GameDataType.Language) };
             ReloadScrollView(appConfig);
@@ -290,21 +297,22 @@ namespace UGF.EditorTools
 
         public override void OnInspectorGUI()
         {
-            //base.OnInspectorGUI();
-
             serializedObject.Update();
             if (GUILayout.Button(editorConstSettingsContent))
             {
                 InternalEditorUtility.OpenFileAtLineExternal(Path.Combine(Path.GetDirectoryName(ConstEditor.BuiltinAssembly), "../Editor/Common/ConstEditor.cs"), 0);
             }
-            EditorGUI.BeginChangeCheck();
+            EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying);
+            EditorGUILayout.BeginHorizontal();
             {
-                AppSettings.Instance.DesignResolution = EditorGUILayout.Vector2IntField("UI设计分辨率:", AppSettings.Instance.DesignResolution);
-                if (EditorGUI.EndChangeCheck())
+                AppSettings.Instance.DesignResolution = EditorGUILayout.Vector2IntField(designResolutionContent, AppSettings.Instance.DesignResolution);
+                if (GUILayout.Button(designResolutionBtnContent, GUILayout.Width(100)))
                 {
-                    EditorUtility.SetDirty(AppSettings.Instance);
+                    SetDesignResolution(AppSettings.Instance.DesignResolution);
                 }
+                EditorGUILayout.EndHorizontal();
             }
+            EditorGUI.EndDisabledGroup();
             EditorGUILayout.Space(10);
             //appConfig.DataTableBytesMode = EditorGUILayout.ToggleLeft(gameDataSaveModeContent, appConfig.DataTableBytesMode);
             procedureFoldout = EditorGUILayout.Foldout(procedureFoldout, procedureTitleContent);
@@ -357,6 +365,58 @@ namespace UGF.EditorTools
                 EditorGUILayout.EndHorizontal();
             }
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private static void SetDesignResolution(Vector2Int designResolution)
+        {
+            var launchSceneName = UtilityBuiltin.AssetsPath.GetScenePath("Launch");
+            var currentOpenScene = EditorSceneManager.GetActiveScene();
+            if (currentOpenScene != null && currentOpenScene.isDirty)
+            {
+                int opIndex = EditorUtility.DisplayDialogComplex("警告", $"当前场景{currentOpenScene.name}未保存,是否保存?", "保存", "取消", "不保存");
+                switch (opIndex)
+                {
+                    case 0:
+                        if (!EditorSceneManager.SaveOpenScenes())
+                            return;
+                        break;
+                    case 1:
+                        return;
+                }
+            }
+            var launchScene = EditorSceneManager.OpenScene(launchSceneName, OpenSceneMode.Single);
+            UIComponent uiCom = null;
+            foreach (var item in launchScene.GetRootGameObjects())
+            {
+                uiCom = item.GetComponentInChildren<UIComponent>();
+                if (uiCom != null) break;
+            }
+            if (uiCom != null)
+            {
+                var instanceRoot = uiCom.GetType().GetField("m_InstanceRoot", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(uiCom) as RectTransform;
+                if (instanceRoot != null)
+                {
+                    var canvasScaler = instanceRoot.GetComponent<CanvasScaler>();
+                    if (canvasScaler != null && canvasScaler.referenceResolution != designResolution)
+                    {
+                        canvasScaler.referenceResolution = designResolution;
+                        EditorSceneManager.SaveScene(launchScene);
+                    }
+                }
+            }
+
+            var gfExtension = UtilityBuiltin.AssetsPath.GetPrefab("Core/GFExtension");
+            var gfExtensionPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(gfExtension);
+            if (gfExtensionPrefab != null)
+            {
+                var canvasScaler = gfExtensionPrefab.GetComponentInChildren<CanvasScaler>();
+                if (canvasScaler != null && canvasScaler.referenceResolution != designResolution)
+                {
+                    canvasScaler.referenceResolution = designResolution;
+                    EditorUtility.SetDirty(gfExtensionPrefab);
+                    AssetDatabase.SaveAssetIfDirty(gfExtensionPrefab);
+                }
+            }
         }
 
         private void SaveConfig(AppConfigs cfg)

@@ -65,6 +65,7 @@ public class UIFormBase : UIFormLogic
     /// 子UI界面, 会随着父界面关闭而关闭
     /// </summary>
     IList<int> m_SubUIForms = null;
+    bool m_Covering = false;
     protected override void OnInit(object userData)
     {
         base.OnInit(userData);
@@ -84,6 +85,7 @@ public class UIFormBase : UIFormLogic
     protected override void OnOpen(object userData)
     {
         base.OnOpen(userData);
+        m_Covering = false;
         Params = userData as UIParams;
         var cvs = GetComponent<Canvas>();
         cvs.overrideSorting = true;
@@ -93,7 +95,18 @@ public class UIFormBase : UIFormLogic
         PlayUIAnimation(true, OnOpenAnimationComplete);
         Params.OpenCallback?.Invoke(this);
     }
-
+    protected override void OnCover()
+    {
+        base.OnCover();
+        m_Covering = true;
+    }
+    protected override void OnReveal()
+    {
+        base.OnReveal();
+        if (m_Covering)
+            PlayUIAnimation(true, null);
+        m_Covering = false;
+    }
 
     protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
     {
@@ -292,11 +305,13 @@ public class UIFormBase : UIFormLogic
         {
             if (m_OpenAnimation != null)
             {
-                m_OpenAnimation.DOPlay().OnComplete(onAnimComplete.Invoke);
+                var anim = m_OpenAnimation.DOPlay();
+                if (onAnimComplete != null)
+                    anim.OnComplete(onAnimComplete.Invoke);
             }
             else
             {
-                DoFadeAnim(0, 1, 0.25f, onAnimComplete);
+                onAnimComplete?.Invoke();
             }
         }
         else
@@ -304,17 +319,21 @@ public class UIFormBase : UIFormLogic
             //如果关闭动画未配置, 默认将打开动画倒放作为关闭动画
             if (m_CloseAnimation != null)
             {
-                m_CloseAnimation.DOPlay().OnComplete(onAnimComplete.Invoke);
+                var anim = m_CloseAnimation.DOPlay();
+                if (onAnimComplete != null)
+                    anim.OnComplete(onAnimComplete.Invoke);
             }
             else
             {
                 if (m_OpenAnimation != null)
                 {
-                    m_OpenAnimation.DORewind().OnComplete(onAnimComplete.Invoke);
+                    var anim = m_OpenAnimation.DORewind();
+                    if (onAnimComplete != null)
+                        anim.OnComplete(onAnimComplete.Invoke);
                 }
                 else
                 {
-                    DoFadeAnim(1, 0, 0.25f, onAnimComplete);
+                    onAnimComplete?.Invoke();
                 }
             }
         }
@@ -363,20 +382,4 @@ public class UIFormBase : UIFormLogic
     {
         GF.UI.CloseUIForm(this.UIForm);
     }
-
-    #region 默认UI动画
-    private void DoFadeAnim(float s, float e, float time, GameFrameworkAction onComplete)
-    {
-        canvasGroup.alpha = s;
-        var fade = canvasGroup.DOFade(e, time);
-        fade.SetEase(DG.Tweening.Ease.InOutFlash).SetTarget(this).SetUpdate(true);
-        fade.OnComplete(() =>
-        {
-            if (onComplete != null && GF.UI.IsValidUIForm(this.UIForm))
-            {
-                onComplete.Invoke();
-            }
-        });
-    }
-    #endregion
 }
