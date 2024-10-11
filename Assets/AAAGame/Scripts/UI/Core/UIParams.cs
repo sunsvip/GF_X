@@ -19,9 +19,9 @@ public class UIParams : RefParams
     }
 
 
-    protected override void ClearDirtyData()
+    protected override void ResetProperties()
     {
-        base.ClearDirtyData();
+        base.ResetProperties();
         AllowEscapeClose = null;
         SortOrder = null;
         OpenCallback = null;

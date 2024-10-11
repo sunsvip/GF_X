@@ -48,9 +48,9 @@ public class EntityParams : RefParams
         eParams.localScale = localScale;
         return eParams;
     }
-    protected override void ClearDirtyData()
+    protected override void ResetProperties()
     {
-        base.ClearDirtyData();
+        base.ResetProperties();
         this.position = null;
         this.localPosition = null;
         this.eulerAngles = null;

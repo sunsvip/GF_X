@@ -8,7 +8,7 @@ using UnityGameFramework.Runtime;
 public class RefParams : IReference
 {
     public int Id { get; protected set; }
-    public static RefParams Acquire()
+    public static RefParams Create()
     {
         var eParams = ReferencePool.Acquire<RefParams>();
         eParams.CreateRoot();
@@ -32,6 +32,10 @@ public class RefParams : IReference
         varObj.Value = value;
         Set<VarObject>(key, varObj);
     }
+    public object Get(string key)
+    {
+        return Get<VarObject>(key).Value;
+    }
     /// <summary>
     /// 获取引用类型的参数
     /// </summary>
@@ -42,10 +46,10 @@ public class RefParams : IReference
     {
         if (defaultValue != null)
         {
-            _ = UniTask.DelayFrame(1).ContinueWith(() =>
+            UniTask.DelayFrame(1).ContinueWith(() =>
             {
                 ReferencePool.Release(defaultValue);
-            });
+            }).Forget();
 
         }
 
@@ -59,13 +63,13 @@ public class RefParams : IReference
 
     public void Clear()
     {
-        ClearDirtyData();
+        ResetProperties();
         GF.VariablePool.ClearVariables(this.Id);
     }
     /// <summary>
     /// 释放时回调, 需重写此方法重置数据以避免脏数据
     /// </summary>
-    protected virtual void ClearDirtyData()
+    protected virtual void ResetProperties()
     {
 
     }
