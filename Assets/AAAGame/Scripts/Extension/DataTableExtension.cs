@@ -160,6 +160,10 @@ public static class DataTableExtension
         string[] splitValue = value.Split(',');
         return new Vector2Int(int.Parse(splitValue[0]), int.Parse(splitValue[1]));
     }
+    public static Vector2Int ReadVector2Int(this BinaryReader binaryReader)
+    {
+        return new Vector2Int(binaryReader.Read7BitEncodedInt32(), binaryReader.Read7BitEncodedInt32());
+    }
     public static Vector2Int[] ParseVector2IntArray(string value)
     {
         string[] arr = ParseArrayElements(value);
@@ -195,6 +199,10 @@ public static class DataTableExtension
     {
         string[] splitValue = value.Split(',');
         return new Vector3Int(int.Parse(splitValue[0]), int.Parse(splitValue[1]), int.Parse(splitValue[2]));
+    }
+    public static Vector3Int ReadVector3Int(this BinaryReader binaryReader)
+    {
+        return new Vector3Int(binaryReader.Read7BitEncodedInt32(), binaryReader.Read7BitEncodedInt32(), binaryReader.Read7BitEncodedInt32());
     }
     public static Vector3Int[] ParseVector3IntArray(string value)
     {
