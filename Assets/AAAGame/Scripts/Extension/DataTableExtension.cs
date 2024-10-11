@@ -1,6 +1,7 @@
 ﻿using GameFramework;
 using GameFramework.DataTable;
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -93,23 +94,44 @@ public static class DataTableExtension
         string[] splitValue = value.Split(',');
         return new Color32(byte.Parse(splitValue[0]), byte.Parse(splitValue[1]), byte.Parse(splitValue[2]), byte.Parse(splitValue[3]));
     }
-
+    public static Color32 ReadColor32(this BinaryReader binaryReader)
+    {
+        return new Color32(binaryReader.ReadByte(), binaryReader.ReadByte(), binaryReader.ReadByte(), binaryReader.ReadByte());
+    }
     public static Color ParseColor(string value)
     {
         string[] splitValue = value.Split(',');
         return new Color(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]), float.Parse(splitValue[3]));
     }
-
+    public static Color ReadColor(this BinaryReader binaryReader)
+    {
+        return new Color(binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle());
+    }
     public static Quaternion ParseQuaternion(string value)
     {
         string[] splitValue = value.Split(',');
         return new Quaternion(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]), float.Parse(splitValue[3]));
     }
-
+    public static Quaternion ReadQuaternion(this BinaryReader binaryReader)
+    {
+        return new Quaternion(binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle());
+    }
+    public static DateTime ParseDateTime(string value)
+    {
+        return DateTime.Parse(value);
+    }
+    public static DateTime ReadDateTime(this BinaryReader binaryReader)
+    {
+        return new DateTime(binaryReader.ReadInt64());
+    }
     public static Rect ParseRect(string value)
     {
         string[] splitValue = value.Split(',');
         return new Rect(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]), float.Parse(splitValue[3]));
+    }
+    public static Rect ReadRect(this BinaryReader binaryReader)
+    {
+        return new Rect(binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle());
     }
 
     public static Vector2 ParseVector2(string value)
@@ -117,6 +139,12 @@ public static class DataTableExtension
         string[] splitValue = value.Split(',');
         return new Vector2(float.Parse(splitValue[0]), float.Parse(splitValue[1]));
     }
+
+    public static Vector2 ReadVector2(this BinaryReader binaryReader)
+    {
+        return new Vector2(binaryReader.ReadSingle(), binaryReader.ReadSingle());
+    }
+
     public static Vector2[] ParseVector2Array(string value)
     {
         string[] arr = ParseArrayElements(value);
@@ -148,6 +176,11 @@ public static class DataTableExtension
 
         return new Vector3(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]));
     }
+
+    public static Vector3 ReadVector3(this BinaryReader binaryReader)
+    {
+        return new Vector3(binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle());
+    }
     public static Vector3[] ParseVector3Array(string value)
     {
         string[] arr = ParseArrayElements(value);
@@ -178,7 +211,10 @@ public static class DataTableExtension
         string[] splitValue = value.Split(',');
         return new Vector4(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]), float.Parse(splitValue[3]));
     }
-
+    public static Vector4 ReadVector4(this BinaryReader binaryReader)
+    {
+        return new Vector4(binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle());
+    }
     /// <summary>
     /// 解析数据表数组
     /// </summary>
@@ -283,4 +319,11 @@ public static class DataTableExtension
         }
         return null;
     }
+    #region BinaryReader Extension
+
+    //public static int4 Readint4(this BinaryReader binaryReader)
+    //{
+    //    return new int4(binaryReader.Read7BitEncodedInt32(), binaryReader.Read7BitEncodedInt32(), binaryReader.Read7BitEncodedInt32(), binaryReader.Read7BitEncodedInt32());
+    //}
+    #endregion
 }
