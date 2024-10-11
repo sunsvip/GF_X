@@ -1,4 +1,4 @@
-﻿using DG.Tweening;
+using DG.Tweening;
 using System;
 using UnityEngine;
 using static DOTweenSequence;
@@ -17,8 +17,15 @@ public class DOTweeSequenceInspector : Editor
 {
     SerializedProperty m_Sequence;
     ReorderableList m_SequenceList;
+
+    GUIContent m_PlayBtnContent;
+    GUIContent m_RewindBtnContent;
+    GUIContent m_ResetBtnContent;
     private void OnEnable()
     {
+        m_PlayBtnContent = EditorGUIUtility.TrIconContent("d_PlayButton@2x", "播放");
+        m_RewindBtnContent = EditorGUIUtility.TrIconContent("d_preAudioAutoPlayOff@2x", "倒放");
+        m_ResetBtnContent = EditorGUIUtility.TrIconContent("d_preAudioLoopOff@2x", "重置");
         m_Sequence = serializedObject.FindProperty("m_Sequence");
         m_SequenceList = new ReorderableList(serializedObject, m_Sequence);
         m_SequenceList.drawElementCallback = OnDrawSequenceItem;
@@ -36,7 +43,7 @@ public class DOTweeSequenceInspector : Editor
         {
             EditorGUILayout.BeginHorizontal();
             {
-                if (GUILayout.Button("Play"))
+                if (GUILayout.Button(m_PlayBtnContent))
                 {
                     if (DOTweenEditorPreview.isPreviewing)
                     {
@@ -46,7 +53,7 @@ public class DOTweeSequenceInspector : Editor
                     DOTweenEditorPreview.PrepareTweenForPreview((target as DOTweenSequence).DOPlay());
                     DOTweenEditorPreview.Start();
                 }
-                if (GUILayout.Button("Rewind"))
+                if (GUILayout.Button(m_RewindBtnContent))
                 {
                     if (DOTweenEditorPreview.isPreviewing)
                     {
@@ -56,7 +63,7 @@ public class DOTweeSequenceInspector : Editor
                     DOTweenEditorPreview.PrepareTweenForPreview((target as DOTweenSequence).DORewind());
                     DOTweenEditorPreview.Start();
                 }
-                if (GUILayout.Button("Reset"))
+                if (GUILayout.Button(m_ResetBtnContent))
                 {
                     DOTweenEditorPreview.Stop(true, true);
                     (target as DOTweenSequence).DOKill();
@@ -559,7 +566,8 @@ public class DOTweenSequence : MonoBehaviour
     [SerializeField] int m_Loops = 1;
     [SerializeField] LoopType m_LoopType = LoopType.Restart;
     [SerializeField] UpdateType m_UpdateType = UpdateType.Normal;
-    [SerializeField] bool m_Snapping = false;
+
+    [SerializeField] bool m_IgnoreTimeScale = false;
     [SerializeField] UnityEvent m_OnPlay = null;
     [SerializeField] UnityEvent m_OnUpdate = null;
     [SerializeField] UnityEvent m_OnComplete = null;
@@ -775,7 +783,7 @@ public class DOTweenSequence : MonoBehaviour
                 }
             }
         }
-        sequence.SetEase(m_Ease).SetUpdate(m_UpdateType).SetLoops(m_Loops, m_LoopType).SetDelay(m_Delay);
+        sequence.SetEase(m_Ease).SetUpdate(m_UpdateType, m_IgnoreTimeScale).SetLoops(m_Loops, m_LoopType).SetDelay(m_Delay);
         if (m_OnPlay != null) sequence.OnPlay(m_OnPlay.Invoke);
         if (m_OnUpdate != null) sequence.OnUpdate(m_OnUpdate.Invoke);
         if (m_OnComplete != null) sequence.OnComplete(m_OnComplete.Invoke);
@@ -1310,7 +1318,7 @@ public class DOTweenSequence : MonoBehaviour
                 if (Delay > 0) result.SetDelay(Delay);
                 if (CustomEase) result.SetEase(EaseCurve);
                 else result.SetEase(Ease);
-
+                
                 if (OnPlay != null) result.OnPlay(OnPlay.Invoke);
                 if (OnUpdate != null) result.OnUpdate(OnUpdate.Invoke);
                 if (OnComplete != null) result.OnComplete(OnComplete.Invoke);

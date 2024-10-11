@@ -867,10 +867,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AvailableProcedureTypeNames:
-  - CheckAndUpdateProcedure
+  - LaunchProcedure
   - LoadHotfixDllProcedure
-  - LunchProcedure
-  m_EntranceProcedureTypeName: LunchProcedure
+  - UpdateResourcesProcedure
+  m_EntranceProcedureTypeName: LaunchProcedure
 --- !u!114 &775722308
 MonoBehaviour:
   m_ObjectHideFlags: 0

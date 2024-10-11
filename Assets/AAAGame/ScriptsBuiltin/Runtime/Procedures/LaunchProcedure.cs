@@ -4,13 +4,13 @@ using UnityGameFramework.Runtime;
 using GameFramework.Fsm;
 using System.Globalization;
 
-public class LunchProcedure : ProcedureBase
+public class LaunchProcedure : ProcedureBase
 {
     protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
     {
         base.OnEnter(procedureOwner);
         this.InitSettings();
-        ChangeState(procedureOwner, GFBuiltin.Base.EditorResourceMode ? typeof(LoadHotfixDllProcedure) : typeof(CheckAndUpdateProcedure));
+        ChangeState(procedureOwner, GFBuiltin.Base.EditorResourceMode ? typeof(LoadHotfixDllProcedure) : typeof(UpdateResourcesProcedure));
     }
 
     private void InitSettings()

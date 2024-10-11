@@ -232,7 +232,38 @@ public static class DataTableExtension
         }
         return null;
     }
-
+    /// <summary>
+    /// 解析枚举
+    /// </summary>
+    /// <typeparam name="TEnum"></typeparam>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static TEnum ParseEnum<TEnum>(string value) where TEnum : struct, Enum
+    {
+        string[] splitValue = value.Split('|', StringSplitOptions.RemoveEmptyEntries);
+        if (splitValue.Length == 1)
+        {
+            var valueStr = splitValue[0].Split('.')[1];
+            if (Enum.TryParse<TEnum>(valueStr, out TEnum result))
+            {
+                return result;
+            }
+        }
+        else
+        {
+            int resultEnum = 0;
+            foreach (string s in splitValue)
+            {
+                var strTrim = s.Split('.')[1].Trim();
+                if (Enum.TryParse<TEnum>(strTrim, true, out TEnum result))
+                {
+                    resultEnum |= Convert.ToInt32(result);
+                }
+            }
+            return (TEnum)Enum.ToObject(typeof(TEnum), resultEnum);
+        }
+        return default(TEnum);
+    }
     private static string[] ParseArrayElements(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
