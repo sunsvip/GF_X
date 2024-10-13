@@ -6,7 +6,7 @@ using UnityEditor.U2D.Sprites;
 using UnityEngine;
 using UnityEngine.U2D;
 
-public partial class RightClickMenuExtension
+public partial class ProjectPanelRightClickExtension
 {
     [MenuItem("Assets/GF Tools/2D/SpriteAtlas -> TMP_SpriteAsset", priority = 100)]
     static void SpriteAtlas2TmpSpriteMenu()

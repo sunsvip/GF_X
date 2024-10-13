@@ -62,6 +62,8 @@ namespace UGF.EditorTools
         public const string GameConfigPath = "Assets/AAAGame/Config";
         public const string LanguagePath = "Assets/AAAGame/Language";
         public const string DataTableCodePath = "Assets/AAAGame/Scripts/DataTable";
+        public const string UIFormTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIFormTemplate.prefab";
+        public const string UIDialogTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIDialogTemplate.prefab";
     }
 }
 #endif

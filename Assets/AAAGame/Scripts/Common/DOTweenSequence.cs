@@ -21,11 +21,14 @@ public class DOTweeSequenceInspector : Editor
     GUIContent m_PlayBtnContent;
     GUIContent m_RewindBtnContent;
     GUIContent m_ResetBtnContent;
+    private GUILayoutOption m_btnHeight;
+
     private void OnEnable()
     {
         m_PlayBtnContent = EditorGUIUtility.TrIconContent("d_PlayButton@2x", "播放");
         m_RewindBtnContent = EditorGUIUtility.TrIconContent("d_preAudioAutoPlayOff@2x", "倒放");
         m_ResetBtnContent = EditorGUIUtility.TrIconContent("d_preAudioLoopOff@2x", "重置");
+        m_btnHeight = GUILayout.Height(35);
         m_Sequence = serializedObject.FindProperty("m_Sequence");
         m_SequenceList = new ReorderableList(serializedObject, m_Sequence);
         m_SequenceList.drawElementCallback = OnDrawSequenceItem;
@@ -43,7 +46,7 @@ public class DOTweeSequenceInspector : Editor
         {
             EditorGUILayout.BeginHorizontal();
             {
-                if (GUILayout.Button(m_PlayBtnContent))
+                if (GUILayout.Button(m_PlayBtnContent, m_btnHeight))
                 {
                     if (DOTweenEditorPreview.isPreviewing)
                     {
@@ -53,7 +56,7 @@ public class DOTweeSequenceInspector : Editor
                     DOTweenEditorPreview.PrepareTweenForPreview((target as DOTweenSequence).DOPlay());
                     DOTweenEditorPreview.Start();
                 }
-                if (GUILayout.Button(m_RewindBtnContent))
+                if (GUILayout.Button(m_RewindBtnContent, m_btnHeight))
                 {
                     if (DOTweenEditorPreview.isPreviewing)
                     {
@@ -63,7 +66,7 @@ public class DOTweeSequenceInspector : Editor
                     DOTweenEditorPreview.PrepareTweenForPreview((target as DOTweenSequence).DORewind());
                     DOTweenEditorPreview.Start();
                 }
-                if (GUILayout.Button(m_ResetBtnContent))
+                if (GUILayout.Button(m_ResetBtnContent, m_btnHeight))
                 {
                     DOTweenEditorPreview.Stop(true, true);
                     (target as DOTweenSequence).DOKill();
