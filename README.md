@@ -4,7 +4,7 @@
 作为极其懒惰、从不加班的设计开发工程师，我的宗旨是拒绝一切高重复度工作，能自动的绝不手动。如果您拥有相同的观点，请和我一起维护完善此项目！
 
 框架详细功能说明文档：[【Unity自动化游戏框架】通用自动化游戏框架 爽到起飞的工作流 巨幅提升效率 质量 产能 功能展示](https://blog.csdn.net/final5788/article/details/138164034)
-视频教程(免费持续更新)：[【GF_X通用自动化游戏框架系列视频教程】] (https://www.bilibili.com/video/BV1AT2rYVE3V/?share_source=copy_web&vd_source=47daa1bb9519dea051e24cd30d7be9be)
+视频教程(免费持续更新)：[【GF_X通用自动化游戏框架系列视频教程】](https://www.bilibili.com/video/BV1AT2rYVE3V/?share_source=copy_web&vd_source=47daa1bb9519dea051e24cd30d7be9be)
 #### 软件架构
 软件架构说明
 ### GF_X功能说明：
