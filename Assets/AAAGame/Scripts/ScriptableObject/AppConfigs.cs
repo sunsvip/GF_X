@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 #endif
 
-[CreateAssetMenu(fileName = "AppConfigs", menuName = "ScriptableObject/AppConfigs【配置App运行时所需数据表、配置表、流程】")]
+[CreateAssetMenu(fileName = "AppConfigs", menuName = "ScriptableObject/Core/AppConfigs【配置App运行时所需数据表、配置表、流程】")]
 public class AppConfigs : ScriptableObject
 {
     private static AppConfigs mInstance = null;
@@ -43,7 +43,7 @@ public class AppConfigs : ScriptableObject
     {
         if (mInstance == null)
         {
-            var configAsset = UtilityBuiltin.AssetsPath.GetScriptableAsset("AppConfigs");
+            var configAsset = UtilityBuiltin.AssetsPath.GetScriptableAsset("Core/AppConfigs");
             mInstance = AssetDatabase.LoadAssetAtPath<AppConfigs>(configAsset);
         }
         return mInstance;
@@ -55,7 +55,7 @@ public class AppConfigs : ScriptableObject
     /// <returns></returns>
     public static async Task<AppConfigs> GetInstanceSync()
     {
-        var configAsset = UtilityBuiltin.AssetsPath.GetScriptableAsset("AppConfigs");
+        var configAsset = UtilityBuiltin.AssetsPath.GetScriptableAsset("Core/AppConfigs");
         if (mInstance == null)
         {
             mInstance = await GFBuiltin.Resource.LoadAssetAsync<AppConfigs>(configAsset);

@@ -17,12 +17,14 @@
       <Asset Guid="02cbc534a52481241872d42107e29c57" ResourceName="Prefabs/Entity" />
       <Asset Guid="034b209892546994d8037e72ca910089" ResourceName="Language" />
       <Asset Guid="0b69b108d75f47940881a60045f21976" ResourceName="Prefabs/UI" />
-      <Asset Guid="13b0b1255d7d6cf44a4d1987723460ef" ResourceName="ScriptableAssets" />
       <Asset Guid="1b586e20031d8b44a9495620988ad3dc" ResourceName="HotfixDlls" />
       <Asset Guid="1caa4c6fdc3281642b46f7c82c497dc5" ResourceName="Prefabs/GFExtension" />
+      <Asset Guid="230b0c809e3e6a647af26c803aa90467" ResourceName="SharedAssets" />
+      <Asset Guid="27d526d805a244b45a1d43a61f4c3e47" ResourceName="ScriptableAssets" />
       <Asset Guid="2cdf1b85fd520ef46b11f580e9443e78" ResourceName="Language" />
-      <Asset Guid="2e498d1c8094910479dc3e1b768306a4" ResourceName="SharedAssets" />
       <Asset Guid="3fdcbb5b7d730f341bf585839b5502a5" ResourceName="Prefabs/UI" />
+      <Asset Guid="53b9781b792f33841a6a088ec392fbd8" ResourceName="SharedAssets" />
+      <Asset Guid="588ff96c6882fb3448095d7a881bced3" ResourceName="SharedAssets" />
       <Asset Guid="60088dd3b0214654ba9150c7fdda1a8d" ResourceName="DataTable" />
       <Asset Guid="63f5f6812a8f9724cac670756d524631" ResourceName="DataTable" />
       <Asset Guid="66210d36a4cf7514e8d9e60ae298c2c4" ResourceName="DataTable" />
@@ -37,11 +39,13 @@
       <Asset Guid="81ed03a317f6d6a43aa694d24e6a8f64" ResourceName="DataTable" />
       <Asset Guid="83bdadb9e1d24a94e8498def13d4804c" ResourceName="Language" />
       <Asset Guid="84a6440c0fd8e974e8986ff4df2d489f" ResourceName="Language" />
-      <Asset Guid="8f586378b4e144a9851e7b34d9b748ee" ResourceName="SharedAssets" />
+      <Asset Guid="8a4e2875174034b4aabb43c9ca9028a1" ResourceName="SharedAssets" />
       <Asset Guid="92cb04501693359419a839b8d33aace7" ResourceName="Prefabs/UI" />
       <Asset Guid="98662c21c0b96bc48a6440a4fe486556" ResourceName="DataTable" />
       <Asset Guid="9f8375e22b5a1e3499c99ed3facbac63" ResourceName="Config" />
+      <Asset Guid="a29db755b6ae1104a94df297de29cfc8" ResourceName="SharedAssets" />
       <Asset Guid="a8043c8d11e46d648bb702e4a3572406" ResourceName="Prefabs/Entity" />
+      <Asset Guid="b8f790017d833da45a5aec7344ed4f97" ResourceName="SharedAssets" />
       <Asset Guid="c4e839cf3d001e0499336fb7f53c0310" ResourceName="DataTable" />
       <Asset Guid="c7a26b8d1ff63834298841254b2332c4" ResourceName="Prefabs/UI" />
       <Asset Guid="ca4765c7a3113644e9f87e202a7ff91d" ResourceName="Scene" />
@@ -50,12 +54,10 @@
       <Asset Guid="e09d64781b233da4c8e75adde91c9652" ResourceName="Prefabs/Entity" />
       <Asset Guid="e1a613ebd6f1d6f4a825d14981f3e88d" ResourceName="DataTable" />
       <Asset Guid="e28cbf64cd5864f46ad3394fcab85cfd" ResourceName="DataTable" />
-      <Asset Guid="e3265ab4bf004d28a9537516768c1c75" ResourceName="SharedAssets" />
       <Asset Guid="e81571591a3393745a08aee12b114309" ResourceName="HotfixDlls" />
       <Asset Guid="ec835c8e8455a4e3eab94be7baf9c04a" ResourceName="Prefabs/UI" />
       <Asset Guid="fb3663d475cbeb74ba97e229b86d2504" ResourceName="Prefabs/Entity" />
       <Asset Guid="fca0697f771517f41a13845450b0f97a" ResourceName="Prefabs/Entity" />
-      <Asset Guid="fe393ace9b354375a9cb14cdbbc28be4" ResourceName="SharedAssets" />
     </Assets>
   </ResourceCollection>
 </UnityGameFramework>

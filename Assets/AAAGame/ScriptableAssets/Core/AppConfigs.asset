@@ -15,17 +15,20 @@ MonoBehaviour:
   mDataTables:
   - CameraViewTable
   - ColorTable
-  - EntityGroupTable
   - LevelTable
-  - SoundGroupTable
-  - UIGroupTable
-  - UITable
+  - Core/EntityGroupTable
+  - Core/LanguagesTable
+  - Core/SoundGroupTable
+  - Core/UIGroupTable
+  - Core/UITable
   mConfigs:
   - GameConfig
   mLanguages:
   - ChineseSimplified
   - ChineseTraditional
   - English
+  - Japanese
+  - Korean
   mProcedures:
   - ChangeSceneProcedure
   - GameOverProcedure
