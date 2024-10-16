@@ -91,6 +91,7 @@ public static class DataTableExtension
 
     public static Color32 ParseColor32(string value)
     {
+        if (string.IsNullOrEmpty(value)) return new Color32(255, 255, 255, 255);
         string[] splitValue = value.Split(',');
         return new Color32(byte.Parse(splitValue[0]), byte.Parse(splitValue[1]), byte.Parse(splitValue[2]), byte.Parse(splitValue[3]));
     }
@@ -100,6 +101,7 @@ public static class DataTableExtension
     }
     public static Color ParseColor(string value)
     {
+        if (string.IsNullOrEmpty(value)) return Color.white;
         string[] splitValue = value.Split(',');
         return new Color(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]), float.Parse(splitValue[3]));
     }
@@ -109,6 +111,7 @@ public static class DataTableExtension
     }
     public static Quaternion ParseQuaternion(string value)
     {
+        if (string.IsNullOrEmpty(value)) return Quaternion.identity;
         string[] splitValue = value.Split(',');
         return new Quaternion(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]), float.Parse(splitValue[3]));
     }
@@ -118,6 +121,7 @@ public static class DataTableExtension
     }
     public static DateTime ParseDateTime(string value)
     {
+        if (string.IsNullOrEmpty(value)) return DateTime.MinValue;
         return DateTime.Parse(value);
     }
     public static DateTime ReadDateTime(this BinaryReader binaryReader)
@@ -126,6 +130,7 @@ public static class DataTableExtension
     }
     public static Rect ParseRect(string value)
     {
+        if (string.IsNullOrEmpty(value)) return Rect.zero;
         string[] splitValue = value.Split(',');
         return new Rect(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]), float.Parse(splitValue[3]));
     }
@@ -136,6 +141,7 @@ public static class DataTableExtension
 
     public static Vector2 ParseVector2(string value)
     {
+        if (string.IsNullOrEmpty(value)) return Vector2.zero;
         string[] splitValue = value.Split(',');
         return new Vector2(float.Parse(splitValue[0]), float.Parse(splitValue[1]));
     }
@@ -147,6 +153,7 @@ public static class DataTableExtension
 
     public static Vector2[] ParseVector2Array(string value)
     {
+        if (string.IsNullOrEmpty(value)) return null;
         string[] arr = ParseArrayElements(value);
         Vector2[] result = new Vector2[arr.Length];
         for (int i = 0; i < arr.Length; i++)
@@ -157,6 +164,7 @@ public static class DataTableExtension
     }
     public static Vector2Int ParseVector2Int(string value)
     {
+        if (string.IsNullOrEmpty(value)) return Vector2Int.zero;
         string[] splitValue = value.Split(',');
         return new Vector2Int(int.Parse(splitValue[0]), int.Parse(splitValue[1]));
     }
@@ -166,6 +174,7 @@ public static class DataTableExtension
     }
     public static Vector2Int[] ParseVector2IntArray(string value)
     {
+        if (string.IsNullOrEmpty(value)) return null;
         string[] arr = ParseArrayElements(value);
         Vector2Int[] result = new Vector2Int[arr.Length];
         for (int i = 0; i < arr.Length; i++)
@@ -176,6 +185,7 @@ public static class DataTableExtension
     }
     public static Vector3 ParseVector3(string value)
     {
+        if (string.IsNullOrEmpty(value)) return Vector3.zero;
         string[] splitValue = value.Split(',');
 
         return new Vector3(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]));
@@ -187,6 +197,7 @@ public static class DataTableExtension
     }
     public static Vector3[] ParseVector3Array(string value)
     {
+        if (string.IsNullOrEmpty(value)) return null;
         string[] arr = ParseArrayElements(value);
         Vector3[] result = new Vector3[arr.Length];
         for (int i = 0; i < arr.Length; i++)
@@ -197,6 +208,7 @@ public static class DataTableExtension
     }
     public static Vector3Int ParseVector3Int(string value)
     {
+        if (string.IsNullOrEmpty(value)) return Vector3Int.zero;
         string[] splitValue = value.Split(',');
         return new Vector3Int(int.Parse(splitValue[0]), int.Parse(splitValue[1]), int.Parse(splitValue[2]));
     }
@@ -206,6 +218,7 @@ public static class DataTableExtension
     }
     public static Vector3Int[] ParseVector3IntArray(string value)
     {
+        if (string.IsNullOrEmpty(value)) return null;
         string[] arr = ParseArrayElements(value);
         Vector3Int[] result = new Vector3Int[arr.Length];
         for (int i = 0; i < arr.Length; i++)
@@ -216,6 +229,7 @@ public static class DataTableExtension
     }
     public static Vector4 ParseVector4(string value)
     {
+        if (string.IsNullOrEmpty(value)) return Vector4.zero;
         string[] splitValue = value.Split(',');
         return new Vector4(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]), float.Parse(splitValue[3]));
     }
@@ -233,7 +247,7 @@ public static class DataTableExtension
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            return new T[0];
+            return null;
         }
         string[] strs = value.Split(',');
         T[] arr = new T[strs.Length];
@@ -284,6 +298,7 @@ public static class DataTableExtension
     /// <returns></returns>
     public static TEnum ParseEnum<TEnum>(string value) where TEnum : struct, Enum
     {
+        if (string.IsNullOrEmpty(value)) return default(TEnum);
         string[] splitValue = value.Split('|', StringSplitOptions.RemoveEmptyEntries);
         if (splitValue.Length == 1)
         {
