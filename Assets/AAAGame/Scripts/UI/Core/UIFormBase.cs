@@ -159,7 +159,8 @@ public class UIFormBase : UIFormLogic
     {
         if (!m_SubUIForms.Contains(uiformId)) return;
         m_SubUIForms.Remove(uiformId);
-        GF.UI.CloseUIForm(uiformId);
+        if (GF.UI.HasUIForm(uiformId))
+            GF.UI.CloseUIForm(uiformId);
     }
     private void CloseAllSubUIForms()
     {
