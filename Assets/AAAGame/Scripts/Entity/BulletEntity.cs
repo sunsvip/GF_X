@@ -18,7 +18,11 @@ public class BulletEntity : EntityBase
     protected override void OnShow(object userData)
     {
         base.OnShow(userData);
+#if UNITY_6000_0_OR_NEWER
+        m_body.linearVelocity = transform.forward * moveSpeed;
+#else
         m_body.velocity = transform.forward * moveSpeed;
+#endif
 
         float lifeTime = Params.Get<VarFloat>(LIFE_TIME);
         UniTask.Delay(TimeSpan.FromSeconds(lifeTime)).ContinueWith(LifeTimeOver).Forget();
