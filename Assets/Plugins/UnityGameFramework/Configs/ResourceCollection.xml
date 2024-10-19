@@ -10,17 +10,17 @@
       <Resource Name="Prefabs/GFExtension" LoadType="2" Packed="False" />
       <Resource Name="Prefabs/UI" LoadType="2" Packed="False" />
       <Resource Name="Scene" LoadType="2" Packed="False" />
-      <Resource Name="ScriptableAssets" LoadType="2" Packed="False" />
+      <Resource Name="ScriptableAssets" LoadType="0" Packed="False" />
       <Resource Name="SharedAssets" LoadType="2" Packed="False" />
     </Resources>
     <Assets>
       <Asset Guid="02cbc534a52481241872d42107e29c57" ResourceName="Prefabs/Entity" />
       <Asset Guid="034b209892546994d8037e72ca910089" ResourceName="Language" />
       <Asset Guid="0b69b108d75f47940881a60045f21976" ResourceName="Prefabs/UI" />
+      <Asset Guid="13b0b1255d7d6cf44a4d1987723460ef" ResourceName="ScriptableAssets" />
       <Asset Guid="1b586e20031d8b44a9495620988ad3dc" ResourceName="HotfixDlls" />
       <Asset Guid="1caa4c6fdc3281642b46f7c82c497dc5" ResourceName="Prefabs/GFExtension" />
       <Asset Guid="230b0c809e3e6a647af26c803aa90467" ResourceName="SharedAssets" />
-      <Asset Guid="27d526d805a244b45a1d43a61f4c3e47" ResourceName="ScriptableAssets" />
       <Asset Guid="2cdf1b85fd520ef46b11f580e9443e78" ResourceName="Language" />
       <Asset Guid="3fdcbb5b7d730f341bf585839b5502a5" ResourceName="Prefabs/UI" />
       <Asset Guid="53b9781b792f33841a6a088ec392fbd8" ResourceName="SharedAssets" />

@@ -1085,8 +1085,11 @@ namespace UGF.EditorTools
             string defaultFolder = UtilityBuiltin.AssetsPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, AppBuildSettings.Instance.AppBuildDir, target.ToString());
             string defaultName = Application.productName;
             //打出包后给包重命名
-
+#if UNITY_6000_0_OR_NEWER
+            string extension = Utility.Assembly.GetType("UnityEditor.PostprocessBuildPlayer").GetMethod("GetExtensionForBuildTarget", new Type[] { typeof(BuildTarget), typeof(int), typeof(BuildOptions) }).Invoke(null, new object[] { target, subtarget, options }) as string;
+#else
             string extension = Utility.Assembly.GetType("UnityEditor.PostprocessBuildPlayer").GetMethod("GetExtensionForBuildTarget", new Type[] { typeof(BuildTargetGroup), typeof(BuildTarget), typeof(int), typeof(BuildOptions) }).Invoke(null, new object[] { targetGroup, target, subtarget, options }) as string;
+#endif
             string buildPath = defaultFolder;
             if (!string.IsNullOrEmpty(extension))
             {

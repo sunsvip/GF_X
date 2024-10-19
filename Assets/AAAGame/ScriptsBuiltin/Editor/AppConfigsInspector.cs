@@ -294,7 +294,10 @@ namespace UGF.EditorTools
             svDataArr = new GameDataScrollView[] { new GameDataScrollView(appConfig, GameDataType.DataTable), new GameDataScrollView(appConfig, GameDataType.Config), new GameDataScrollView(appConfig, GameDataType.Language) };
             ReloadScrollView(appConfig);
         }
-
+        private void OnDisable()
+        {
+            SaveConfig(appConfig);
+        }
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
@@ -369,6 +372,7 @@ namespace UGF.EditorTools
 
         private static void SetDesignResolution(Vector2Int designResolution)
         {
+            EditorUtility.SetDirty(AppSettings.Instance);
             var launchSceneName = UtilityBuiltin.AssetsPath.GetScenePath("Launch");
             var currentOpenScene = EditorSceneManager.GetActiveScene();
             if (currentOpenScene != null && currentOpenScene.isDirty)
@@ -444,6 +448,7 @@ namespace UGF.EditorTools
             }
             cfg.GetType().GetField("mProcedures", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(cfg, selectedProcedures.ToArray());
             EditorUtility.SetDirty(cfg);
+            EditorUtility.SetDirty(AppSettings.Instance);
         }
         private void ReloadScrollView(AppConfigs cfg)
         {
