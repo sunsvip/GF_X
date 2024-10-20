@@ -162,7 +162,6 @@ namespace UGF.EditorTools
         {
             var atlasFiles = GetSelectedAssets();
             int totalCount = atlasFiles.Count;
-            AssetDatabase.StartAssetEditing();
             for (int i = 0; i < totalCount; i++)
             {
                 var atlasPath = atlasFiles[i];
@@ -176,7 +175,6 @@ namespace UGF.EditorTools
                 CompressTool.CreateAtlasVariant(atlas, GetUserAtlasSettins());
             }
             EditorUtility.ClearProgressBar();
-            AssetDatabase.StopAssetEditing();
         }
         private AtlasVariantSettings GetUserAtlasSettins()
         {

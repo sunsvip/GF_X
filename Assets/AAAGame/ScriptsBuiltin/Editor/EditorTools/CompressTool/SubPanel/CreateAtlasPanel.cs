@@ -307,8 +307,6 @@ namespace UGF.EditorTools
             //创建图集
             var texFolders = GetSelectedFolders();
             int totalCount = texFolders.Count;
-
-            AssetDatabase.StartAssetEditing();
             for (int i = 0; i < totalCount; i++)
             {
                 var folder = texFolders[i];
@@ -339,7 +337,6 @@ namespace UGF.EditorTools
                 }
             }
             EditorUtility.ClearProgressBar();
-            AssetDatabase.StopAssetEditing();
             AssetDatabase.Refresh();
         }
     }

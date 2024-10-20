@@ -197,7 +197,7 @@ namespace UGF.EditorTools
             }
             return success;
         }
-        
+
         /// <summary>
         /// 创建图集
         /// </summary>
@@ -310,7 +310,7 @@ namespace UGF.EditorTools
             {
                 AssetDatabase.CreateAsset(new SpriteAtlas(), atlasAssetName);
             }
-            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+            AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
         }
         /// <summary>
         /// 根据图集对象生成图集变体
@@ -327,7 +327,7 @@ namespace UGF.EditorTools
                 Debug.LogError($"atlas '{atlasMaster.name}' is not a asset file.");
                 return null;
             }
-            
+
             var atlasVariantName = UtilityBuiltin.AssetsPath.GetCombinePath(Path.GetDirectoryName(atlasFileName), $"{Path.GetFileNameWithoutExtension(atlasFileName)}_Variant{Path.GetExtension(atlasFileName)}");
 
             SpriteAtlas varAtlas;
@@ -376,7 +376,7 @@ namespace UGF.EditorTools
 
 #endif
                 tmpVarAtlas.SetIsVariant(true);
-                
+
                 ModifySpriteAtlasSettings(settings, ref packSettings, ref texSettings, ref platformSettings);
 #if UNITY_2022_1_OR_NEWER
                 tmpVarAtlasImpt.packingSettings = packSettings;
