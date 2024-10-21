@@ -1,1 +1,1 @@
--quit -nographics -batchmode -projectPath "${ProjectRoot}" -executeMethod UGF.EditorTools.JenkinsBuilder.BuildApp -logFile "${ProjectRoot}/Tools/Jenkins/UnityBuildLog.log"
+-quit -nographics -batchmode -projectPath "${ProjectRoot}" -executeMethod UGF.EditorTools.JenkinsBuilder.BuildApp -buildTarget ${Platform} -logFile "${ProjectRoot}/Tools/Jenkins/UnityBuildLog.log"
