@@ -14,6 +14,7 @@ using UnityEditor.Build.Reporting;
 using UnityGameFramework.Editor.ResourceTools;
 using Cysharp.Threading.Tasks;
 using UnityEditor.Build;
+using System.Xml;
 
 namespace UGF.EditorTools
 {
@@ -147,7 +148,6 @@ namespace UGF.EditorTools
 
             if (!EditorApplication.isCompiling && !EditorApplication.isUpdating && EditorPrefs.GetBool(BUILD_TASK_TAG, false))
             {
-                EditorPrefs.SetBool(BUILD_TASK_TAG, false);
                 CallBuildMethods();
             }
         }
@@ -500,30 +500,49 @@ namespace UGF.EditorTools
                     break;
             }
         }
-        private async UniTask<bool> HasPackedResource()
+        private bool HasPackedResource()
         {
-            ResourceEditorController resEditor = new ResourceEditorController();
-            bool loaded = false;
-            bool result = false;
-            resEditor.OnLoadCompleted += () =>
+            var getConfigPathMtd = Utility.Assembly.GetType("UnityGameFramework.Editor.Type").GetMethod("GetConfigurationPath", BindingFlags.Static | BindingFlags.NonPublic);
+            getConfigPathMtd = getConfigPathMtd.MakeGenericMethod(typeof(ResourceCollectionConfigPathAttribute));
+            var configPath = getConfigPathMtd.Invoke(null, null) as string ?? Utility.Path.GetRegularPath(Path.Combine(Application.dataPath, "GameFramework/Configs/ResourceCollection.xml"));
+
+            if (!File.Exists(configPath))
             {
-                var bundles = resEditor.GetResources();
-                for (int i = 0; i < bundles.Length; i++)
+                return false;
+            }
+            try
+            {
+                XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.Load(configPath);
+                XmlNode xmlRoot = xmlDocument.SelectSingleNode("UnityGameFramework");
+                XmlNode xmlCollection = xmlRoot.SelectSingleNode("ResourceCollection");
+                XmlNode xmlResources = xmlCollection.SelectSingleNode("Resources");
+                var xmlNodeList = xmlResources.ChildNodes;
+
+                for (int i = 0; i < xmlNodeList.Count; i++)
                 {
-                    var ab = bundles[i];
-                    if (ab.Packed) result = true;
+                    var xmlNode = xmlNodeList.Item(i);
+                    if (xmlNode.Name != "Resource")
+                    {
+                        continue;
+                    }
+
+                    if (xmlNode.Attributes.GetNamedItem("Packed") != null)
+                    {
+                        if (bool.TryParse(xmlNode.Attributes.GetNamedItem("Packed").Value, out bool packed) && packed)
+                        {
+                            return true;
+                        }
+                    }
+
                 }
-                loaded = true;
-            };
-            if (resEditor.Load())
-            {
-                await UniTask.WaitUntil(() => true == loaded);
             }
-            else
+            catch (Exception)
             {
-                loaded = true;
+                return false;
             }
-            return result;
+
+            return false;
         }
         private void OpenResourcesEditor()
         {
@@ -684,10 +703,10 @@ namespace UGF.EditorTools
         /// <summary>
         /// 打包资源
         /// </summary>
-        private async void BuildHotfix()
+        private void BuildHotfix()
         {
-            m_Controller.OutputPackedSelected = (AppSettings.Instance.ResourceMode != ResourceMode.Package) && await HasPackedResource();
-            await AssetBuildHandler.AutoResolveAbDuplicateAssets();
+            m_Controller.OutputPackedSelected = (AppSettings.Instance.ResourceMode != ResourceMode.Package) && HasPackedResource();
+            AssetBuildHandler.AutoResolveAbDuplicateAssets();
 #if !DISABLE_HYBRIDCLR
             HybridCLRExtensionTool.CompileTargetDll();
 #endif
@@ -697,24 +716,29 @@ namespace UGF.EditorTools
         /// 打包App
         /// </summary>
         /// <param name="generateAot"></param>
-        private async void BuildApp(bool generateAot)
+        private bool BuildApp(bool generateAot)
         {
 #if UNITY_ANDROID
             if (AppBuildSettings.Instance.AndroidUseKeystore && !CheckKeystoreAvailable(AppBuildSettings.Instance.AndroidKeystoreName))
             {
                 EditorUtility.DisplayDialog("Build Error!", Utility.Text.Format("Keystore文件不存在或格式错误:{0}", AppBuildSettings.Instance.AndroidKeystoreName), "GOT IT");
-                return;
+                return false;
             }
 #endif
-            m_Controller.OutputPackedSelected = (AppSettings.Instance.ResourceMode != ResourceMode.Package) && await HasPackedResource();
+            m_Controller.OutputPackedSelected = (AppSettings.Instance.ResourceMode != ResourceMode.Package) && HasPackedResource();
             if (m_Controller.OutputPackageSelected)
             {
-                await AssetBuildHandler.AutoResolveAbDuplicateAssets();
+                AssetBuildHandler.AutoResolveAbDuplicateAssets();
                 if (m_Controller.BuildResources())
                 {
+                    Debug.Log("########## Build Resources Success ###########");
                     DeleteAotDlls();//单机模式删除Resource下的AOT dlls
-                    //AssetDatabase.Refresh();
                     PrepareBuildApp(generateAot);
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
             else
@@ -726,12 +750,17 @@ namespace UGF.EditorTools
 #if !DISABLE_HYBRIDCLR
                     HybridCLRExtensionTool.CompileTargetDll(false);
 #endif
-                    await AssetBuildHandler.AutoResolveAbDuplicateAssets();
+                    AssetBuildHandler.AutoResolveAbDuplicateAssets();
                     buildAppReady = m_Controller.BuildResources();
                 }
                 if (buildAppReady)
                 {
                     PrepareBuildApp(generateAot);
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
         }
@@ -769,6 +798,7 @@ namespace UGF.EditorTools
         }
         private void CallBuildMethods()
         {
+            EditorPrefs.SetBool(BUILD_TASK_TAG, false);
             typeof(UnityEditor.BuildPlayerWindow).GetField("buildCompletionHandler", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new Action<BuildReport>(OnPostprocessBuild));
             var getBuildPlayerOptions = typeof(UnityEditor.BuildPlayerWindow.DefaultBuildMethods).GetMethod("GetBuildPlayerOptionsInternal", BindingFlags.NonPublic | BindingFlags.Static);
             var buildOptions = new BuildPlayerOptions();
@@ -1104,13 +1134,13 @@ namespace UGF.EditorTools
         /// </summary>
         public void JenkinsBuildResource(JenkinsBuildResourceConfig configJson)
         {
-            Debug.Log($"###########打包资源前初始化配置##########");
+            Debug.Log($"###########Build Resources: Init configs##########");
             Debug.Log($"{UtilityBuiltin.Json.ToJson(configJson)}");
             Debug.Log($"#########################################");
             var tPlatform = GetGFPlatform(configJson.Platform);
             if (tPlatform == Platform.Undefined)
             {
-                Debug.LogError($"#############打包失败, 不支持的平台:{configJson.Platform}############");
+                Debug.LogError($"#############Build Resources failed, Unsupport platform:{configJson.Platform}############");
                 return;
             }
             m_Controller.OutputDirectory = configJson.ResourceOutputDir;
@@ -1130,16 +1160,15 @@ namespace UGF.EditorTools
         /// <param name="createAot"></param>
         public void JenkinsBuildApp(JenkinsBuildAppConfig configJson)
         {
-            Debug.Log($"###########打包App前初始化配置##########");
+            Debug.Log($"###########Build App: Init configs##########");
             Debug.Log($"{UtilityBuiltin.Json.ToJson(configJson)}");
             Debug.Log($"#########################################");
             var tPlatform = GetGFPlatform(configJson.Platform);
             if (tPlatform == Platform.Undefined)
             {
-                Debug.LogError($"#############打包失败, 不支持的平台:{configJson.Platform}############");
+                Debug.LogError($"#############Build App failed, Unsupport platform:{configJson.Platform}############");
                 return;
             }
-
 
 #if UNITY_ANDROID
             PlayerSettings.Android.useCustomKeystore = AppBuildSettings.Instance.AndroidUseKeystore;
@@ -1158,9 +1187,12 @@ namespace UGF.EditorTools
             Debug.Log($"#############AppBuildSettings############");
             Debug.Log($"{UtilityBuiltin.Json.ToJson(AppBuildSettings.Instance)}");
             Debug.Log($"#########################################");
-            this.BuildApp(configJson.FullBuild);
-            EditorPrefs.SetBool(BUILD_TASK_TAG, false);
-            this.CallBuildMethods();
+
+            m_Controller.Platforms = tPlatform;
+            if (this.BuildApp(configJson.FullBuild))
+            {
+                this.CallBuildMethods();
+            }
         }
         private Platform GetGFPlatform(BuildTarget buildTarget)
         {

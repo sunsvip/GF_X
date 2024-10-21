@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -114,16 +114,15 @@ namespace UGF.EditorTools
 
 
         [MenuItem("Game Framework/Resource Tools/Resolve Duplicate Assets【解决AB资源重复依赖冗余】", false, 100)]
-        static async void RefreshSharedAssets()
+        static void RefreshSharedAssets()
         {
-            await AutoResolveAbDuplicateAssets();
+            AutoResolveAbDuplicateAssets();
         }
-        public static async UniTask<bool> AutoResolveAbDuplicateAssets()
+        public static bool AutoResolveAbDuplicateAssets()
         {
             ResourceEditorController resEditor = new ResourceEditorController();
             bool resolved = false;
-            bool refreshCompleted = false;
-            resEditor.OnLoadCompleted += async () =>
+            resEditor.OnLoadCompleted += () =>
             {
                 if (resEditor.HasResource(ConstEditor.SharedAssetBundleName, null))
                 {
@@ -134,15 +133,10 @@ namespace UGF.EditorTools
                     resEditor.Save();
                 }
 
-                var duplicateAssetNames = await FindDuplicateAssetNamesAsync();
+                var duplicateAssetNames = FindDuplicateAssetNamesAsync();
                 resolved = ResolveDuplicateAssets(resEditor, duplicateAssetNames);
-                refreshCompleted = true;
             };
-            if (!resEditor.Load())
-            {
-                refreshCompleted = true;
-            }
-            await UniTask.WaitUntil(() => refreshCompleted);
+            resEditor.Load();
             return resolved;
         }
         private static bool ResolveDuplicateAssets(ResourceEditorController resEditor, List<string> duplicateAssetNames)
@@ -201,10 +195,9 @@ namespace UGF.EditorTools
             }
             return true;
         }
-        private static async UniTask<List<string>> FindDuplicateAssetNamesAsync()
+        private static List<string> FindDuplicateAssetNamesAsync()
         {
             List<string> duplicateAssets = new List<string>();
-            bool refreshCompleted = false;
             ResourceAnalyzerController resAnalyzer = new ResourceAnalyzerController();
             resAnalyzer.OnAnalyzeCompleted += () =>
             {
@@ -228,17 +221,11 @@ namespace UGF.EditorTools
                         }
                     }
                 }
-                refreshCompleted = true;
             };
             if (resAnalyzer.Prepare())
             {
                 resAnalyzer.Analyze();
             }
-            else
-            {
-                refreshCompleted = true;
-            }
-            await UniTask.WaitUntil(() => refreshCompleted);
             return duplicateAssets;
         }
 
