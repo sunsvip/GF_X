@@ -4,7 +4,6 @@ using System.Linq;
 using UnityGameFramework.Runtime;
 namespace GameFramework
 {
-
     public class DataModelComponent : GameFrameworkComponent
     {
         private Dictionary<TypeIdPair, DataModelBase> m_DataModels;

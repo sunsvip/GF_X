@@ -37,34 +37,6 @@ public class GameOverUIForm : UIFormBase
         rewardNumText.text = Utility.Text.Format("+{0}", rewardNum);
     }
 
-
-    private void ClaimReward(int multi, GameFrameworkAction onClaimComplete)
-    {
-        if (isClaimed)
-        {
-            onClaimComplete?.Invoke();
-            return;
-        }
-        var playerDm = GF.DataModel.GetOrCreate<PlayerDataModel>();
-        animDoing = true;
-        int diamondNum = playerDm.GetMultiReward(rewardNum, multi);
-        int curMoney = playerDm.Coins;
-        isClaimed = true;
-        playerDm.Coins += rewardNum;
-        float doMoneyNumDuration = Mathf.Clamp(rewardNum * 0.01f, 0.5f, 1f);
-        GF.UI.ShowRewardEffect(rewardNumText.transform.position, diamondNode.position,0.5f, () =>
-        {
-            onClaimComplete?.Invoke();
-            animDoing = false;
-        }, 30);
-        var doMoneyNum = DOTween.To(() => curMoney, (x) => curMoney = x, playerDm.Coins, doMoneyNumDuration).SetEase(Ease.Linear).SetDelay(1f);
-        doMoneyNum.onUpdate = () =>
-        {
-            SetMoneyText(curMoney);
-        };
-    }
-
-
     private void SetMoneyText(int money)
     {
         moneyText.text = UtilityBuiltin.Valuer.ToCoins(money);
@@ -81,16 +53,6 @@ public class GameOverUIForm : UIFormBase
             case "RETRY":
                 var gameOverProc = GF.Procedure.CurrentProcedure as GameOverProcedure;
                 gameOverProc.NextLevel();
-                break;
-            case "CLAIM":
-                if (!isClaimed)
-                {
-                    this.ClaimReward(1, () =>
-                    {
-                        var gameOverProc = GF.Procedure.CurrentProcedure as GameOverProcedure;
-                        gameOverProc.NextLevel();
-                    });
-                }
                 break;
         }
     }

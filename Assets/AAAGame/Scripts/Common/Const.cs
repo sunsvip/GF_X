@@ -11,16 +11,4 @@ public static partial class Const
 
     public static readonly string HORIZONTAL = "Horizontal";
     public static readonly bool RepeatLevel = true;//是否循环关卡
-
-    internal static class UserData
-    {
-        internal static readonly string MONEY = "UserData.MONEY";
-        internal static readonly string GUIDE_ON = "UserData.GUIDE_ON";
-
-        internal static readonly string SHOW_RATING_COUNT = "UserData.SHOW_RATING_COUNT";
-        internal static readonly string GAME_LEVEL = "UserData.GAME_LEVEL";
-        internal static readonly string CAR_SKIN_ID = "UserData.CAR_SKIN_ID";
-
-        internal static readonly string USER_SPAWN_POINT_TYPE = "UserData.USER_SPAWN_POINT_TYPE";
-    }
 }

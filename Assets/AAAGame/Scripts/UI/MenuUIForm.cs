@@ -8,7 +8,7 @@ public partial class MenuUIForm : UIFormBase
     protected override void OnOpen(object userData)
     {
         base.OnOpen(userData);
-        GF.Event.Subscribe(UserDataChangedEventArgs.EventId, OnUserDataChanged);
+        GF.Event.Subscribe(PlayerDataChangedEventArgs.EventId, OnUserDataChanged);
         GF.Event.Subscribe(PlayerEventArgs.EventId, OnPlayerEvent);
         RefreshMoneyText();
     }
@@ -20,7 +20,7 @@ public partial class MenuUIForm : UIFormBase
 
     protected override void OnClose(bool isShutdown, object userData)
     {
-        GF.Event.Unsubscribe(UserDataChangedEventArgs.EventId, OnUserDataChanged);
+        GF.Event.Unsubscribe(PlayerDataChangedEventArgs.EventId, OnUserDataChanged);
         GF.Event.Unsubscribe(PlayerEventArgs.EventId, OnPlayerEvent);
         base.OnClose(isShutdown, userData);
     }
@@ -44,13 +44,13 @@ public partial class MenuUIForm : UIFormBase
 
     private void OnUserDataChanged(object sender, GameEventArgs e)
     {
-        var args = e as UserDataChangedEventArgs;
-        switch (args.Type)
+        var args = e as PlayerDataChangedEventArgs;
+        switch (args.DataType)
         {
-            case UserDataType.MONEY:
+            case PlayerDataType.Coins:
                 RefreshMoneyText();
                 break;
-            case UserDataType.GAME_LEVEL:
+            case PlayerDataType.LevelId:
 
                 break;
         }
@@ -68,7 +68,7 @@ public partial class MenuUIForm : UIFormBase
     }
     public void SwitchLevel(int dir)
     {
-        GF.DataModel.GetOrCreate<PlayerDataModel>().GAME_LEVEL += dir;
+        GF.DataModel.GetOrCreate<PlayerDataModel>().LevelId += dir;
         var menuProcedure = GF.Procedure.CurrentProcedure as MenuProcedure;
         if (null != menuProcedure)
         {

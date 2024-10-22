@@ -121,8 +121,7 @@ namespace UGF.EditorTools
         public static bool AutoResolveAbDuplicateAssets()
         {
             ResourceEditorController resEditor = new ResourceEditorController();
-            bool resolved = false;
-            resEditor.OnLoadCompleted += () =>
+            if (resEditor.Load())
             {
                 if (resEditor.HasResource(ConstEditor.SharedAssetBundleName, null))
                 {
@@ -133,11 +132,13 @@ namespace UGF.EditorTools
                     resEditor.Save();
                 }
 
-                var duplicateAssetNames = FindDuplicateAssetNamesAsync();
-                resolved = ResolveDuplicateAssets(resEditor, duplicateAssetNames);
-            };
-            resEditor.Load();
-            return resolved;
+                var duplicateAssetNames = FindDuplicateAssetNames();
+                if (duplicateAssetNames == null) return true;
+                bool resolved = ResolveDuplicateAssets(resEditor, duplicateAssetNames);
+                return resolved;
+            }
+
+            return false;
         }
         private static bool ResolveDuplicateAssets(ResourceEditorController resEditor, List<string> duplicateAssetNames)
         {
@@ -167,7 +168,7 @@ namespace UGF.EditorTools
                 {
                     continue;
                 }
-                if(!resEditor.AssignAsset(AssetDatabase.AssetPathToGUID(assetName), ConstEditor.SharedAssetBundleName, null))
+                if (!resEditor.AssignAsset(AssetDatabase.AssetPathToGUID(assetName), ConstEditor.SharedAssetBundleName, null))
                 {
                     Debug.LogWarning($"添加资源:{assetName}到{ConstEditor.SharedAssetBundleName}失败!");
                 }
@@ -195,12 +196,13 @@ namespace UGF.EditorTools
             }
             return true;
         }
-        private static List<string> FindDuplicateAssetNamesAsync()
+        private static List<string> FindDuplicateAssetNames()
         {
-            List<string> duplicateAssets = new List<string>();
             ResourceAnalyzerController resAnalyzer = new ResourceAnalyzerController();
-            resAnalyzer.OnAnalyzeCompleted += () =>
+            if (resAnalyzer.Prepare())
             {
+                resAnalyzer.Analyze();
+                List<string> duplicateAssets = new List<string>();
                 var scatteredAssetNames = resAnalyzer.GetScatteredAssetNames();
                 foreach (var scatteredAsset in scatteredAssetNames)
                 {
@@ -221,12 +223,9 @@ namespace UGF.EditorTools
                         }
                     }
                 }
-            };
-            if (resAnalyzer.Prepare())
-            {
-                resAnalyzer.Analyze();
+                return duplicateAssets;
             }
-            return duplicateAssets;
+            return null;
         }
 
         /// <summary>

@@ -1,8 +1,9 @@
+using GameFramework;
 using GameFramework.Event;
 
 public enum GFEventType
 {
-    ResourceInitialized //游戏资源初始化完成后
+    ApplicationQuit //游戏退出
 }
 public class GFEventArgs : GameEventArgs
 {
@@ -14,10 +15,11 @@ public class GFEventArgs : GameEventArgs
     {
         UserData = null;
     }
-    public GFEventArgs Fill(GFEventType eventType, object userDt = null)
+    public static GFEventArgs Create(GFEventType eventType, object userDt = null)
     {
-        this.EventType = eventType;
-        this.UserData = userDt;
-        return this;
+        var instance = ReferencePool.Acquire<GFEventArgs>();
+        instance.EventType = eventType;
+        instance.UserData = userDt;
+        return instance;
     }
 }

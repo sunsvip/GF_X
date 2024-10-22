@@ -1,121 +1,103 @@
 using GameFramework;
+using GameFramework.Event;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-public class PlayerDataModel : DataModelBase
+public enum PlayerDataType
 {
+    /// <summary>
+    /// 玩家金币
+    /// </summary>
+    Coins,
+    /// <summary>
+    /// 玩家钻石
+    /// </summary>
+    Diamond,
+    /// <summary>
+    /// 玩家血量
+    /// </summary>
+    Hp,
+    /// <summary>
+    /// 玩家能量
+    /// </summary>
+    Energy,
+    /// <summary>
+    /// 关卡Id
+    /// </summary>
+    LevelId
+}
+
+/// <summary>
+/// 玩家数据类, 金币/血量等
+/// </summary>
+public class PlayerDataModel : DataModelStorageBase
+{
+    [JsonProperty]
+    private Dictionary<PlayerDataType, int> m_PlayerDataDic;
+    public PlayerDataModel()
+    {
+        m_PlayerDataDic = new Dictionary<PlayerDataType, int>();
+    }
+    protected override void OnCreate(RefParams userdata)
+    {
+        base.OnCreate(userdata);
+        GF.Event.Subscribe(GFEventArgs.EventId, OnGFEventCallback);
+    }
+
+
+    protected override void OnRelease()
+    {
+        base.OnRelease();
+        GF.Event.Unsubscribe(GFEventArgs.EventId, OnGFEventCallback);
+    }
+
+    private void OnGFEventCallback(object sender, GameEventArgs e)
+    {
+        var args = e as GFEventArgs;
+        if(args.EventType == GFEventType.ApplicationQuit)
+        {
+            GF.DataModel.ReleaseDataModel<PlayerDataModel>();
+        }
+    }
+    protected override void OnInitialDataModel()
+    {
+        m_PlayerDataDic[PlayerDataType.Coins] = GF.Config.GetInt("DefaultCoins");
+        m_PlayerDataDic[PlayerDataType.Diamond] = GF.Config.GetInt("DefaultDiamonds");
+        m_PlayerDataDic[PlayerDataType.Hp] = 100;
+        m_PlayerDataDic[PlayerDataType.Energy] = 100;
+        m_PlayerDataDic[PlayerDataType.LevelId] = 1;
+    }
     public int Coins
     {
-        get
-        {
-            return GF.Setting.GetInt(Const.UserData.MONEY, GF.Config.GetInt("DEFAULT_COINS"));
-        }
-        set
-        {
-            int oldNum = Coins;
-            int fixedNum = Mathf.Max(0, value);
-            GF.Setting.SetInt(Const.UserData.MONEY, fixedNum);
-            FireUserDataChanged(UserDataType.MONEY, oldNum, fixedNum);
-        }
+        get => GetData(PlayerDataType.Coins);
+        set => SetData(PlayerDataType.Coins, Mathf.Max(0, value));
     }
     /// <summary>
     /// 关卡
     /// </summary>
-    public int GAME_LEVEL
+    public int LevelId
     {
-        get { return GF.Setting.GetInt(Const.UserData.GAME_LEVEL, 1); }
+        get => GetData(PlayerDataType.LevelId);
         set
         {
             var lvTb = GF.DataTable.GetDataTable<LevelTable>();
-            int preLvId = GAME_LEVEL;
-
             int nextLvId = Const.RepeatLevel ? value : Mathf.Clamp(value, lvTb.MinIdDataRow.Id, lvTb.MaxIdDataRow.Id);
-            GF.Setting.SetInt(Const.UserData.GAME_LEVEL, nextLvId);
-            FireUserDataChanged(UserDataType.GAME_LEVEL, preLvId, nextLvId);
+            SetData(PlayerDataType.LevelId, nextLvId);
         }
     }
-
-    public int GetCurrentLevelId()
+    public int GetData(PlayerDataType tp)
     {
-
-        var lvTb = GF.DataTable.GetDataTable<LevelTable>();
-        if (lvTb == null) Log.Fatal("Get LevelTable failed");
-        return (GAME_LEVEL - 1) % lvTb.MaxIdDataRow.Id + 1;
+        return m_PlayerDataDic[tp];
     }
-    internal void ClaimMoney(int bonus, bool showFx, Vector3 fxSpawnPos)
+    public void SetData(PlayerDataType tp, int value, bool triggerEvent = true)
     {
-        int initMoney = this.Coins;
-        this.Coins += bonus;
-        GF.Event.Fire(this, ReferencePool.Acquire<PlayerEventArgs>().Fill(PlayerEventType.ClaimMoney, new Dictionary<string, object>
-        {
-            ["ShowFX"] = showFx,
-            ["SpawnPoint"] = fxSpawnPos,
-            ["StartNum"] = initMoney
-        }));
-    }
-    internal Vector2Int GetOfflineBonus()
-    {
-        int offlineFactor = GF.Config.GetInt("OfflineFactor");
-        int bonus = GF.Config.GetInt("OfflineBonus");
-        int bonusMulti = GF.Config.GetInt("OfflineAdBonusMulti");
-        int maxBonus = GF.Config.GetInt("MaxOfflineBonus");
-        var offlineMinutes = GetOfflineTime().TotalMinutes;
-        Vector2Int result = Vector2Int.zero;
+        int oldValue = m_PlayerDataDic[tp];
+        m_PlayerDataDic[tp] = value;
 
-        result.x = Mathf.Clamp(bonus * Mathf.FloorToInt((float)offlineMinutes / offlineFactor), 0, maxBonus);
-        result.y = Mathf.CeilToInt(result.x * bonusMulti);
-        return result;
-    }
-    internal TimeSpan GetOfflineTime()
-    {
-        string dTimeStr = GF.Setting.GetString(ConstBuiltin.Setting.QuitAppTime, string.Empty);
-        if (string.IsNullOrWhiteSpace(dTimeStr) || !DateTime.TryParse(dTimeStr, out DateTime exitTime))
-        {
-            return TimeSpan.Zero;
-        }
-        return System.DateTime.UtcNow.Subtract(exitTime);
-    }
-    internal bool IsNewDay()
-    {
-        string dTimeStr = GF.Setting.GetString(ConstBuiltin.Setting.QuitAppTime, string.Empty);
-        if (string.IsNullOrWhiteSpace(dTimeStr) || !DateTime.TryParse(dTimeStr, out DateTime dTime))
-        {
-            return true;
-        }
-
-        var today = DateTime.Today;
-        return !(today.Year == dTime.Year && today.Month == dTime.Month && today.Day == dTime.Day);
-    }
-    internal void CheckAndShowRating(float ratio)
-    {
-        if (GF.UI.HasUIForm(UIViews.RatingDialog) || GF.Setting.GetBool("RATED_FIVE", false))
-        {
-            return;
-        }
-
-        int show_count = GF.Setting.GetInt(Const.UserData.SHOW_RATING_COUNT, 0);
-        if (show_count > 3 || UnityEngine.Random.value > ratio)
-        {
-            return;
-        }
-
-        GF.Setting.SetInt(Const.UserData.SHOW_RATING_COUNT, ++show_count);
-        GF.UI.OpenUIForm(UIViews.RatingDialog);
-    }
-    /// <summary>
-    /// 触发用户数据改变事件
-    /// </summary>
-    /// <param name="tp"></param>
-    /// <param name="udt"></param>
-    private void FireUserDataChanged(UserDataType tp, object oldValue, object value)
-    {
-        GF.Event.Fire(this, ReferencePool.Acquire<UserDataChangedEventArgs>().Fill(tp, oldValue, value));
-    }
-
-    internal int GetMultiReward(int rewardNum, int multi)
-    {
-        return rewardNum * multi;
+        if (triggerEvent)
+            GF.Event.Fire(this, PlayerDataChangedEventArgs.Create(tp, oldValue, value));
     }
 }

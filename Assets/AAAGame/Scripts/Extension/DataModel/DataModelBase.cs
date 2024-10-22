@@ -1,7 +1,8 @@
 
+using UnityEngine;
+
 namespace GameFramework
 {
-
     public abstract class DataModelBase : IReference
     {
         [Newtonsoft.Json.JsonIgnore]
@@ -27,6 +28,7 @@ namespace GameFramework
         }
         public void Clear()
         {
+            OnRelease();
             this.Id = 0;
             if (Userdata != null)
             {
@@ -36,7 +38,6 @@ namespace GameFramework
 
         internal void Shutdown()
         {
-            OnRelease();
             ReferencePool.Release(this);
         }
     }

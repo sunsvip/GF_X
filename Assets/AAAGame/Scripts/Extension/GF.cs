@@ -45,10 +45,10 @@ public class GF : GFBuiltin
     }
     private void OnExitGame()
     {
-        GF.Event.FireNow(this, ReferencePool.Acquire<PlayerEventArgs>().Fill(PlayerEventType.ExitGame));
+        GF.Event.FireNow(this, GFEventArgs.Create(GFEventType.ApplicationQuit));
         var exit_time = DateTime.UtcNow.ToString();
         GF.Setting.SetString(ConstBuiltin.Setting.QuitAppTime, exit_time);
         GF.Setting.Save();
-        Log.Info("Exit Time:{0}", exit_time);
+        Log.Info("Application Quit:{0}", exit_time);
     }
 }

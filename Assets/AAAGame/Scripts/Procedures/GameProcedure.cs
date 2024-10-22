@@ -57,7 +57,6 @@ public class GameProcedure : ProcedureBase
         GF.Event.Unsubscribe(ShowEntitySuccessEventArgs.EventId, OnShowEntitySuccess);
         GF.Event.Unsubscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
         GF.Event.Unsubscribe(CloseUIFormCompleteEventArgs.EventId, OnCloseUIForm);
-        if (this.procedure.HasData(Const.UserData.GAME_LEVEL)) this.procedure.RemoveData(Const.UserData.GAME_LEVEL);
         base.OnLeave(procedureOwner, isShutdown);
     }
 
@@ -122,11 +121,11 @@ public class GameProcedure : ProcedureBase
     {
         var playerDm = GF.DataModel.GetOrCreate<PlayerDataModel>();
         if (isNext)
-            playerDm.GAME_LEVEL += 1;
+            playerDm.LevelId += 1;
         else
         {
-            playerDm.GAME_LEVEL -= 1;
-            playerDm.GAME_LEVEL = Mathf.Clamp(playerDm.GAME_LEVEL, 1, playerDm.GAME_LEVEL);
+            playerDm.LevelId -= 1;
+            playerDm.LevelId = Mathf.Clamp(playerDm.LevelId, 1, playerDm.LevelId);
         }
 
         this.procedure.SetData<VarBoolean>("EnterNextLevel", true);
@@ -137,7 +136,7 @@ public class GameProcedure : ProcedureBase
     public void ChangeLevel(int level)
     {
         var playerDm = GF.DataModel.GetOrCreate<PlayerDataModel>();
-        playerDm.GAME_LEVEL = level;
+        playerDm.LevelId = level;
         this.procedure.SetData<VarBoolean>("EnterNextLevel", true);
         ChangeState<MenuProcedure>(procedure);
     }
