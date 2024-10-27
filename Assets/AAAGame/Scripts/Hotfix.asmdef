@@ -10,7 +10,10 @@
         "Builtin.Runtime",
         "UniTask",
         "GameFramework",
-        "DOTween.Extension"
+        "DOTween.Extension",
+        "Unity.Jobs",
+        "Unity.Collections",
+        "Unity.Mathematics"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

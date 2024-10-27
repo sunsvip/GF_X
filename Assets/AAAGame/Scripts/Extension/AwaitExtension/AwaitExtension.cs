@@ -62,7 +62,7 @@ public static class AwaitExtension
     /// <summary>
     /// 打开界面（可等待）
     /// </summary>
-    public static UniTask<UIFormLogic> OpenUIFormAsync(this UIComponent uiCom, UIViews viewId, UIParams parms = null)
+    public static UniTask<UIFormLogic> OpenUIFormAwait(this UIComponent uiCom, UIViews viewId, UIParams parms = null)
     {
 #if UNITY_EDITOR
         TipsSubscribeEvent();
@@ -81,7 +81,7 @@ public static class AwaitExtension
     /// <summary>
     /// 显示实体（可等待）
     /// </summary>
-    public static UniTask<EntityLogic> ShowEntityAsync<T>(this EntityComponent eCom, string pfbName, Const.EntityGroup eGroup, EntityParams parms = null) where T : EntityLogic
+    public static UniTask<EntityLogic> ShowEntityAwait<T>(this EntityComponent eCom, string pfbName, Const.EntityGroup eGroup, EntityParams parms = null) where T : EntityLogic
     {
 #if UNITY_EDITOR
         TipsSubscribeEvent();
@@ -95,7 +95,7 @@ public static class AwaitExtension
     /// <summary>
     /// 加载数据表（可等待）
     /// </summary>
-    public static async UniTask<IDataTable<T>> LoadDataTableAsync<T>(this DataTableComponent dataTableComponent, string dataTableName, object userData = null) where T : IDataRow
+    public static async UniTask<IDataTable<T>> LoadDataTableAwait<T>(this DataTableComponent dataTableComponent, string dataTableName, object userData = null) where T : IDataRow
     {
 #if UNITY_EDITOR
         TipsSubscribeEvent();
@@ -143,7 +143,7 @@ public static class AwaitExtension
     /// <summary>
     /// 打开界面（可等待）
     /// </summary>
-    public static UniTask<UIFormLogic> OpenUIFormAsync(this UIComponent uiComponent, string uiFormAssetName, string uiGroupName, int priority, bool pauseCoveredUIForm, object userData)
+    public static UniTask<UIFormLogic> OpenUIFormAwait(this UIComponent uiComponent, string uiFormAssetName, string uiGroupName, int priority, bool pauseCoveredUIForm, object userData)
     {
 #if UNITY_EDITOR
         TipsSubscribeEvent();
@@ -180,7 +180,7 @@ public static class AwaitExtension
     /// <summary>
     /// 显示实体（可等待）
     /// </summary>
-    public static UniTask<EntityLogic> ShowEntityAsync(this EntityComponent entityComponent, int entityId,
+    public static UniTask<EntityLogic> ShowEntityAwait(this EntityComponent entityComponent, int entityId,
         Type entityLogicType, string entityAssetName, string entityGroupName, int priority, object userData)
     {
 #if UNITY_EDITOR
@@ -220,7 +220,7 @@ public static class AwaitExtension
     /// <summary>
     /// 加载场景（可等待）
     /// </summary>
-    public static async UniTask<bool> LoadSceneAsync(this SceneComponent sceneComponent, string sceneAssetName)
+    public static async UniTask<bool> LoadSceneAwait(this SceneComponent sceneComponent, string sceneAssetName)
     {
 #if UNITY_EDITOR
         TipsSubscribeEvent();
@@ -272,7 +272,7 @@ public static class AwaitExtension
     /// <summary>
     /// 卸载场景（可等待）
     /// </summary>
-    public static async UniTask<bool> UnLoadSceneAsync(this SceneComponent sceneComponent, string sceneAssetName)
+    public static async UniTask<bool> UnLoadSceneAwait(this SceneComponent sceneComponent, string sceneAssetName)
     {
 #if UNITY_EDITOR
         TipsSubscribeEvent();
@@ -323,7 +323,7 @@ public static class AwaitExtension
     /// <summary>
     /// 加载资源（可等待）
     /// </summary>
-    public static UniTask<T> LoadAssetAsync<T>(this ResourceComponent resourceComponent, string assetName)
+    public static UniTask<T> LoadAssetAwait<T>(this ResourceComponent resourceComponent, string assetName)
         where T : UnityEngine.Object
     {
 #if UNITY_EDITOR
@@ -360,7 +360,7 @@ public static class AwaitExtension
     /// <summary>
     /// 加载多个资源（可等待）
     /// </summary>
-    public static async UniTask<T[]> LoadAssetsAsync<T>(this ResourceComponent resourceComponent, string[] assetName) where T : UnityEngine.Object
+    public static async UniTask<T[]> LoadAssetsAwait<T>(this ResourceComponent resourceComponent, string[] assetName) where T : UnityEngine.Object
     {
 #if UNITY_EDITOR
         TipsSubscribeEvent();
@@ -373,7 +373,7 @@ public static class AwaitExtension
         var tasks = new UniTask<T>[assets.Length];
         for (int i = 0; i < tasks.Length; i++)
         {
-            tasks[i] = resourceComponent.LoadAssetAsync<T>(assetName[i]);
+            tasks[i] = resourceComponent.LoadAssetAwait<T>(assetName[i]);
         }
 
         await UniTask.WhenAll(tasks);
@@ -389,7 +389,7 @@ public static class AwaitExtension
     /// <summary>
     /// 增加Web请求任务（可等待）
     /// </summary>
-    public static UniTask<WebRequestResult> AddWebRequestAsync(this WebRequestComponent webRequestComponent,
+    public static UniTask<WebRequestResult> AddWebRequestAwait(this WebRequestComponent webRequestComponent,
         string webRequestUri, WWWForm wwwForm = null, object userdata = null)
     {
 #if UNITY_EDITOR
@@ -405,7 +405,7 @@ public static class AwaitExtension
     /// <summary>
     /// 增加Web请求任务（可等待）
     /// </summary>
-    public static UniTask<WebRequestResult> AddWebRequestAsync(this WebRequestComponent webRequestComponent,
+    public static UniTask<WebRequestResult> AddWebRequestAwait(this WebRequestComponent webRequestComponent,
         string webRequestUri, byte[] postData, object userdata = null)
     {
 #if UNITY_EDITOR
@@ -474,7 +474,7 @@ public static class AwaitExtension
     /// <summary>
     /// 增加下载任务（可等待)
     /// </summary>
-    public static UniTask<DownloadResult> AddDownloadAsync(this DownloadComponent downloadComponent,
+    public static UniTask<DownloadResult> AddDownloadAwait(this DownloadComponent downloadComponent,
         string downloadPath,
         string downloadUri,
         object userdata = null)

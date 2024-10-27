@@ -8,52 +8,24 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 
-public class GameOverUIForm : UIFormBase
+public partial class GameOverUIForm : UIFormBase
 {
     public const string P_IsWin = "IsWin";
-    [SerializeField] Text moneyText;
-    [SerializeField] GameObject[] panels;
-    [SerializeField] Text rewardNumText;
-    [SerializeField] Transform diamondNode;
-    private bool isClaimed;
-    private bool animDoing;
+    
     private bool isWin;
-    private int rewardNum;
-    protected override void OnInit(object userData)
-    {
-        base.OnInit(userData);
-
-    }
     protected override void OnOpen(object userData)
     {
         base.OnOpen(userData);
-        isClaimed = false;
+        
         isWin = Params.Get<VarBoolean>(P_IsWin);
-        rewardNum = 10;
-        panels[0].SetActive(!isWin);
-        panels[1].SetActive(isWin);
-        topBar.gameObject.SetActive(isWin);
-        this.SetMoneyText(GF.DataModel.GetOrCreate<PlayerDataModel>().Coins);
-        rewardNumText.text = Utility.Text.Format("+{0}", rewardNum);
+        varTitleTxt.text = isWin ? GF.Localization.GetString("Victory") : GF.Localization.GetString("Failed");
     }
-
-    private void SetMoneyText(int money)
+    protected override void OnButtonClick(object sender, Button btSelf)
     {
-        moneyText.text = UtilityBuiltin.Valuer.ToCoins(money);
-    }
-    protected override void OnButtonClick(object sender, string btId)
-    {
-        if (animDoing)
+        base.OnButtonClick(sender, btSelf);
+        if(btSelf == varBackBtn)
         {
-            return;
-        }
-        base.OnButtonClick(sender, btId);
-        switch (btId)
-        {
-            case "RETRY":
-                var gameOverProc = GF.Procedure.CurrentProcedure as GameOverProcedure;
-                gameOverProc.NextLevel();
-                break;
+            (GF.Procedure.CurrentProcedure as GameOverProcedure).BackHome();
         }
     }
 }

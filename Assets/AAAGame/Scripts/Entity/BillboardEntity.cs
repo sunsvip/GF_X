@@ -37,18 +37,18 @@ public class BillboardEntity : SampleEntity
         {
             case PivotAxis.X:
                 Vector3 right = transform.right;
-                forward = Vector3.ProjectOnPlane(CameraFollower.Instance.transform.forward, right).normalized;
+                forward = Vector3.ProjectOnPlane(CameraController.Instance.transform.forward, right).normalized;
                 up = Vector3.Cross(forward, right);
                 break;
 
             case PivotAxis.Y:
                 up = transform.up;
-                forward = Vector3.ProjectOnPlane(CameraFollower.Instance.transform.forward, up).normalized;
+                forward = Vector3.ProjectOnPlane(CameraController.Instance.transform.forward, up).normalized;
                 break;
             case PivotAxis.Free:
             default:
-                forward = CameraFollower.Instance.transform.forward;
-                up = CameraFollower.Instance.transform.up;
+                forward = CameraController.Instance.transform.forward;
+                up = CameraController.Instance.transform.up;
                 break;
         }
         transform.rotation = Quaternion.LookRotation(forward, up);

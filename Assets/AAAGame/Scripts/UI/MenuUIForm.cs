@@ -9,7 +9,6 @@ public partial class MenuUIForm : UIFormBase
     {
         base.OnOpen(userData);
         GF.Event.Subscribe(PlayerDataChangedEventArgs.EventId, OnUserDataChanged);
-        GF.Event.Subscribe(PlayerEventArgs.EventId, OnPlayerEvent);
         RefreshMoneyText();
     }
     protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
@@ -21,15 +20,9 @@ public partial class MenuUIForm : UIFormBase
     protected override void OnClose(bool isShutdown, object userData)
     {
         GF.Event.Unsubscribe(PlayerDataChangedEventArgs.EventId, OnUserDataChanged);
-        GF.Event.Unsubscribe(PlayerEventArgs.EventId, OnPlayerEvent);
         base.OnClose(isShutdown, userData);
     }
 
-    private void OnPlayerEvent(object sender, GameEventArgs e)
-    {
-        var args = e as PlayerEventArgs;
-        
-    }
 
     protected override void OnButtonClick(object sender, string btId)
     {

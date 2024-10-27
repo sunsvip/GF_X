@@ -23,7 +23,6 @@ public class BulletEntity : EntityBase
 #else
         m_body.velocity = transform.forward * moveSpeed;
 #endif
-
         float lifeTime = Params.Get<VarFloat>(LIFE_TIME);
         UniTask.Delay(TimeSpan.FromSeconds(lifeTime)).ContinueWith(LifeTimeOver).Forget();
     }

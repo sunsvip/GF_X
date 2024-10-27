@@ -4,9 +4,9 @@ using Cinemachine;
 using UnityEngine.Rendering.Universal;
 using Cysharp.Threading.Tasks;
 
-public class CameraFollower : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
-    public static CameraFollower Instance { get; private set; }
+    public static CameraController Instance { get; private set; }
     internal Vector3 GetTargetPosition()
     {
         if (target == null)
@@ -84,14 +84,9 @@ public class CameraFollower : MonoBehaviour
     {
         var transposer = followerVCamera.GetCinemachineComponent<CinemachineTransposer>();
         var aimCom = followerVCamera.GetCinemachineComponent<CinemachineComposer>();
-        if (!smooth)
-        {
-            transposer.m_FollowOffset = offset;
-            aimCom.m_TrackedObjectOffset = aimOffset;
-            return;
-        }
-        float duration = Mathf.Clamp(Vector3.Distance(transposer.m_FollowOffset, offset) * 0.5f, 0f, 1f);
-        DOTween.To(() => transposer.m_FollowOffset, x => transposer.m_FollowOffset = x, offset, duration);
-        DOTween.To(() => aimCom.m_TrackedObjectOffset, x => aimCom.m_TrackedObjectOffset = x, aimOffset, duration);
+        transposer.m_XDamping = transposer.m_YDamping = transposer.m_ZDamping = smooth ? 1f : 0f;
+        aimCom.m_HorizontalDamping = aimCom.m_VerticalDamping = smooth ? 0.5f : 0f;
+        transposer.m_FollowOffset = offset;
+        aimCom.m_TrackedObjectOffset = aimOffset;
     }
 }

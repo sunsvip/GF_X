@@ -7,9 +7,7 @@ using UnityGameFramework.Runtime;
 public class MenuProcedure : ProcedureBase
 {
     int menuUIFormId;
-    int levelEntityId;
     LevelEntity lvEntity;
-    MenuUIForm menuUIForm;
 
     IFsm<IProcedureManager> procedure;
     protected override void OnInit(IFsm<IProcedureManager> procedureOwner)
@@ -20,8 +18,6 @@ public class MenuProcedure : ProcedureBase
     {
         base.OnEnter(procedureOwner);
         procedure = procedureOwner;
-        GF.Event.Subscribe(ShowEntitySuccessEventArgs.EventId, OnShowEntitySuccess);//订阅Entity打开事件, Entity显示成功时触发
-        GF.Event.Subscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);//订阅UI打开事件, UI打开成功时触发
         ShowLevel();//加载关卡
         //var res = await GF.WebRequest.AddWebRequestAsync("https://blog.csdn.net/final5788");
         //Log.Info(Utility.Converter.GetString(res.Bytes));
@@ -30,19 +26,15 @@ public class MenuProcedure : ProcedureBase
     protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)
     {
         base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
-        if (menuUIForm == null || lvEntity == null)
+        if (lvEntity == null || !lvEntity.IsAllReady)
         {
             return;
         }
-
-        if (GF.UI.IsValidUIForm(menuUIForm.UIForm) && GF.Entity.IsValidEntity(lvEntity.Entity) && lvEntity.IsAllReady)
+        //点击屏幕开始游戏
+        if (Input.GetMouseButtonDown(0) && !GF.UI.IsPointerOverUIObject(Input.mousePosition) && GF.UI.GetTopUIFormId() == menuUIFormId)
         {
-            if (Input.GetMouseButtonDown(0) && !GF.UI.IsPointerOverUIObject(Input.mousePosition) && GF.UI.GetTopUIFormId() == menuUIFormId)
-            {
-                EnterGame();
-            }
+            EnterGame();
         }
-
     }
     protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
     {
@@ -50,19 +42,16 @@ public class MenuProcedure : ProcedureBase
         {
             GF.UI.CloseUIForm(menuUIFormId);
         }
-        GF.Event.Unsubscribe(ShowEntitySuccessEventArgs.EventId, OnShowEntitySuccess);
-        GF.Event.Unsubscribe(OpenUIFormSuccessEventArgs.EventId, OnOpenUIFormSuccess);
         base.OnLeave(procedureOwner, isShutdown);
     }
     public void EnterGame()
     {
-        this.procedure.SetData<VarInt32>("LevelEntityId", levelEntityId);
+        procedure.SetData<VarUnityObject>("LevelEntity", lvEntity);
         ChangeState<GameProcedure>(procedure);
     }
-    public void ShowLevel()
+    public async void ShowLevel()
     {
         lvEntity = null;
-        menuUIForm = null;
         if (GF.Base.IsGamePaused)
         {
             GF.Base.ResumeGame();
@@ -73,12 +62,7 @@ public class MenuProcedure : ProcedureBase
         GF.Entity.HideAllLoadedEntities();
 
         //异步打开主菜单UI
-        var uiParms = UIParams.Create();//用于给UI传递各种参数
-        uiParms.OpenCallback = uiLogic =>
-        {
-            menuUIForm = uiLogic as MenuUIForm;
-        };
-        menuUIFormId = GF.UI.OpenUIForm(UIViews.MenuUIForm, uiParms);
+        menuUIFormId = GF.UI.OpenUIForm(UIViews.MenuUIForm);
 
         //动态创建关卡
         var lvTb = GF.DataTable.GetDataTable<LevelTable>();
@@ -87,26 +71,7 @@ public class MenuProcedure : ProcedureBase
 
         var lvParams = EntityParams.Create(Vector3.zero, Vector3.zero, Vector3.one);
         lvParams.Set(LevelEntity.P_LevelData, lvRow);
-        lvParams.Set(LevelEntity.P_LevelReadyCallback, (GameFrameworkAction)OnLevelAllReady);
-        levelEntityId = GF.Entity.ShowEntity<LevelEntity>(lvRow.LvPfbName, Const.EntityGroup.Level, lvParams);
-    }
-    private void OnLevelAllReady()
-    {
-        procedure.SetData<VarUnityObject>("LevelEntity", lvEntity);
+        lvEntity = await GF.Entity.ShowEntityAwait<LevelEntity>(lvRow.LvPfbName, Const.EntityGroup.Level, lvParams) as LevelEntity;
         GF.BuiltinView.HideLoadingProgress();
-    }
-    private void OnOpenUIFormSuccess(object sender, GameEventArgs e)
-    {
-        var args = e as OpenUIFormSuccessEventArgs;
-
-    }
-    private void OnShowEntitySuccess(object sender, GameEventArgs e)
-    {
-        var args = e as ShowEntitySuccessEventArgs;
-        if (args.Entity.Id == levelEntityId)
-        {
-            lvEntity = args.Entity.Logic as LevelEntity;
-            CameraFollower.Instance.SetFollowTarget(lvEntity.transform);
-        }
     }
 }

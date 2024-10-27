@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -7,15 +8,15 @@ public class ParticleEntity : EntityBase
     public const string LIFE_TIME = "LifeTime";
     public const string SORT_LAYER = "SortLayer";
     bool autoHide;
-    float lifeTime;
+    public float LifeTime { get; private set; }
     protected override void OnShow(object userData)
     {
         base.OnShow(userData);
         autoHide = true;
 
-        lifeTime = Params.Get<VarFloat>(LIFE_TIME, 2f);
+        LifeTime = Params.Get<VarFloat>(LIFE_TIME, 2f);
 
-        autoHide = lifeTime > 0;
+        autoHide = LifeTime > 0;
 
         if (Params.TryGet<VarInt32>(SORT_LAYER, out var pSortLayer))
         {
@@ -24,7 +25,7 @@ public class ParticleEntity : EntityBase
 
         if (autoHide)
         {
-            UniTask.Delay((int)(lifeTime * 1000)).ContinueWith(() =>
+            UniTask.Delay(TimeSpan.FromSeconds(LifeTime)).ContinueWith(() =>
             {
                 GF.Entity.HideEntitySafe(this);
             }).Forget();

@@ -1,11 +1,6 @@
 ﻿using DG.Tweening;
-using GameFramework;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityGameFramework.Runtime;
 
 public class GameOverProcedure : ProcedureBase
@@ -35,15 +30,15 @@ public class GameOverProcedure : ProcedureBase
 
     private void ShowGameOverUIForm(float delay)
     {
-        DOTween.Sequence().AppendInterval(delay).onComplete = () =>
+        DOVirtual.DelayedCall(delay, () =>
         {
             var gameoverParms = UIParams.Create();
             gameoverParms.Set<VarBoolean>(GameOverUIForm.P_IsWin, isWin);
             GF.UI.OpenUIForm(UIViews.GameOverUIForm, gameoverParms);
-        };
+        });
     }
 
-    internal void NextLevel()
+    internal void BackHome()
     {
         ChangeState<MenuProcedure>(procedure);
     }

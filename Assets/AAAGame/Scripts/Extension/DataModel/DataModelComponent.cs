@@ -308,7 +308,7 @@ namespace GameFramework
             TypeIdPair TypeIdPair = new TypeIdPair(typeof(T), id);
             if (HasDataModel<T>(id))
             {
-                throw new GameFrameworkException(Utility.Text.Format("Already exist data model '{0}'.", TypeIdPair));
+                throw new GameFrameworkException(Utility.Text.Format("Already exist data model '{0}'.", TypeIdPair.ToString()));
             }
 
             T DataModel = ReferencePool.Acquire<T>();
@@ -338,7 +338,7 @@ namespace GameFramework
             TypeIdPair TypeIdPair = new TypeIdPair(dataRowType, id);
             if (HasDataModel(dataRowType, id))
             {
-                throw new GameFrameworkException(Utility.Text.Format("Already exist data model '{0}'.", TypeIdPair));
+                throw new GameFrameworkException(Utility.Text.Format("Already exist data model '{0}'.", TypeIdPair.ToString()));
             }
 
             DataModelBase DataModel = ReferencePool.Acquire(dataRowType) as DataModelBase;

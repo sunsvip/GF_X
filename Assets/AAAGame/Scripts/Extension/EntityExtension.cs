@@ -56,15 +56,14 @@ public static class EntityExtension
     /// <param name="startWorldPos"></param>
     /// <param name="popDistance"></param>
     /// <param name="duration"></param>
-    public static void PopScreenText(this EntityComponent eCom, string text, Vector3 startWorldPos, float popDistance, float duration = 1f)
+    public static void PopScreenText(this EntityComponent eCom, string text, Vector3 startWorldPos, float popDistance, float duration = 1f, float fontSize = 4f)
     {
-        var vPos = Camera.main.WorldToViewportPoint(startWorldPos);
-        var sPos = GF.UICamera.ViewportToWorldPoint(vPos);
-        var ePos = sPos + Vector3.up * popDistance;
-        var effectParms = EntityParams.Create(sPos, Vector3.zero, Vector3.one);
+        var ePos = startWorldPos + Vector3.up * popDistance;
+        var effectParms = EntityParams.Create(startWorldPos, Vector3.zero, Vector3.one);
         effectParms.OnShowCallback = (EntityLogic entity) =>
         {
             var textMesh = entity.GetComponent<TextMeshPro>();
+            textMesh.fontSize = fontSize;
             textMesh.text = text;
             var txtCol = textMesh.color;
             txtCol.a = 1;
@@ -83,7 +82,7 @@ public static class EntityExtension
             };
             seqAct.SetAutoKill();
         };
-        eCom.ShowEntity<SampleEntity>("Effect/OutOfMoney", Const.EntityGroup.Effect, effectParms);
+        eCom.ShowEntity<SampleEntity>("Effect/PopText", Const.EntityGroup.Effect, effectParms);
     }
     /// <summary>
     /// 创建飘字效果
@@ -94,7 +93,7 @@ public static class EntityExtension
     /// <param name="content"></param>
     /// <param name="duration"></param>
     /// <param name="fontSize"></param>
-    public static void ShowPopText(this EntityComponent eCom, EntityParams eParams, string content, Vector3 endPos, float duration = 1f, float fontSize = 10f)
+    public static void ShowPopText(this EntityComponent eCom, EntityParams eParams, string content, Vector3 endPos, float duration = 0.5f, float fontSize = 5f)
     {
         if (eParams.OnShowCallback != null)
         {
@@ -110,7 +109,7 @@ public static class EntityExtension
             textMesh.fontSize = fontSize;
             eLogic.CachedTransform.localScale = Vector3.zero;
             var seqAct = DOTween.Sequence();
-            float jumpPower = Mathf.Abs( endPos.y - eLogic.CachedTransform.position.y);
+            float jumpPower = Mathf.Abs(endPos.y - eLogic.CachedTransform.position.y);
             var jumpAct = eLogic.CachedTransform.DOJump(endPos, jumpPower, 1, duration);
             float minY = Mathf.Min(eLogic.CachedTransform.position.y, endPos.y);
             jumpAct.onUpdate = () =>

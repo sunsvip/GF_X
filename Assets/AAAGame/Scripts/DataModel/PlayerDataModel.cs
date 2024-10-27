@@ -37,6 +37,29 @@ public class PlayerDataModel : DataModelStorageBase
 {
     [JsonProperty]
     private Dictionary<PlayerDataType, int> m_PlayerDataDic;
+    public int Hp
+    {
+        get=>GetData(PlayerDataType.Hp);
+        set=>SetData(PlayerDataType.Hp, Mathf.Max(0, value));
+    }
+    public int Coins
+    {
+        get => GetData(PlayerDataType.Coins);
+        set => SetData(PlayerDataType.Coins, Mathf.Max(0, value));
+    }
+    /// <summary>
+    /// ¹Ø¿¨
+    /// </summary>
+    public int LevelId
+    {
+        get => GetData(PlayerDataType.LevelId);
+        set
+        {
+            var lvTb = GF.DataTable.GetDataTable<LevelTable>();
+            int nextLvId = Const.RepeatLevel ? value : Mathf.Clamp(value, lvTb.MinIdDataRow.Id, lvTb.MaxIdDataRow.Id);
+            SetData(PlayerDataType.LevelId, nextLvId);
+        }
+    }
     public PlayerDataModel()
     {
         m_PlayerDataDic = new Dictionary<PlayerDataType, int>();
@@ -69,25 +92,9 @@ public class PlayerDataModel : DataModelStorageBase
         m_PlayerDataDic[PlayerDataType.Hp] = 100;
         m_PlayerDataDic[PlayerDataType.Energy] = 100;
         m_PlayerDataDic[PlayerDataType.LevelId] = 1;
+
     }
-    public int Coins
-    {
-        get => GetData(PlayerDataType.Coins);
-        set => SetData(PlayerDataType.Coins, Mathf.Max(0, value));
-    }
-    /// <summary>
-    /// ¹Ø¿¨
-    /// </summary>
-    public int LevelId
-    {
-        get => GetData(PlayerDataType.LevelId);
-        set
-        {
-            var lvTb = GF.DataTable.GetDataTable<LevelTable>();
-            int nextLvId = Const.RepeatLevel ? value : Mathf.Clamp(value, lvTb.MinIdDataRow.Id, lvTb.MaxIdDataRow.Id);
-            SetData(PlayerDataType.LevelId, nextLvId);
-        }
-    }
+    
     public int GetData(PlayerDataType tp)
     {
         return m_PlayerDataDic[tp];

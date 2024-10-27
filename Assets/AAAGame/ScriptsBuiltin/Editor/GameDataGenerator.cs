@@ -23,7 +23,7 @@ namespace UGF.EditorTools
         /// Excel下拉列表总限制255个字符
         /// </summary>
         const int MAX_CHAR_LENGTH = 255;
-        static IList<string> m_DataTableVarTypes = null;
+        static IList<KeyValuePair<int, string>> m_DataTableVarTypes = null;
         [InitializeOnLoadMethod]
         static void InitEPPlusLicense()
         {
@@ -120,7 +120,7 @@ namespace UGF.EditorTools
                         //listValidation.ShowInputMessage = true;
                         foreach (var typeName in m_DataTableVarTypes)
                         {
-                            listValidation.Formula.Values.Add(typeName);
+                            listValidation.Formula.Values.Add(typeName.Value);
                         }
                     }
                     var i18nValidation = sheet.DataValidations.AddListValidation("D1:Z1");
@@ -138,7 +138,7 @@ namespace UGF.EditorTools
             }
 
         }
-        private static List<string> ScanVariableTypes()
+        private static List<KeyValuePair<int, string>> ScanVariableTypes()
         {
             List<KeyValuePair<int, string>> types = new List<KeyValuePair<int, string>>();
             var nestedTypes = typeof(GameFramework.Editor.DataTableTools.DataTableProcessor).GetNestedTypes(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
@@ -154,14 +154,19 @@ namespace UGF.EditorTools
                 }
             }
             types.Sort((itmA, itmB) => itmA.Key.CompareTo(itmB.Key));
+
             int totalLength = 0;
-            List<string> result = new List<string>();
-            foreach (var item in types)
+            int cutIndex = -1;
+            for (int i = 0; i < types.Count; i++)
             {
-                if ((totalLength += item.Value.Length) > (MAX_CHAR_LENGTH - result.Count)) break;
-                result.Add(item.Value);
+                var item = types[i].Value;
+                totalLength += item.Length;
+                if (totalLength + i + 1 >= MAX_CHAR_LENGTH) break;
+                cutIndex = i;
             }
-            return result;
+            if (cutIndex < 0) return null;
+            for (int i = types.Count - 1; i > cutIndex; i--) types.RemoveAt(i);
+            return types;
         }
         /// <summary>
         /// 生成Entity,Sound,UI枚举脚本

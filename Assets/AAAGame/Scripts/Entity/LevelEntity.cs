@@ -1,5 +1,6 @@
 using GameFramework;
 using GameFramework.Event;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -10,93 +11,128 @@ public class LevelEntity : EntityBase
     public const string P_LevelReadyCallback = "OnLevelReady";
     public bool IsAllReady { get; private set; }
     private Transform playerSpawnPoint;
-    List<int> loadEntityTaskList;
-    int mPlayerId;
-    public int PlayerId { get => mPlayerId; }
-    List<int> enemyList;
+    PlayerEntity m_PlayerEntity;
+
+    List<Spawnner> m_Spawnners;
+
+    HashSet<int> m_EntityLoadingList;
+    Dictionary<int, CombatUnitEntity> m_Enemies;
+    bool m_IsGameOver;
     protected override void OnInit(object userData)
     {
         base.OnInit(userData);
-        loadEntityTaskList = new List<int>();
-        enemyList = new List<int>();
         playerSpawnPoint = transform.Find("PlayerSpawnPoint");
+        m_Spawnners = new List<Spawnner>();
+        m_EntityLoadingList = new HashSet<int>();
+        m_Enemies = new Dictionary<int, CombatUnitEntity>();
     }
-    protected override void OnShow(object userData)
+    protected override async void OnShow(object userData)
     {
         base.OnShow(userData);
         GF.Event.Subscribe(ShowEntitySuccessEventArgs.EventId, OnShowEntitySuccess);
+        GF.Event.Subscribe(HideEntityCompleteEventArgs.EventId, OnHideEntityComplete);
+        m_PlayerEntity = null;
+        m_IsGameOver = false;
         IsAllReady = false;
-        loadEntityTaskList?.Clear();
-        enemyList?.Clear();
-        SpawnAllEntity();
+        m_Spawnners.Clear();
+        m_EntityLoadingList.Clear();
+        m_Enemies.Clear();
+        CachedTransform.Find("EnemySpawnPoints").GetComponentsInChildren<Spawnner>(m_Spawnners);
+
+        var combatUnitTb = GF.DataTable.GetDataTable<CombatUnitTable>();
+        var playerRow = combatUnitTb.GetDataRow(0);
+        var playerParams = EntityParams.Create(playerSpawnPoint.position, playerSpawnPoint.eulerAngles);
+        playerParams.Set(PlayerEntity.P_DataTableRow, playerRow);
+        playerParams.Set<VarInt32>(PlayerEntity.P_CombatFlag, (int)CombatUnitEntity.CombatFlag.Player);
+        playerParams.Set<VarAction>(PlayerEntity.P_OnBeKilled, (Action)OnPlayerBeKilled);
+        m_PlayerEntity = await GF.Entity.ShowEntityAwait<PlayerEntity>(playerRow.PrefabName, Const.EntityGroup.Player, playerParams) as PlayerEntity;
+        CameraController.Instance.SetFollowTarget(m_PlayerEntity.CachedTransform);
+        IsAllReady = true;
+    }
+
+
+    protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
+    {
+        base.OnUpdate(elapseSeconds, realElapseSeconds);
+        if (m_IsGameOver || !IsAllReady) return;
+        SpawnEnemiesUpdate();
     }
     protected override void OnHide(bool isShutdown, object userData)
     {
         GF.Event.Unsubscribe(ShowEntitySuccessEventArgs.EventId, OnShowEntitySuccess);
+        GF.Event.Unsubscribe(HideEntityCompleteEventArgs.EventId, OnHideEntityComplete);
 
         base.OnHide(isShutdown, userData);
     }
 
-
-    private void SpawnAllEntity()
-    {
-        var playerParams = EntityParams.Create(playerSpawnPoint.position, playerSpawnPoint.eulerAngles, playerSpawnPoint.localScale);
-
-        mPlayerId = GF.Entity.ShowEntity<PlayerEntity>("MyPlayer", Const.EntityGroup.Player, playerParams);
-        loadEntityTaskList.Add(mPlayerId);
-    }
     public void StartGame()
     {
-        var player = GF.Entity.GetEntity<PlayerEntity>(mPlayerId);
-        player.Ctrlable = true;
+        m_PlayerEntity.Ctrlable = true;
     }
-    private void OnShowEntitySuccess(object sender, GameEventArgs e)
+    private void SpawnEnemiesUpdate()
     {
-        var eArgs = e as ShowEntitySuccessEventArgs;
-        if (loadEntityTaskList.Contains(eArgs.Entity.Id))
+        if (m_Spawnners.Count == 0) return;
+        Spawnner item = null;
+        var playerPos = m_PlayerEntity.CachedTransform.position;
+        for (int i = m_Spawnners.Count - 1; i >= 0; i--)
         {
-            loadEntityTaskList.Remove(eArgs.Entity.Id);
-            IsAllReady = loadEntityTaskList.Count <= 0;
-            if (eArgs.Entity.Id == mPlayerId)
+            item = m_Spawnners[i];
+            if (item.CheckInBounds(playerPos))
             {
-                CameraFollower.Instance.SetFollowTarget(eArgs.Entity.transform);
-            }
-            if (IsAllReady)
-            {
-                if (Params.TryGet<VarObject>(LevelEntity.P_LevelReadyCallback, out var callback))
+                var ids = item.SpawnAllCombatUnits(m_PlayerEntity);
+                m_Spawnners.RemoveAt(i);
+                foreach (var entityId in ids)
                 {
-                    (callback.Value as GameFrameworkAction).Invoke();
+                    m_EntityLoadingList.Add(entityId);
                 }
             }
         }
     }
 
-    internal void AddEnemies(int v)
+    private void OnPlayerBeKilled()
     {
-        var player = GF.Entity.GetEntity<PlayerEntity>(mPlayerId);
-        int spawnCount = v;
-        for (int i = 0; i < spawnCount; i++)
+        if (m_IsGameOver) return;
+        m_IsGameOver = true;
+        var eParms = RefParams.Create();
+        eParms.Set<VarBoolean>("IsWin", false);
+        GF.Event.Fire(GameplayEventArgs.EventId, GameplayEventArgs.Create(GameplayEventType.GameOver, eParms));
+    }
+    private void CheckGameOver()
+    {
+        if(m_IsGameOver) return;
+        if (m_Spawnners.Count < 1 && m_EntityLoadingList.Count < 1 && m_Enemies.Count < 1)
         {
-            var randomPos = UnityEngine.Random.insideUnitCircle * 5;
-            var enemyParams = EntityParams.Create();
-            enemyParams.position = player.transform.position + new Vector3(randomPos.x, 0, randomPos.y);
-            enemyParams.eulerAngles = Vector3.up * UnityEngine.Random.value * 360f;
-            var enemyId = GF.Entity.ShowEntity<SampleEntity>("MyPlayer", Const.EntityGroup.Player, enemyParams);
-            enemyList.Add(enemyId);
+            m_IsGameOver = true;
+            var eParms = RefParams.Create();
+            eParms.Set<VarBoolean>("IsWin", true);
+            GF.Event.Fire(GameplayEventArgs.EventId, GameplayEventArgs.Create(GameplayEventType.GameOver, eParms));
+        }
+    }
+    private void OnShowEntitySuccess(object sender, GameEventArgs e)
+    {
+        var eArgs = e as ShowEntitySuccessEventArgs;
+        int entityId = eArgs.Entity.Id;
+        if (m_EntityLoadingList.Contains(entityId))
+        {
+            m_Enemies.Add(entityId, eArgs.Entity.Logic as CombatUnitEntity);
+            m_EntityLoadingList.Remove(entityId);
         }
     }
 
-    internal void RemoveEnemies(int v)
+
+    private void OnHideEntityComplete(object sender, GameEventArgs e)
     {
-        for (int i = 0; i < v; i++)
+        var eArgs = e as HideEntityCompleteEventArgs;
+        int entityId = eArgs.EntityId;
+        if (m_Enemies.ContainsKey(entityId))
         {
-            if (enemyList.Count <= 0)
-            {
-                break;
-            }
-            int eId = enemyList[0];
-            GF.Entity.HideEntitySafe(eId);
-            enemyList.RemoveAt(0);
+            m_Enemies.Remove(entityId);
         }
+        else if (m_EntityLoadingList.Contains(entityId))
+        {
+            m_EntityLoadingList.Remove(entityId);
+        }
+
+        CheckGameOver();
     }
 }
