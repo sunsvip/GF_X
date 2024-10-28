@@ -1,9 +1,7 @@
 ﻿using GameFramework;
 using GameFramework.ObjectPool;
 using UnityEngine;
-/// <summary>
-/// UI Item对象类, 用于对象池复用item, 使用UIFormBase类的SpawnItem/UnspawnItem从对象池取用/归还Item
-/// </summary>
+
 public class UIItemObject : ObjectBase
 {
 #pragma warning disable IDE1006 // 命名样式
@@ -25,9 +23,23 @@ public class UIItemObject : ObjectBase
         }
         Object.Destroy(gameObject);
     }
-
+    
     protected virtual void OnCreate(GameObject itemInstance)
     {
 
+    }
+
+    protected override void OnSpawn()
+    {
+        base.OnSpawn();
+        var transform = gameObject.transform;
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+        gameObject.SetActive(true);
+    }
+    protected override void OnUnspawn()
+    {
+        base.OnUnspawn();
+        gameObject.SetActive(false);
     }
 }

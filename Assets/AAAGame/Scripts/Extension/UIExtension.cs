@@ -317,22 +317,47 @@ public static class UIExtension
         }
     }
     /// <summary>
-    /// 获取当前顶层的UI界面id
+    /// 获取当前顶层的UI界面id(排除子界面)
     /// </summary>
     /// <param name="uiCom"></param>
     /// <returns></returns>
     public static int GetTopUIFormId(this UIComponent uiCom)
     {
         var dialogGp = uiCom.GetUIGroup(Const.UIGroup.Dialog.ToString());
-        if (dialogGp.CurrentUIForm != null)
+        var allUIForms = dialogGp.GetAllUIForms();
+        int maxSortOrder = -1;
+        int maxOrderIndex = -1;
+        for (int i = 0; i < allUIForms.Length; i++)
         {
-            return dialogGp.CurrentUIForm.SerialId;
+            var uiBase = (allUIForms[i] as UIForm).Logic as UIFormBase;
+            if (uiBase == null || uiBase.Params.IsSubUIForm) continue;
+
+            int curOrder = uiBase.SortOrder;
+            if (curOrder >= maxSortOrder)
+            {
+                maxSortOrder = curOrder;
+                maxOrderIndex = i;
+            }
         }
+        if (maxOrderIndex != -1) return allUIForms[maxOrderIndex].SerialId;
+
+        maxSortOrder = -1;
+        maxOrderIndex = -1;
         var uiFormGp = uiCom.GetUIGroup(Const.UIGroup.UIForm.ToString());
-        if (uiFormGp.CurrentUIForm != null)
+        allUIForms = uiFormGp.GetAllUIForms();
+        for (int i = 0; i < allUIForms.Length; i++)
         {
-            return uiFormGp.CurrentUIForm.SerialId;
+            var uiBase = (allUIForms[i] as UIForm).Logic as UIFormBase;
+            if (uiBase == null || uiBase.Params.IsSubUIForm) continue;
+
+            int curOrder = uiBase.SortOrder;
+            if (curOrder >= maxSortOrder)
+            {
+                maxSortOrder = curOrder;
+                maxOrderIndex = i;
+            }
         }
+        if (maxOrderIndex != -1) return allUIForms[maxOrderIndex].SerialId;
         return -1;
     }
     public static void ShowRewardEffect(this UIComponent uiCom, Vector3 centerPos, Vector3 fly2Pos, float flyDelay = 0.5f, GameFrameworkAction onAnimComplete = null, int num = 30)

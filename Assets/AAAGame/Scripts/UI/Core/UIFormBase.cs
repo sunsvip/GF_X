@@ -33,10 +33,12 @@ public class SerializeFieldData
     }
 }
 
+/// <summary>
+/// UI基类, 所有UI界面需继承此类
+/// </summary>
 public class UIFormBase : UIFormLogic
 {
     [HideInInspector][SerializeField] SerializeFieldData[] _fields = new SerializeFieldData[0];
-    [SerializeField] protected RectTransform topBar = null;
     /// <summary>
     /// UI打开动画
     /// </summary>
@@ -45,6 +47,7 @@ public class UIFormBase : UIFormLogic
     /// </summary>
     [HideInInspector][SerializeField] DOTweenSequence m_CloseAnimation = null;
     public UIParams Params { get; private set; }
+    public int SortOrder => UICanvas.sortingOrder;
     public int Id => this.UIForm.SerialId;
     public bool Interactable
     {
@@ -65,7 +68,6 @@ public class UIFormBase : UIFormLogic
     /// 子UI界面, 会随着父界面关闭而关闭
     /// </summary>
     IList<int> m_SubUIForms = null;
-    bool m_Covering = false;
     protected override void OnInit(object userData)
     {
         base.OnInit(userData);
@@ -80,12 +82,10 @@ public class UIFormBase : UIFormLogic
         transform.localPosition = Vector3.zero;
         gameObject.GetOrAddComponent<GraphicRaycaster>();
         InitLocalization();
-        FitHoleScreen();
     }
     protected override void OnOpen(object userData)
     {
         base.OnOpen(userData);
-        m_Covering = false;
         Params = userData as UIParams;
         var cvs = GetComponent<Canvas>();
         cvs.overrideSorting = true;
@@ -95,18 +95,7 @@ public class UIFormBase : UIFormLogic
         PlayUIAnimation(true, OnOpenAnimationComplete);
         Params.OpenCallback?.Invoke(this);
     }
-    protected override void OnCover()
-    {
-        base.OnCover();
-        m_Covering = true;
-    }
-    protected override void OnReveal()
-    {
-        base.OnReveal();
-        if (m_Covering)
-            PlayUIAnimation(true, null);
-        m_Covering = false;
-    }
+
 
     protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
     {
@@ -136,17 +125,17 @@ public class UIFormBase : UIFormLogic
     /// <summary>
     /// 打开子UI Form
     /// </summary>
-    /// <param name="viewName"></param>
-    /// <param name="params"></param>
+    /// <param name="viewName">界面枚举</param>
+    /// <param name="subUiOrder">子界面的显示层级(相对父界面)</param>
+    /// <param name="params">UI参数</param>
     /// <returns></returns>
-    public int OpenSubUIForm(UIViews viewName, UIParams @params = null)
+    public int OpenSubUIForm(UIViews viewName, int subUiOrder = -1, UIParams @params = null)
     {
         if (m_SubUIForms == null) m_SubUIForms = new List<int>(2);
-        if (@params == null)
-        {
-            @params = UIParams.Create();
-        }
-        @params.SortOrder = Params.SortOrder + m_SubUIForms.Count + 1;
+        @params ??= UIParams.Create();
+        if (subUiOrder <= -1) subUiOrder = m_SubUIForms.Count;
+        @params.SortOrder = Params.SortOrder + subUiOrder + 1;
+        @params.IsSubUIForm = true;
         var uiformId = GF.UI.OpenUIForm(viewName, @params);
         m_SubUIForms.Add(uiformId);
         return uiformId;
@@ -162,7 +151,10 @@ public class UIFormBase : UIFormLogic
         if (GF.UI.HasUIForm(uiformId))
             GF.UI.CloseUIForm(uiformId);
     }
-    private void CloseAllSubUIForms()
+    /// <summary>
+    /// 关闭全部子UI Form
+    /// </summary>
+    public void CloseAllSubUIForms()
     {
         if (m_SubUIForms != null)
         {
@@ -229,9 +221,9 @@ public class UIFormBase : UIFormLogic
         if (spawn == null)
         {
             var itemInstance = Instantiate(itemTemple, instanceRoot);
-            itemInstance.transform.localPosition = Vector3.zero;
-            itemInstance.transform.localRotation = Quaternion.identity;
-            if (!itemInstance.activeSelf) itemInstance.SetActive(true);
+            //itemInstance.transform.localPosition = Vector3.zero;
+            //itemInstance.transform.localRotation = Quaternion.identity;
+            //if (!itemInstance.activeSelf) itemInstance.SetActive(true);
             spawn = UIItemObject.Create<T>(itemInstance);
             pool.Register(spawn, true);
         }
@@ -262,6 +254,19 @@ public class UIFormBase : UIFormLogic
         pool.Unspawn(itemInstance);
     }
     /// <summary>
+    /// 回收所有item
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="itemTemple"></param>
+    protected void UnspawnAllItem<T>(GameObject itemTemple) where T : UIItemObject, new()
+    {
+        var itemTempleId = itemTemple.GetHashCode().ToString();
+        if (!GF.ObjectPool.HasObjectPool<T>(itemTempleId)) return;
+
+        var pool = GF.ObjectPool.GetObjectPool<T>(itemTempleId);
+        pool.UnspawnAll();
+    }
+    /// <summary>
     /// 更新界面中静态文本的多语言文字
     /// </summary>
     public virtual void InitLocalization()
@@ -279,27 +284,7 @@ public class UIFormBase : UIFormLogic
             }
         }
     }
-    /// <summary>
-    /// 适配挖空屏/刘海屏
-    /// </summary>
-    private void FitHoleScreen()
-    {
-        if (topBar == null)
-        {
-            return;
-        }
-        float topSpace = Screen.height - Screen.safeArea.height;
-        if (topSpace < 1f)
-        {
-            return;
-        }
-#if UNITY_IOS
-        topSpace = 80;
-#endif
-        var pos = topBar.anchoredPosition;
-        pos.y = -topSpace;
-        topBar.anchoredPosition = pos;
-    }
+    
     private void PlayUIAnimation(bool isOpen, GameFrameworkAction onAnimComplete)
     {
         if (isOpen)
@@ -307,8 +292,7 @@ public class UIFormBase : UIFormLogic
             if (m_OpenAnimation != null)
             {
                 var anim = m_OpenAnimation.DOPlay();
-                if (onAnimComplete != null)
-                    anim.OnComplete(onAnimComplete.Invoke);
+                if (onAnimComplete != null) anim.OnComplete(onAnimComplete.Invoke);
             }
             else
             {
@@ -321,16 +305,14 @@ public class UIFormBase : UIFormLogic
             if (m_CloseAnimation != null)
             {
                 var anim = m_CloseAnimation.DOPlay();
-                if (onAnimComplete != null)
-                    anim.OnComplete(onAnimComplete.Invoke);
+                if (onAnimComplete != null) anim.OnComplete(onAnimComplete.Invoke);
             }
             else
             {
                 if (m_OpenAnimation != null)
                 {
                     var anim = m_OpenAnimation.DORewind();
-                    if (onAnimComplete != null)
-                        anim.OnComplete(onAnimComplete.Invoke);
+                    if (onAnimComplete != null) anim.OnComplete(onAnimComplete.Invoke);
                 }
                 else
                 {

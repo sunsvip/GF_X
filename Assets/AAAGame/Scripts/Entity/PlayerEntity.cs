@@ -19,7 +19,7 @@ public class PlayerEntity : CombatUnitEntity
     private bool isGrounded;
     private Vector3 moveStep;
 
-    private float m_AttackInterval = 0.4f;
+    private float m_AttackInterval = 0.2f;
     private float m_AttackTimer;
     private bool mCtrlable;
     public bool Ctrlable
@@ -256,7 +256,7 @@ public class PlayerEntity : CombatUnitEntity
             entityIds.Add(entityId);
         }
         hitsList.Dispose();
-        float damageInterval = 2;
+        float damageInterval = 0.5f;
         float lastDamageRadius = damageInterval;
         bool hasEnemy = false;
         for (int i = 0; i < entityIds.Count; i++)
