@@ -59,7 +59,7 @@ GF_HybridCLR通过Procedure(流程)来走游戏逻辑，游戏入口流程为Lau
 
 使用有限状态机Procedure管理游戏逻辑，结构清晰，逻辑简单。无论是维护还是debug都非常容易切入，使用Procedure可以规范开发
 
-# 引用库 致谢
+### 引用库 致谢
 [UnityGameFramework](https://github.com/EllanJiang/UnityGameFramework)
 
 [HybridCLR](https://github.com/focus-creative-games/hybridclr)
