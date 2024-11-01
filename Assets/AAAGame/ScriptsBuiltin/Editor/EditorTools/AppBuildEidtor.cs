@@ -274,6 +274,7 @@ namespace UGF.EditorTools
                 EditorGUILayout.BeginHorizontal();
                 {
                     EditorGUILayout.LabelField("Build Resources Settings", EditorStyles.boldLabel);
+                    AppBuildSettings.Instance.UseResourceRule = EditorGUILayout.ToggleLeft("Enable [Rule Editor]", AppBuildSettings.Instance.UseResourceRule, GUILayout.Width(160));
                     if (GUILayout.Button("Resources Editor", GUILayout.Width(160f)))
                     {
                         OpenResourcesEditor();
@@ -323,6 +324,28 @@ namespace UGF.EditorTools
                     EditorGUILayout.EndHorizontal();
                     EditorGUILayout.BeginHorizontal();
                     {
+                        EditorGUILayout.LabelField("Resource Mode:", GUILayout.Width(160f));
+                        EditorGUI.BeginChangeCheck();
+                        {
+                            AppSettings.Instance.ResourceMode = (ResourceMode)EditorGUILayout.EnumPopup(AppSettings.Instance.ResourceMode);
+                        }
+                        if (EditorGUI.EndChangeCheck())
+                        {
+                            RefreshHybridCLREnable();
+                        }
+                        if (AppSettings.Instance.ResourceMode != ResourceMode.Unspecified)
+                        {
+                            SetResourceMode(AppSettings.Instance.ResourceMode);
+                        }
+                        AppBuildSettings.Instance.RevealFolder = EditorGUILayout.ToggleLeft(revealFolderContent, AppBuildSettings.Instance.RevealFolder, GUILayout.Width(105f));
+                        EditorGUILayout.EndHorizontal();
+                        if (AppSettings.Instance.ResourceMode == ResourceMode.Unspecified)
+                        {
+                            EditorGUILayout.HelpBox("ResourceMode is invalid.", MessageType.Error);
+                        }
+                    }
+                    EditorGUILayout.BeginHorizontal();
+                    {
                         EditorGUILayout.LabelField("Output Directory", GUILayout.Width(160f));
                         m_Controller.OutputDirectory = EditorGUILayout.TextField(m_Controller.OutputDirectory);
                         if (GUILayout.Button("Browse...", GUILayout.Width(80f)))
@@ -336,26 +359,8 @@ namespace UGF.EditorTools
                     {
                         EditorGUILayout.LabelField("Output Resources Path", GUILayout.Width(160f));
                         GUILayout.Label(GetResourceOupoutPathByMode(AppSettings.Instance.ResourceMode));
-                        EditorGUILayout.LabelField("Resource Mode:", GUILayout.Width(100f));
-                        EditorGUI.BeginChangeCheck();
-                        {
-                            AppSettings.Instance.ResourceMode = (ResourceMode)EditorGUILayout.EnumPopup(AppSettings.Instance.ResourceMode, GUILayout.Width(160f));
-                        }
-                        if (EditorGUI.EndChangeCheck())
-                        {
-                            RefreshHybridCLREnable();
-                        }
-                        if (AppSettings.Instance.ResourceMode != ResourceMode.Unspecified)
-                        {
-                            SetResourceMode(AppSettings.Instance.ResourceMode);
-                        }
-                        AppBuildSettings.Instance.RevealFolder = EditorGUILayout.ToggleLeft(revealFolderContent, AppBuildSettings.Instance.RevealFolder, GUILayout.Width(105f));
                     }
                     EditorGUILayout.EndHorizontal();
-                    if (AppSettings.Instance.ResourceMode == ResourceMode.Unspecified)
-                    {
-                        EditorGUILayout.HelpBox("ResourceMode is invalid.", MessageType.Error);
-                    }
                     EditorGUILayout.BeginHorizontal();
                     {
                         EditorGUILayout.LabelField("Working Path", GUILayout.Width(160f));

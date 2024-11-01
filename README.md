@@ -58,3 +58,10 @@ GF_HybridCLR通过Procedure(流程)来走游戏逻辑，游戏入口流程为Lau
 8. GameOverProcedure(游戏结束流程, 通常会显示游戏胜利/失败界面, 进行游戏奖励结算, 并显示下一关、重玩按钮或返回主页等按钮) => 如点击下一关, 把关卡Id改为下一关然后切换到GameProcedure就开始下一关游戏了。点击返回主页按钮切换到MenuProcedure就回到了游戏主菜单。
 
 使用有限状态机Procedure管理游戏逻辑，结构清晰，逻辑简单。无论是维护还是debug都非常容易切入，使用Procedure可以规范开发
+
+# 引用库 致谢
+[UnityGameFramework](https://github.com/EllanJiang/UnityGameFramework)
+[HybridCLR](https://github.com/focus-creative-games/hybridclr)
+[UGFExtensions](https://github.com/FingerCaster/UGFExtensions)
+[UniTask(零分配Task,gc优化)](https://github.com/Cysharp/UniTask)
+[ZString(零分配StringBuilder,字符串连接、格式化gc优化)](https://github.com/Cysharp/ZString)

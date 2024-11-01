@@ -10,7 +10,7 @@ namespace UGF.EditorTools
         public string AppUpdateUrl;
         public string AppUpdateDesc;
         public bool RevealFolder = false;
-
+        public bool UseResourceRule = true;
         //Android Build Settings
         public bool AndroidUseKeystore;
         public string AndroidKeystoreName;

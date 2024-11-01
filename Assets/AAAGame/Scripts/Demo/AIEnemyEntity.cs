@@ -13,6 +13,7 @@ public class AIEnemyEntity : CombatUnitEntity
     {
         base.OnInit(userData);
         m_Rigidbody = GetComponent<Rigidbody>();
+        gameObject.tag = "Enemy";
     }
     protected override void OnShow(object userData)
     {

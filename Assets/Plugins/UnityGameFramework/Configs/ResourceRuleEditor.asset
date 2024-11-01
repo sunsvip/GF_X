@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99b93107d7bc31740838a156d99e161c, type: 3}
+  m_Name: ResourceRuleEditor
+  m_EditorClassIdentifier: 
+  rules:
+  - valid: 1
+    name: Entity
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/AAAGame/Prefabs/Entity
+    loadType: 0
+    packed: 0
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: Core
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/AAAGame/Prefabs/Core
+    loadType: 0
+    packed: 0
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: UI
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/AAAGame/Prefabs/UI
+    loadType: 0
+    packed: 0
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: Config
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/AAAGame/Config
+    loadType: 0
+    packed: 0
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: DataTable
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/AAAGame/DataTable
+    loadType: 0
+    packed: 0
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: HotfixDlls
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/AAAGame/HotfixDlls
+    loadType: 0
+    packed: 0
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: Language
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/AAAGame/Language
+    loadType: 0
+    packed: 0
+    filterType: 0
+    searchPatterns: '*.*'
+  - valid: 1
+    name: Scene
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/AAAGame/Scene
+    loadType: 0
+    packed: 0
+    filterType: 0
+    searchPatterns: '*.unity'
+  - valid: 1
+    name: ScriptableAssets
+    variant: 
+    fileSystem: 
+    groups: 
+    assetsDirectoryPath: Assets/AAAGame/ScriptableAssets
+    loadType: 0
+    packed: 0
+    filterType: 0
+    searchPatterns: '*.asset'

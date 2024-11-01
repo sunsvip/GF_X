@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UGF.EditorTools.ResourceTools;
 using UnityEditor;
 using UnityEngine;
 using UnityGameFramework.Editor.ResourceTools;
@@ -120,6 +121,11 @@ namespace UGF.EditorTools
         }
         public static bool AutoResolveAbDuplicateAssets()
         {
+            if (AppBuildSettings.Instance.UseResourceRule)
+            {
+                ResourceRuleEditorUtility.RefreshResourceCollection();
+            }
+
             ResourceEditorController resEditor = new ResourceEditorController();
             if (resEditor.Load())
             {
