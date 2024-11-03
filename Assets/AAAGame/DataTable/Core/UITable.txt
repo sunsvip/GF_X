@@ -11,3 +11,4 @@
 	7		10	GameOverUIForm	True	UIForm	False
 	8		0	MenuUIForm	True	UIForm	False
 	9		31	LanguagesDialog	False	Dialog	True
+	10		0	Topbar	False	UIForm	False

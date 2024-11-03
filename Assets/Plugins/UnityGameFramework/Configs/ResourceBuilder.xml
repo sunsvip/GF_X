@@ -9,7 +9,7 @@
       <AdditionalCompressionSelected>True</AdditionalCompressionSelected>
       <ForceRebuildAssetBundleSelected>False</ForceRebuildAssetBundleSelected>
       <BuildEventHandlerTypeName>UGF.EditorTools.AssetBuildHandler</BuildEventHandlerTypeName>
-      <OutputDirectory>D:/OpenSource/GF_X/AB</OutputDirectory>
+      <OutputDirectory>D:/Workspace/OpenSource/GF_X/AB</OutputDirectory>
       <OutputPackageSelected>True</OutputPackageSelected>
       <OutputFullSelected>False</OutputFullSelected>
       <OutputPackedSelected>False</OutputPackedSelected>

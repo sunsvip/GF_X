@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using GameFramework.Event;
+using UnityGameFramework.Runtime;
 
 public partial class MenuUIForm : UIFormBase
 {
@@ -10,6 +11,10 @@ public partial class MenuUIForm : UIFormBase
         base.OnOpen(userData);
         GF.Event.Subscribe(PlayerDataChangedEventArgs.EventId, OnUserDataChanged);
         RefreshMoneyText();
+        var uiparms = UIParams.Create();
+        uiparms.Set<VarBoolean>(UITopbar.P_EnableBG, true);
+        uiparms.Set<VarBoolean>(UITopbar.P_EnableSettingBtn, true);
+        this.OpenSubUIForm(UIViews.Topbar, 1, uiparms);
     }
     protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
     {

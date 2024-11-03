@@ -2236,7 +2236,6 @@ MonoBehaviour:
     - {fileID: 4898068743401733356}
     VarType: TMPro.TextMeshProUGUI
     VarPrefix: 0
-  topBar: {fileID: 0}
   m_OpenAnimation: {fileID: 3290982404624986673}
   m_CloseAnimation: {fileID: 0}
   varVersionTxt: {fileID: 8488177668127629767}
@@ -2333,7 +2332,7 @@ MonoBehaviour:
   m_Loops: 1
   m_LoopType: 0
   m_UpdateType: 0
-  m_Snapping: 0
+  m_IgnoreTimeScale: 1
   m_OnPlay:
     m_PersistentCalls:
       m_Calls: []

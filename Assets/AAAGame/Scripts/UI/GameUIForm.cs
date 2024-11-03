@@ -17,6 +17,11 @@ public partial class GameUIForm : UIFormBase
     {
         base.OnOpen(userData);
         RefreshCoinsText();
+
+        var uiparms = UIParams.Create();
+        uiparms.Set<VarBoolean>(UITopbar.P_EnableBG, false);
+        uiparms.Set<VarBoolean>(UITopbar.P_EnableSettingBtn, true);
+        this.OpenSubUIForm(UIViews.Topbar, 1, uiparms);
     }
     private void RefreshCoinsText()
     {

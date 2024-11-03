@@ -13,6 +13,7 @@ public partial class LanguagesDialog : UIFormBase
     {
         base.OnOpen(userData);
         m_VarAction = Params.Get<VarAction>(P_LangChangedCb);
+        varLanguageToggle.SetActive(false);
         RefreshList();
     }
     protected override void OnClose(bool isShutdown, object userData)

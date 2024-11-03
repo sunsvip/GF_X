@@ -76,6 +76,11 @@ public class CombatUnitEntity : EntityBase
     protected virtual void OnBeKilled()
     {
         GF.Entity.HideEntity(this.Entity);
+
+        if(CampFlag == CombatFlag.Enemy)
+        {
+            GF.DataModel.GetDataModel<PlayerDataModel>().Coins++;
+        }
     }
 
     internal void SetColor(Color green)
