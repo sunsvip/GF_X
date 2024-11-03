@@ -1,9 +1,0 @@
-﻿#	关卡表					i18n
-#	ID		LvPfbName	InitMoney	MoneyColorId	LvDisplayName
-#	int		string	int	int	string
-#		备注	关卡prefab名	玩家初始钱数	取值1-6	
-	1		Islands/Island_1	100	1	Level.DisplayName1
-	2		Islands/Island_2	101	5	Level.DisplayName2
-	3		Islands/Island_3	102	6	Level.DisplayName3
-	4		Islands/Island_4	103	2	Level.DisplayName4
-	5		Islands/Island_5	104	3	Level.DisplayName5

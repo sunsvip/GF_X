@@ -119,7 +119,7 @@ namespace GameFramework.Editor.DataTableTools
                     .AppendLine("        /// <summary>")
                     .AppendFormat("        /// {0}", dataTableProcessor.GetComment(i)).AppendLine()
                     .AppendLine("        /// </summary>")
-                    .AppendFormat("        public {0} {1}", enumType.FullName, dataTableProcessor.GetName(i)).AppendLine()
+                    .AppendFormat("        public {0} {1}", enumType.FullName.Replace('+', '.'), dataTableProcessor.GetName(i)).AppendLine()
                     .AppendLine("        {")
                     .AppendLine("            get;")
                     .AppendLine("            private set;")
@@ -204,7 +204,7 @@ namespace GameFramework.Editor.DataTableTools
                                 continue;
                             }
 
-                            stringBuilder.AppendFormat("            {0} = DataTableExtension.ParseEnum<{1}>(columnStrings[index++]);", dataTableProcessor.GetName(i), enumType.FullName).AppendLine();
+                            stringBuilder.AppendFormat("            {0} = DataTableExtension.ParseEnum<{1}>(columnStrings[index++]);", dataTableProcessor.GetName(i), enumType.FullName.Replace('+', '.')).AppendLine();
                         }
                         else
                         {
@@ -288,7 +288,7 @@ namespace GameFramework.Editor.DataTableTools
                                 GFBuiltin.LogError(Utility.Text.Format("解析枚举类型失败:{0}, 配置枚举格式为: EnumType.Item1", firstEnumValue));
                                 continue;
                             }
-                            stringBuilder.AppendFormat("                    {0} = ({1})binaryReader.Read7BitEncodedInt32();", dataTableProcessor.GetName(i), enumType.FullName).AppendLine();
+                            stringBuilder.AppendFormat("                    {0} = ({1})binaryReader.Read7BitEncodedInt32();", dataTableProcessor.GetName(i), enumType.FullName.Replace('+', '.')).AppendLine();
                         }
                         else
                         {

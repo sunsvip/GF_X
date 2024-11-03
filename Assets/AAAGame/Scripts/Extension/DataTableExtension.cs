@@ -237,6 +237,18 @@ public static class DataTableExtension
     {
         return new Vector4(binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle());
     }
+
+    public static Vector4[] ParseVector4Array(string value)
+    {
+        if (string.IsNullOrEmpty(value)) return null;
+        string[] arr = ParseArrayElements(value);
+        Vector4[] result = new Vector4[arr.Length];
+        for (int i = 0; i < arr.Length; i++)
+        {
+            result[i] = ParseVector4(arr[i]);
+        }
+        return result;
+    }
     /// <summary>
     /// 解析数据表数组
     /// </summary>
@@ -342,6 +354,7 @@ public static class DataTableExtension
         }
         return null;
     }
+
     #region BinaryReader Extension
 
     //public static int4 Readint4(this BinaryReader binaryReader)

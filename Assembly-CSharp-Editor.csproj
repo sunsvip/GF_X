@@ -68,12 +68,14 @@
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\DataTableGenerator\DataTableProcessor.Vector2IntProcessor.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\EditorTools\CompressTool\SubPanel\CompressImageFilePanel.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\DataTableGenerator\DataTableProcessor.Vector4Processor.cs" />
+    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\DataTableGenerator\DataTableProcessor.Vector2ArrayProcessor.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\EditorTools\EditorToolbarExtension.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\AppConfigsInspector.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\JenkinsBuilder.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\DataTableGenerator\DataTableProcessor.UShortProcessor.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\DataTableGenerator\DataTableProcessor.ShortProcessor.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\EditorTools\EditorToolBase.cs" />
+    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\DataTableGenerator\DataTableProcessor.Vector4ArrayProcessor.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\EditorTools\LocalizationScanner\LocalizationTextScannerEditor.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\DataTableGenerator\DataTableProcessor.IntProcessor.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\DataTableGenerator\DataTableProcessor.UIntProcessor.cs" />
@@ -98,6 +100,7 @@
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\DataTableGenerator\DataTableProcessor.DecimalProcessor.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\DataTableGenerator\DataTableProcessor.IntArrayProcessor.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\DataTableGenerator\DataTableProcessor.SByteProcessor.cs" />
+    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\ResourceRuleEditor\ResourceRuleEditor.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\UI\UIFormEditor.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\DataTableGenerator\DataTableProcessor.ULongProcessor.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\DataTableGenerator\DataTableProcessor.BoolProcessor.cs" />
@@ -114,9 +117,11 @@
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\Common\GameFrameworkConfigs.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\DataTableGenerator\DataTableProcessor.Vector3IntProcessor.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\Common\AppBuildSettings.cs" />
+    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\ResourceRuleEditor\ResourceRuleEditorUtility.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\DataTableUpdater.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\EditorTools\LocalizationScanner\LocalizationTextScanner.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\EditorTools\AppBuildEidtor.cs" />
+    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\ResourceRuleEditor\ResourceRuleEditorData.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\EditorTools\CompressTool\CompressToolEditor.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\EditorTools\BatchOperateTool\BatchOperateToolEditor.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Editor\EditorTools\UnityEditorToolbar.cs" />
