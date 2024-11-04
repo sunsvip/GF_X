@@ -33,10 +33,9 @@ public partial class ToastTips : UIFormBase
     }
     private void ScheduleStart()
     {
-        UniTask.Delay(TimeSpan.FromSeconds(m_Duration)).ContinueWith(() =>
+        UniTask.Delay(TimeSpan.FromSeconds(m_Duration), true).ContinueWith(() =>
         {
-            if (GF.UI.IsValidUIForm(this.UIForm))
-                GF.UI.Close(this.UIForm);
+            GF.UI.Close(this.UIForm);
         }).Forget();
     }
 }
