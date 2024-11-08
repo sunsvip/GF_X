@@ -12,6 +12,7 @@ namespace UGF.EditorTools
         public const bool AutoScriptUTF8 = true;//新建脚本时自动修改脚本编码方式为utf-8以支持中文
         public const string UIViewScriptFile = "Assets/AAAGame/Scripts/UI/Core/UIViews.cs";
         public const string UISerializeFieldDir = "Assets/AAAGame/Scripts/UI/UIVariables";//生成UI变量代码目录
+        public const string UIItemSerializeFiledDir = "Assets/AAAGame/Scripts/UI/UIItemVariables";
         public const string UITableExcel = "Core/UITable.xlsx";
         public static string UITableExcelFullPath => UtilityBuiltin.AssetsPath.GetCombinePath(DataTableExcelPath, UITableExcel);
 

@@ -6,39 +6,13 @@ using DG.Tweening;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
-[Serializable]
-public class SerializeFieldData
-{
-    public string VarName;      //变量名
-    public GameObject[] Targets;//关联的GameObject
-    public string VarType;      //变量类型FullName,带有名字空间
-    public int VarPrefix;//变量private/protect/public
-    public SerializeFieldData(string varName, GameObject[] targets = null)
-    {
-        VarName = varName;
-        Targets = targets ?? new GameObject[1];
-    }
-    public T GetComponent<T>(int idx) where T : Component
-    {
-        return Targets[idx].GetComponent<T>();
-    }
-    public T[] GetComponents<T>() where T : Component
-    {
-        T[] result = new T[Targets.Length];
-        for (int i = 0; i < Targets.Length; i++)
-        {
-            result[i] = Targets[i].GetComponent<T>();
-        }
-        return result;
-    }
-}
 
 /// <summary>
 /// UI基类, 所有UI界面需继承此类
 /// </summary>
-public class UIFormBase : UIFormLogic
+public class UIFormBase : UIFormLogic, ISerializeFieldTool
 {
-    [HideInInspector][SerializeField] SerializeFieldData[] _fields = new SerializeFieldData[0];
+    [HideInInspector][SerializeField] SerializeFieldData[] _fields;
     /// <summary>
     /// UI打开动画
     /// </summary>
@@ -46,6 +20,7 @@ public class UIFormBase : UIFormLogic
     /// <summary>    /// UI关闭动画, 若为空,默认使用UI打开动画倒放
     /// </summary>
     [HideInInspector][SerializeField] DOTweenSequence m_CloseAnimation = null;
+    public SerializeFieldData[] SerializeFieldArr { get => _fields; set => _fields = value; }
     public UIParams Params { get; private set; }
     public int SortOrder => UICanvas.sortingOrder;
     public int Id => this.UIForm.SerialId;
@@ -62,6 +37,7 @@ public class UIFormBase : UIFormLogic
     }
     private CanvasGroup canvasGroup = null;
     protected Canvas UICanvas { get; private set; }
+
     private bool isOnEscape;
     IList<KeyValuePair<Type, string>> m_ItemPools = null;
     /// <summary>
@@ -164,14 +140,7 @@ public class UIFormBase : UIFormLogic
             }
         }
     }
-    public SerializeFieldData[] GetFieldsProperties()
-    {
-        return _fields;
-    }
-    public void ModifyFieldsProperties(SerializeFieldData[] modified)
-    {
-        this._fields = modified;
-    }
+
     private void UnspawnAllItemObjects()
     {
         if (m_ItemPools == null) return;
@@ -365,4 +334,22 @@ public class UIFormBase : UIFormLogic
     {
         GF.UI.CloseUIForm(this.UIForm);
     }
+}
+
+[Serializable]
+public class SerializeFieldData
+{
+    public string VarName;      //变量名
+    public GameObject[] Targets;//关联的GameObject
+    public string VarType;      //变量类型FullName,带有名字空间
+    public int VarPrefix;//变量private/protect/public
+    public SerializeFieldData(string varName, GameObject[] targets = null)
+    {
+        VarName = varName;
+        Targets = targets ?? new GameObject[1];
+    }
+}
+public interface ISerializeFieldTool
+{
+    public SerializeFieldData[] SerializeFieldArr { get; set; }
 }

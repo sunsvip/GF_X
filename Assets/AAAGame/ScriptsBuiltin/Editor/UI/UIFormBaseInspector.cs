@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-using UnityEditor.SceneManagement;
 using System.Linq;
 using UnityEditor;
 using System.Collections.Generic;
@@ -18,8 +17,10 @@ using UnityGameFramework.Runtime;
 namespace UGF.EditorTools
 {
     [CustomEditor(typeof(UIFormBase), true)]
-    public class UIFormBaseEditor : UnityEditor.Editor
+    public class UIFormBaseInspector : UnityEditor.Editor
     {
+        public const string helpTitle = "使用说明";
+        public const string helpDoc = "1.打开UI界面预制体.\n2.右键节点'UIForm Tools'子菜单,添加/移除变量.\n3.在Inspector面板点击功能按钮生成变量代码.";
         const string KEY_BUTTON_ONCLICK = "ClickUIButton";
         const string KEY_BUTTON_ONCLOSE = "OnClickClose";
         readonly static string[] varPrefixArr = { "private", "protected", "public" };
@@ -36,7 +37,6 @@ namespace UGF.EditorTools
         int mCurFoldoutItemIdx = -1;
         static int varPrefixIndex = -1;
         static bool mShowSelectTypeMenu;
-        static bool mHasChanged = false;//标记是否需要生成代码
 
         GUIContent prefixContent;
         GUIContent typeContent;
@@ -45,12 +45,10 @@ namespace UGF.EditorTools
         private GUIContent generateVarBtTitle;
         private GUIContent openVarCodeBtTitle;
         private GUIContent openUiLogicBtTitle;
+        private GUIContent dropdownBtContent;
 
         private GUIStyle highlightBtStyle;
-        const string helpTitle = "使用说明";
-        const string helpDoc = "1.打开UI界面预制体.\n2.右键节点'[Add/Remove] UI Variable'添加/移除变量.\n3.在Inspector面板点击功能按钮生成变量代码.";
 
-        private GUIContent dropdownBtContent;
         SerializedProperty m_UIOpenAnim;
         SerializedProperty m_UICloseAnim;
         #region #右键菜单
@@ -60,56 +58,39 @@ namespace UGF.EditorTools
         [InitializeOnLoadMethod]
         static void InitEditor()
         {
-            PrefabStage.prefabStageClosing -= OnUIFormPrefabClosing;
-            PrefabStage.prefabStageClosing += OnUIFormPrefabClosing;
             Selection.selectionChanged = () =>
             {
                 addToFieldToggle = false;
                 removeToFieldToggle = false;
             };
 
-            EditorApplication.hierarchyWindowItemOnGUI = delegate (int id, Rect rect)
+            EditorApplication.hierarchyWindowItemOnGUI -= OnHierarchyItemOnGUI;
+            EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyItemOnGUI;
+        }
+        private static void OnHierarchyItemOnGUI(int instanceID, Rect rect)
+        {
+            OpenSelectComponentMenuListener(rect);
+            if (varLabelGUIStyle == null)
             {
-                OpenSelectComponentMenuListener(rect);
-                var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
-                if (prefabStage == null)
-                {
-                    return;
-                }
-                var uiForm = prefabStage.prefabContentsRoot.GetComponent<UIFormBase>();
-                if (uiForm == null)
-                {
-                    return;
-                }
-                var curDrawNode = EditorUtility.InstanceIDToObject(id) as GameObject;
-                if (curDrawNode == null)
-                {
-                    return;
-                }
-                var fields = uiForm.GetFieldsProperties();
-                SerializeFieldData drawItem = null;
-                foreach (var item in fields)
-                {
-                    if (item == null) continue;
-                    if (ArrayUtility.Contains(item.Targets, curDrawNode))
-                    {
-                        drawItem = item;
-                        break;
-                    }
-                }
-                if (drawItem != null)
-                {
-                    if (varLabelGUIStyle == null)
-                    {
-                        varLabelGUIStyle = new GUIStyle(EditorStyles.helpBox);
-                        varLabelGUIStyle.stretchWidth = false;
-                        varLabelGUIStyle.stretchHeight = false;
-                        varLabelGUIStyle.normal.textColor = Color.white * 0.88f;
-                        varLabelGUIStyle.fontStyle = FontStyle.Bold;
-                        varLabelGUIStyle.hover.textColor = Color.cyan;
-                    }
+                varLabelGUIStyle = new GUIStyle(EditorStyles.helpBox);
+                varLabelGUIStyle.stretchWidth = false;
+                varLabelGUIStyle.stretchHeight = false;
+                varLabelGUIStyle.normal.textColor = Color.white * 0.88f;
+                varLabelGUIStyle.fontStyle = FontStyle.Bold;
+                varLabelGUIStyle.hover.textColor = Color.cyan;
+            }
+            var curDrawNode = EditorUtility.InstanceIDToObject(instanceID);
+            if (curDrawNode == null) return;
+            var uiForm = GetSerializeFieldTool(curDrawNode as GameObject);
+            if (uiForm == null) return;
+            var fields = uiForm.SerializeFieldArr;
 
-                    var displayContent = EditorGUIUtility.TrTextContent(Utility.Text.Format("{0} {1} {2}", GetVarPrefix(drawItem.VarPrefix), GetDisplayVarTypeName(drawItem.VarType), drawItem.VarName));
+            foreach (var item in fields)
+            {
+                if (item == null) continue;
+                if (ArrayUtility.Contains(item.Targets, curDrawNode))
+                {
+                    var displayContent = EditorGUIUtility.TrTextContent(Utility.Text.Format("{0} {1} {2}", GetVarPrefix(item.VarPrefix), GetDisplayVarTypeName(item.VarType), item.VarName));
                     var itemLabelRect = GUILayoutUtility.GetRect(displayContent, varLabelGUIStyle);
                     itemLabelRect.y = rect.y;
                     itemLabelRect.width = Mathf.Min(rect.width * 0.4f, itemLabelRect.width);
@@ -118,18 +99,7 @@ namespace UGF.EditorTools
                     {
                         GUI.Label(itemLabelRect, displayContent, varLabelGUIStyle);
                     }
-                }
-
-            };
-        }
-
-        private static void OnUIFormPrefabClosing(PrefabStage stage)
-        {
-            if (mHasChanged)
-            {
-                if (EditorUtility.DisplayDialog("提示", "存在修改, 请重新生成UI代码。", "是", "否"))
-                {
-                    PrefabStageUtility.OpenPrefab(stage.assetPath);
+                    break;
                 }
             }
         }
@@ -175,21 +145,15 @@ namespace UGF.EditorTools
                 return;
             }
             if (Selection.count <= 0) return;
-
-            var uiForm = GetPrefabRootComponent<UIFormBase>();
-            if (uiForm == null)
+            var selectGos = Selection.gameObjects;
+            for (int i = 0; i < selectGos.Length; i++)
             {
-                Debug.LogWarning("UIForm Script is not exist.");
-                return;
-            }
-            var fieldsProperties = uiForm.GetFieldsProperties();
-            if (fieldsProperties == null) return;
-            Undo.RecordObject(uiForm, uiForm.name);
-            for (int i = 0; i < Selection.gameObjects.Length; i++)
-            {
-                var itm = Selection.gameObjects[i];
+                var itm = selectGos[i];
                 if (itm == null) continue;
-
+                var serializeTool = GetSerializeFieldTool(itm);
+                if (serializeTool == null) continue;
+                var fieldsProperties = serializeTool.SerializeFieldArr;
+                if (fieldsProperties == null) return;
                 for (int j = fieldsProperties.Length - 1; j >= 0; j--)
                 {
                     var fields = fieldsProperties[j];
@@ -209,12 +173,11 @@ namespace UGF.EditorTools
                         }
                     }
                 }
+                serializeTool.SerializeFieldArr = fieldsProperties;
+                EditorUtility.SetDirty(serializeTool as MonoBehaviour);
             }
-            uiForm.ModifyFieldsProperties(fieldsProperties);
-            EditorUtility.SetDirty(uiForm);
             removeToFieldToggle = true;
             addToFieldToggle = false;
-            mHasChanged = true;
         }
         [MenuItem("GameObject/UIForm Tools/Add Button OnClick(string)", false, priority = 1101)]
         static void AddClickButtonEventString()
@@ -232,43 +195,35 @@ namespace UGF.EditorTools
         static void AddLocalizationKey()
         {
             if (Selection.count == 0) return;
-            var uiForm = GetPrefabRootComponent<UIFormBase>();
-            if (uiForm == null)
-            {
-                Debug.LogWarning("UIForm Script is not exist.");
-                return;
-            }
-            bool dirty = false;
-            foreach (var item in Selection.gameObjects)
+            var selectGos = Selection.gameObjects;
+            foreach (var item in selectGos)
             {
                 if (item == null) continue;
                 if (item.GetComponent<TMPro.TextMeshProUGUI>() != null || item.GetComponent<UnityEngine.UI.Text>() != null || item.GetComponent<TMPro.TextMeshPro>() != null)
                 {
-                    item.GetOrAddComponent<UIStringKey>().Key = Utility.Text.Format("{0}.{1}", uiForm.name, item.name);
-                    dirty = true;
+                    var serializeTool = GetSerializeFieldTool(item);
+                    if (serializeTool == null) continue;
+                    var goLogic = serializeTool as MonoBehaviour;
+                    item.GetOrAddComponent<UIStringKey>().Key = Utility.Text.Format("{0}.{1}", goLogic.name, item.name);
+                    EditorUtility.SetDirty(goLogic);
                 }
             }
-            if (dirty) EditorUtility.SetDirty(uiForm);
         }
 
         private static void AddClickButtonEvent<T>()
         {
-            if (Selection.count <= 0) return;
+            if (Selection.count == 0) return;
 
-            var uiForm = GetPrefabRootComponent<UIFormBase>();
-            if (uiForm == null)
-            {
-                Debug.LogWarning("UIForm Script is not exist.");
-                return;
-            }
             var paramsType = typeof(T);
-            bool hasChanged = false;
-            foreach (var item in Selection.gameObjects)
+            var selectGos = Selection.gameObjects;
+            foreach (var item in selectGos)
             {
                 if (item == null || !item.TryGetComponent<Button>(out var buttonCom)) continue;
-
+                var serializeTool = GetSerializeFieldTool(item);
+                if (serializeTool == null) continue;
+                var goLogic = serializeTool as MonoBehaviour;
                 var m_OnClick = buttonCom.GetType().GetField("m_OnClick", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(buttonCom) as UnityEvent;
-                var btnEvent = UnityEngine.Events.UnityAction.CreateDelegate(typeof(UnityAction<T>), uiForm, KEY_BUTTON_ONCLICK) as UnityAction<T>;
+                var btnEvent = UnityEngine.Events.UnityAction.CreateDelegate(typeof(UnityAction<T>), goLogic, KEY_BUTTON_ONCLICK) as UnityAction<T>;
                 for (int i = m_OnClick.GetPersistentEventCount() - 1; i >= 0; i--)
                 {
                     UnityEventTools.RemovePersistentListener(m_OnClick, i);
@@ -281,37 +236,29 @@ namespace UGF.EditorTools
                 {
                     UnityEventTools.AddObjectPersistentListener<UnityEngine.UI.Button>(m_OnClick, btnEvent as UnityAction<UnityEngine.UI.Button>, buttonCom);
                 }
-                //如需支持其它事件参数类型,可参考如上代码追加
-                hasChanged = true;
+                EditorUtility.SetDirty(goLogic);
             }
-            if (hasChanged) EditorUtility.SetDirty(uiForm);
         }
         [MenuItem("GameObject/UIForm Tools/Add Close Button Event", false, priority = 1102)]
         private static void AddCloseButtonEvent()
         {
             if (Selection.count <= 0) return;
 
-            var uiForm = GetPrefabRootComponent<UIFormBase>();
-            if (uiForm == null)
-            {
-                Debug.LogWarning("UIForm Script is not exist.");
-                return;
-            }
-            bool hasChanged = false;
             foreach (var item in Selection.gameObjects)
             {
                 if (item == null || !item.TryGetComponent<Button>(out var buttonCom)) continue;
-
+                var serializeTool = GetSerializeFieldTool(item);
+                if (serializeTool == null) continue;
+                var goLogic = serializeTool as MonoBehaviour;
                 var m_OnClick = buttonCom.GetType().GetField("m_OnClick", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(buttonCom) as UnityEvent;
-                var btnEvent = UnityEngine.Events.UnityAction.CreateDelegate(typeof(UnityAction), uiForm, KEY_BUTTON_ONCLOSE) as UnityAction;
+                var btnEvent = UnityEngine.Events.UnityAction.CreateDelegate(typeof(UnityAction), goLogic, KEY_BUTTON_ONCLOSE) as UnityAction;
                 for (int i = m_OnClick.GetPersistentEventCount() - 1; i >= 0; i--)
                 {
                     UnityEventTools.RemovePersistentListener(m_OnClick, i);
                 }
                 UnityEventTools.AddVoidPersistentListener(m_OnClick, btnEvent);
-                hasChanged = true;
+                EditorUtility.SetDirty(goLogic);
             }
-            if (hasChanged) EditorUtility.SetDirty(uiForm);
         }
         /// <summary>
         /// 不带名字空间的类型名
@@ -322,15 +269,20 @@ namespace UGF.EditorTools
             var result = Utility.Assembly.GetType(fullName);
             return result;
         }
-        private static T GetPrefabRootComponent<T>() where T : Component
+
+        private static ISerializeFieldTool GetSerializeFieldTool(GameObject go)
         {
-            var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
-            if (prefabStage == null)
+            var parent = go.transform.parent;
+            while (parent != null)
             {
-                Debug.LogWarning("GetCurrentPrefabStage is null.");
-                return null;
+                var mono = parent.GetComponents<MonoBehaviour>().FirstOrDefault(item => item is ISerializeFieldTool);
+                if (mono != null)
+                {
+                    return mono as ISerializeFieldTool;
+                }
+                parent = parent.parent;
             }
-            return prefabStage.prefabContentsRoot.GetComponent<T>();
+            return null;
         }
         private static void AddToFields(int varPrefix, string varType)
         {
@@ -339,42 +291,65 @@ namespace UGF.EditorTools
                 return;
             }
             if (Selection.count <= 0) return;
-            var uiForm = GetPrefabRootComponent<UIFormBase>();
-            if (uiForm == null)
-            {
-                Debug.LogWarning("UIForm Script is not exist.");
-                return;
-            }
             var targets = GetTargetsFromSelectedNodes(Selection.gameObjects);
-
-            var fieldsProperties = uiForm.GetFieldsProperties();
-            if (fieldsProperties == null) fieldsProperties = new SerializeFieldData[0];
-            Undo.RecordObject(uiForm, uiForm.name);
 
             if (varPrefix != 2)
             {
-                var field = new SerializeFieldData(GenerateFieldName(fieldsProperties, targets), targets);
-                field.VarPrefix = varPrefix;
-                field.VarType = varType;
-                ArrayUtility.Add(ref fieldsProperties, field);
+                Dictionary<ISerializeFieldTool, List<GameObject>> dic = new Dictionary<ISerializeFieldTool, List<GameObject>>();
+                foreach (var item in targets)
+                {
+                    var serializeTool = GetSerializeFieldTool(item);
+                    if (serializeTool == null) continue;
+                    var fieldsProperties = serializeTool.SerializeFieldArr;
+                    if (fieldsProperties == null) return;
+                    if (dic.ContainsKey(serializeTool))
+                    {
+                        dic[serializeTool].Add(item);
+                    }
+                    else
+                    {
+                        dic[serializeTool] = new List<GameObject>() { item };
+                    }
+                }
+                foreach (var item in dic)
+                {
+                    var serializeTool = item.Key;
+                    var goLogic = serializeTool as MonoBehaviour;
+                    Undo.RecordObject(goLogic, goLogic.name);
+                    var fieldsProperties = serializeTool.SerializeFieldArr;
+                    var gos = item.Value.ToArray();
+                    var field = new SerializeFieldData(GenerateFieldName(fieldsProperties, gos), gos);
+                    field.VarPrefix = varPrefix;
+                    field.VarType = varType;
+                    ArrayUtility.Add(ref fieldsProperties, field);
+                    serializeTool.SerializeFieldArr = fieldsProperties;
+                    EditorUtility.SetDirty(goLogic);
+                }
+
             }
             else
             {
+                HashSet<UnityEngine.Object> recorded = new HashSet<UnityEngine.Object>();
                 foreach (var item in targets)
                 {
+                    var serializeTool = GetSerializeFieldTool(item);
+                    if (serializeTool == null) continue;
+                    var fieldsProperties = serializeTool.SerializeFieldArr;
+                    if (fieldsProperties == null) return;
+                    var goLogic = serializeTool as MonoBehaviour;
+                    if (!recorded.Contains(goLogic))
+                        Undo.RecordObject(goLogic, goLogic.name);
                     GameObject[] elements = new GameObject[] { item };
                     var field = new SerializeFieldData(GenerateFieldName(fieldsProperties, elements), elements);
                     field.VarPrefix = 1; //默认protect
                     field.VarType = varType;
                     ArrayUtility.Add(ref fieldsProperties, field);
+                    serializeTool.SerializeFieldArr = fieldsProperties;
+                    EditorUtility.SetDirty(goLogic);
                 }
             }
-
-            uiForm.ModifyFieldsProperties(fieldsProperties);
-            EditorUtility.SetDirty(uiForm);
             addToFieldToggle = true;
             removeToFieldToggle = false;
-            mHasChanged = true;
         }
         private static GameObject[] GetTargetsFromSelectedNodes(GameObject[] selectedList)
         {
@@ -400,16 +375,16 @@ namespace UGF.EditorTools
             generateVarBtTitle = new GUIContent("生成变量代码", "generate or update variables code");
             openVarCodeBtTitle = new GUIContent("查看变量代码", "open variables code in editor");
             openUiLogicBtTitle = new GUIContent("编辑UI代码", "open ui logic code in editor");
+            dropdownBtContent = new GUIContent("选择动效", "select dotween sequence component");
             prefixContent = new GUIContent();
             typeContent = new GUIContent();
             varPrefixIndex = 0;
             mShowSelectTypeMenu = false;
             uiForm = (target as UIFormBase);
-            if (uiForm.GetFieldsProperties() == null)
+            if (uiForm.SerializeFieldArr == null)
             {
-                uiForm.ModifyFieldsProperties(new SerializeFieldData[0]);
+                uiForm.SerializeFieldArr = new SerializeFieldData[0];
             }
-            dropdownBtContent = new GUIContent("选择动效", "select DOTweenSequence component");
             mFields = serializedObject.FindProperty("_fields");
             m_UIOpenAnim = serializedObject.FindProperty("m_OpenAnimation");
             m_UICloseAnim = serializedObject.FindProperty("m_CloseAnimation");
@@ -425,7 +400,7 @@ namespace UGF.EditorTools
             if (EditorApplication.isUpdating || EditorApplication.isCompiling) return;
             if (EditorPrefs.GetBool(REFRESH_BIND, false))
             {
-                SerializeFieldProperties(serializedObject, uiForm.GetFieldsProperties());
+                SerializeFieldProperties(serializedObject, uiForm.SerializeFieldArr);
             }
         }
 
@@ -470,12 +445,12 @@ namespace UGF.EditorTools
             var btnHeight = GUILayout.Height(30);
             if (GUILayout.Button(generateVarBtTitle, highlightBtStyle, btnHeight)) //生成脚本
             {
-                GenerateUIFormVariables(uiForm, serializedObject);
+                GenerateUIFormVariables(uiForm);
             }
 
             if (GUILayout.Button(bindVarBtTitle, btnHeight)) //绑定变量
             {
-                SerializeFieldProperties(serializedObject, uiForm.GetFieldsProperties());
+                SerializeFieldProperties(serializedObject, uiForm.SerializeFieldArr);
             }
 
             if (GUILayout.Button(openVarCodeBtTitle, btnHeight))
@@ -501,7 +476,6 @@ namespace UGF.EditorTools
             if (GUILayout.Button("Clear All"))
             {
                 mFields.ClearArray();
-                mHasChanged = true;
             }
             EditorGUILayout.EndHorizontal();
 
@@ -628,27 +602,17 @@ namespace UGF.EditorTools
         /// 生成UI脚本.cs
         /// </summary>
         /// <param name="uiForm"></param>
-        /// <param name="uiFormSerializer"></param>
-        private void GenerateUIFormVariables(UIFormBase uiForm, SerializedObject uiFormSerializer)
+        private void GenerateUIFormVariables(UIFormBase uiForm)
         {
             if (uiForm == null) return;
 
             var monoScript = MonoScript.FromMonoBehaviour(uiForm);
             var uiFormClassName = monoScript.GetClass().Name;
             string scriptFile = UtilityBuiltin.AssetsPath.GetCombinePath(ConstEditor.UISerializeFieldDir, Utility.Text.Format("{0}.Variables.cs", uiFormClassName));
-            var fields = uiForm.GetFieldsProperties();
+            var fields = uiForm.SerializeFieldArr;
             if (fields == null || fields.Length <= 0)
             {
-                if (File.Exists(scriptFile))
-                {
-                    File.Delete(scriptFile);
-                }
-                var metaFile = Utility.Text.Format("{0}.meta", scriptFile);
-                if (File.Exists(metaFile))
-                {
-                    File.Delete(metaFile);
-                }
-                AssetDatabase.Refresh();
+                AssetDatabase.DeleteAsset(scriptFile);
                 return;
             }
 
@@ -663,15 +627,10 @@ namespace UGF.EditorTools
             List<string> fieldList = new List<string>();
             foreach (var field in fields)
             {
-                if (string.IsNullOrWhiteSpace(field.VarType) || string.IsNullOrWhiteSpace(field.VarName))
-                {
-                    continue;
-                }
+                if (string.IsNullOrWhiteSpace(field.VarType) || string.IsNullOrWhiteSpace(field.VarName)) continue;
                 var varType = GetSampleType(field.VarType);
-                if (varType == null)
-                {
-                    continue;
-                }
+                if (varType == null) continue;
+
                 if (!string.IsNullOrEmpty(varType.Namespace) && !nameSpaceList.Contains(varType.Namespace))
                 {
                     nameSpaceList.Add(varType.Namespace);
@@ -719,7 +678,8 @@ namespace UGF.EditorTools
 
             stringBuilder.AppendLine("}");
             if (hasNameSpace) stringBuilder.AppendLine("}");
-
+            if (!Directory.Exists(ConstEditor.UISerializeFieldDir))
+                Directory.CreateDirectory(ConstEditor.UISerializeFieldDir);
             File.WriteAllText(scriptFile, stringBuilder.ToString());
             EditorPrefs.SetBool(REFRESH_BIND, true);
             AssetDatabase.Refresh();
@@ -774,11 +734,11 @@ namespace UGF.EditorTools
 
         private void CheckAndInitFields()
         {
-            if (uiForm.GetFieldsProperties() == null)
+            if (uiForm.SerializeFieldArr == null)
             {
-                uiForm.ModifyFieldsProperties(new SerializeFieldData[0]);
+                uiForm.SerializeFieldArr = new SerializeFieldData[0];
+                mFields = serializedObject.FindProperty("_fields");
             }
-            if (mFields == null) mFields = serializedObject.FindProperty("_fields");
 
             if (mFields.arraySize != mReorderableList.Length)
             {
@@ -813,14 +773,12 @@ namespace UGF.EditorTools
                     lastVarName.stringValue += idx.ToString();
                 }
             }
-            mHasChanged = true;
         }
         private void RemoveField(int idx)
         {
             Undo.RecordObject(uiForm, uiForm.name);
             mFields.DeleteArrayElementAtIndex(idx);
             ArrayUtility.RemoveAt(ref mReorderableList, idx);
-            mHasChanged = true;
         }
         private void DrawVariableTargets(Rect rect, int index, bool isActive, bool isFocused)
         {
@@ -911,26 +869,25 @@ namespace UGF.EditorTools
         {
             var go = targets[0];
             string varName = Regex.Replace(go.name, "[^\\w]", string.Empty);
-            if (fields == null || fields.Length <= 0)
+            if (targets.Length > 1) varName += arrFlag;
+
+            if (fields == null || fields.Length == 0)
             {
-                return GetFieldVarName(targets.Length > 1 ? varName + arrFlag : varName);
+                return GetFieldVarName(varName);
             }
             bool contains = false;
-
             foreach (SerializeFieldData item in fields)
             {
                 if (item != null && item.VarName.CompareTo(varName) == 0)
                 {
                     contains = true;
+                    break;
                 }
             }
-            if (targets.Length > 1)
-            {
-                varName += arrFlag;
-            }
+
             if (contains)
             {
-                varName += Mathf.Abs(go.GetInstanceID());
+                varName = Utility.Text.Format("{0}_{1}", varName, go.transform.GetSiblingIndex());
             }
 
             return GetFieldVarName(varName);

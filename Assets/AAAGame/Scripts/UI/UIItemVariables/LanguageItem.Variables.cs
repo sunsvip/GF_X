@@ -4,10 +4,11 @@
 //---------------------------------
 using UnityEngine;
 using UnityEngine.UI;
-public partial class LanguagesDialog
+using TMPro;
+public partial class LanguageItem
 {
 	[Space(10)]
 	[Header("UI Variables:")]
-	[SerializeField] private GameObject varLanguageToggle = null;
-	[SerializeField] private ToggleGroup varToggleGroup = null;
+	[SerializeField] private Image varIcon = null;
+	[SerializeField] private TextMeshProUGUI varName = null;
 }
