@@ -13,7 +13,7 @@ public class LoadHotfixDllProcedure : ProcedureBase
     /// <summary>
     /// 全部的预加载热更脚本dll
     /// </summary>
-    private string[] hotfixDlls;
+    private System.Collections.Generic.List<string> hotfixDlls;
     private bool hotfixListIsLoaded;
     private int totalProgress;
     private int loadedProgress;
@@ -114,15 +114,23 @@ public class LoadHotfixDllProcedure : ProcedureBase
             var textAsset = asset as TextAsset;
             if (textAsset != null)
             {
-                hotfixDlls = UtilityBuiltin.Json.ToObject<string[]>(textAsset.text);
-                totalProgress += hotfixDlls.Length;
-                for (int i = 0; i < hotfixDlls.Length - 1; i++)
-                {
-                    var dllName = hotfixDlls[i];
-                    var dllAsset = UtilityBuiltin.AssetsPath.GetHotfixDll(dllName);
-                    LoadHotfixDll(dllAsset, this);
-                }
                 hotfixListIsLoaded = true;
+                hotfixDlls = UtilityBuiltin.Json.ToObject<System.Collections.Generic.List<string>>(textAsset.text);
+                totalProgress += hotfixDlls.Count;
+                if (hotfixDlls.Count == 1)
+                {
+                    var mainDll = UtilityBuiltin.AssetsPath.GetHotfixDll(hotfixDlls.Last());
+                    LoadHotfixDll(mainDll, this);
+                }
+                else
+                {
+                    for (int i = 0; i < hotfixDlls.Count - 1; i++)
+                    {
+                        var dllName = hotfixDlls[i];
+                        var dllAsset = UtilityBuiltin.AssetsPath.GetHotfixDll(dllName);
+                        LoadHotfixDll(dllAsset, this);
+                    }
+                }
             }
         }));
     }
@@ -145,10 +153,14 @@ public class LoadHotfixDllProcedure : ProcedureBase
         GFBuiltin.BuiltinView.SetLoadingProgress(loadedProgress / (float)totalProgress);
 
         //所有依赖dll加载完成后再加载Hotfix.dll
-        if (loadedProgress + 1 == totalProgress)
+        if (hotfixDlls.Contains(args.DllName))
         {
-            var mainDll = UtilityBuiltin.AssetsPath.GetHotfixDll(hotfixDlls.Last());
-            LoadHotfixDll(mainDll, this);
+            hotfixDlls.Remove(args.DllName);
+            if(hotfixDlls.Count == 1)
+            {
+                var mainDll = UtilityBuiltin.AssetsPath.GetHotfixDll(hotfixDlls.Last());
+                LoadHotfixDll(mainDll, this);
+            }
         }
     }
 
