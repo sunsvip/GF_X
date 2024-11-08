@@ -7,6 +7,7 @@ using UnityEngine;
 using System.Linq;
 using GameFramework;
 using GameFramework.Resource;
+using System.IO;
 
 public class LoadHotfixDllProcedure : ProcedureBase
 {
@@ -199,7 +200,7 @@ public class LoadHotfixDllProcedure : ProcedureBase
     private void OnLoadDllFail(string assetName, LoadResourceStatus status, string errorMessage, object userData)
     {
         Log.Error("加载{0}失败! Error:{1}", assetName, errorMessage);
-        GFBuiltin.Event.Fire(this, ReferencePool.Acquire<LoadHotfixDllEventArgs>().Fill(assetName, null, userData));
+        GFBuiltin.Event.Fire(this, ReferencePool.Acquire<LoadHotfixDllEventArgs>().Fill(Path.GetFileNameWithoutExtension(assetName), null, userData));
     }
 
     private void OnLoadDllSuccess(string assetName, object asset, float duration, object userData)
@@ -219,7 +220,8 @@ public class LoadHotfixDllProcedure : ProcedureBase
             }
 
         }
-        GFBuiltin.Event.Fire(this, ReferencePool.Acquire<LoadHotfixDllEventArgs>().Fill(assetName, dllAssembly, userData));
+        var dllName = Path.GetFileNameWithoutExtension(assetName);
+        GFBuiltin.Event.Fire(this, ReferencePool.Acquire<LoadHotfixDllEventArgs>().Fill(dllName, dllAssembly, userData));
     }
     /// <summary>
     /// 为aot assembly加载原始metadata， 这个代码放aot或者热更新都行。
