@@ -30,7 +30,7 @@ namespace UGF.EditorTools.ResourceTools
         private string[] m_SourceAssetExceptLabelFilterGUIDArray;
         
         [MenuItem("Game Framework/Resource Tools/Resource Rule Editor", false, 50)]
-        static void Open()
+        public static void Open()
         {
             ResourceRuleEditor window = GetWindow<ResourceRuleEditor>(true, "Resource Rule Editor", true);
             window.minSize = new Vector2(1555f, 420f);

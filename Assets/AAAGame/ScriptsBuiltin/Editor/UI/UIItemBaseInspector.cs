@@ -67,7 +67,7 @@ namespace UGF.EditorTools
             prefixContent = new GUIContent();
             typeContent = new GUIContent();
             uiForm = (target as UIItemBase);
-            if (uiForm.SerializeFieldArr == null)
+            if (uiForm != null && uiForm.SerializeFieldArr == null)
             {
                 uiForm.SerializeFieldArr = (new SerializeFieldData[0]);
             }

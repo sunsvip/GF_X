@@ -15,6 +15,7 @@ using UnityGameFramework.Editor.ResourceTools;
 using Cysharp.Threading.Tasks;
 using UnityEditor.Build;
 using System.Xml;
+using UGF.EditorTools.ResourceTools;
 
 namespace UGF.EditorTools
 {
@@ -275,6 +276,11 @@ namespace UGF.EditorTools
                 {
                     EditorGUILayout.LabelField("Build Resources Settings", EditorStyles.boldLabel);
                     AppBuildSettings.Instance.UseResourceRule = EditorGUILayout.ToggleLeft("Enable [Rule Editor]", AppBuildSettings.Instance.UseResourceRule, GUILayout.Width(160));
+                    if(AppBuildSettings.Instance.UseResourceRule && GUILayout.Button("Rule Editor", GUILayout.Width(160)))
+                    {
+                        ResourceRuleEditor.Open();
+                        GUIUtility.ExitGUI();
+                    }
                     if (GUILayout.Button("Resources Editor", GUILayout.Width(160f)))
                     {
                         OpenResourcesEditor();
