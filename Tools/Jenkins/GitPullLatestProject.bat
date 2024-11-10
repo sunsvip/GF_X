@@ -1,6 +1,6 @@
 @echo off
 cd /d %ProjectRoot%
 git reset --hard
-git clean -fdx
+git checkout %BranchName%
 git pull
 echo Reset and pull latest project
