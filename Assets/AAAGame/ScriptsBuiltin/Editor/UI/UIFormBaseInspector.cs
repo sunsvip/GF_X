@@ -87,7 +87,7 @@ namespace UGF.EditorTools
 
             foreach (var item in fields)
             {
-                if (item == null) continue;
+                if (item == null || item.Targets == null) continue;
                 if (ArrayUtility.Contains(item.Targets, curDrawNode))
                 {
                     var displayContent = EditorGUIUtility.TrTextContent(Utility.Text.Format("{0} {1} {2}", GetVarPrefix(item.VarPrefix), GetDisplayVarTypeName(item.VarType), item.VarName));
