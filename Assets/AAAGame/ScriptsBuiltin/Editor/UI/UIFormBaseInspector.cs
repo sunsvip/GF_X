@@ -46,11 +46,15 @@ namespace UGF.EditorTools
         private GUIContent openVarCodeBtTitle;
         private GUIContent openUiLogicBtTitle;
         private GUIContent dropdownBtContent;
+        private GUIContent dropdownBtAnimContent;
 
         private GUIStyle highlightBtStyle;
 
+        SerializedProperty m_UIAnimationType;
         SerializedProperty m_UIOpenAnim;
         SerializedProperty m_UICloseAnim;
+        SerializedProperty m_UIOpenAnimName;
+        SerializedProperty m_UICloseAnimName;
         #region #右键菜单
 
         const string REFRESH_BIND = "UI_REFRESH_BIND";
@@ -376,6 +380,7 @@ namespace UGF.EditorTools
             openVarCodeBtTitle = new GUIContent("查看变量代码", "open variables code in editor");
             openUiLogicBtTitle = new GUIContent("编辑UI代码", "open ui logic code in editor");
             dropdownBtContent = new GUIContent("选择动效", "select dotween sequence component");
+            dropdownBtAnimContent = new GUIContent("", "select animation name");
             prefixContent = new GUIContent();
             typeContent = new GUIContent();
             varPrefixIndex = 0;
@@ -386,8 +391,11 @@ namespace UGF.EditorTools
                 uiForm.SerializeFieldArr = new SerializeFieldData[0];
             }
             mFields = serializedObject.FindProperty("_fields");
+            m_UIAnimationType = serializedObject.FindProperty("m_UIAnimationType");
             m_UIOpenAnim = serializedObject.FindProperty("m_OpenAnimation");
             m_UICloseAnim = serializedObject.FindProperty("m_CloseAnimation");
+            m_UIOpenAnimName = serializedObject.FindProperty("m_OpenAnimationName");
+            m_UICloseAnimName = serializedObject.FindProperty("m_CloseAnimationName");
             mReorderableList = new ReorderableList[mFields.arraySize];
             EditorApplication.update += OnEditorUpdate;
         }
@@ -558,28 +566,74 @@ namespace UGF.EditorTools
                 }
             }
             EditorGUILayout.Space(10);
-            EditorGUILayout.PrefixLabel("UI Animations:");
-            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PropertyField(m_UIAnimationType);
+            if (m_UIAnimationType.intValue == (int)UIFormAnimationType.DOTween)
             {
-                EditorGUILayout.PropertyField(m_UIOpenAnim);
-                if (EditorGUILayout.DropdownButton(dropdownBtContent, FocusType.Passive, GUILayout.Width(100)))
+                EditorGUILayout.BeginHorizontal();
                 {
-                    ShowDOTweenSequenceDP(m_UIOpenAnim);
+                    EditorGUILayout.PropertyField(m_UIOpenAnim);
+                    if (EditorGUILayout.DropdownButton(dropdownBtContent, FocusType.Passive, GUILayout.Width(100)))
+                    {
+                        ShowDOTweenSequenceDP(m_UIOpenAnim);
+                    }
+                    EditorGUILayout.EndHorizontal();
                 }
-                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.BeginHorizontal();
+                {
+                    EditorGUILayout.PropertyField(m_UICloseAnim);
+                    if (EditorGUILayout.DropdownButton(dropdownBtContent, FocusType.Passive, GUILayout.Width(100)))
+                    {
+                        ShowDOTweenSequenceDP(m_UICloseAnim);
+                    }
+                    EditorGUILayout.EndHorizontal();
+                }
             }
-            EditorGUILayout.BeginHorizontal();
+            else if (m_UIAnimationType.intValue == (int)UIFormAnimationType.Animation)
             {
-                EditorGUILayout.PropertyField(m_UICloseAnim);
-                if (EditorGUILayout.DropdownButton(dropdownBtContent, FocusType.Passive, GUILayout.Width(100)))
+                EditorGUILayout.BeginHorizontal();
                 {
-                    ShowDOTweenSequenceDP(m_UICloseAnim);
+                    EditorGUILayout.PrefixLabel("Open Animation Name");
+                    dropdownBtAnimContent.text = m_UIOpenAnimName.stringValue;
+                    if (EditorGUILayout.DropdownButton(dropdownBtAnimContent, FocusType.Passive))
+                    {
+                        ShowAnimationNamesDP(m_UIOpenAnimName);
+                    }
+                    EditorGUILayout.EndHorizontal();
                 }
-                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.BeginHorizontal();
+                {
+                    EditorGUILayout.PrefixLabel("Close Animation Name");
+                    dropdownBtAnimContent.text = m_UICloseAnimName.stringValue;
+                    if (EditorGUILayout.DropdownButton(dropdownBtAnimContent, FocusType.Passive))
+                    {
+                        ShowAnimationNamesDP(m_UICloseAnimName);
+                    }
+                    EditorGUILayout.EndHorizontal();
+                }
             }
+
             EditorGUILayout.EndVertical();
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
+        }
+        private void ShowAnimationNamesDP(SerializedProperty property)
+        {
+            var clips = AnimationUtility.GetAnimationClips((target as UIFormBase).gameObject);
+            if (clips == null || clips.Length == 0) return;
+
+            var dropdownMenu = new GenericMenu();
+            for (var menuIndex = 0; menuIndex < clips.Length; menuIndex++)
+            {
+                var clip = clips[menuIndex];
+                if (clip == null) continue;
+                var clipName = clip.name;
+                dropdownMenu.AddItem(new GUIContent(clipName), property.stringValue == clipName, () =>
+                {
+                    property.stringValue = clipName;
+                    serializedObject.ApplyModifiedProperties();
+                });
+            }
+            dropdownMenu.ShowAsContext();
         }
         private void ShowDOTweenSequenceDP(SerializedProperty property)
         {

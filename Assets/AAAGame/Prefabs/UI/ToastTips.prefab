@@ -1356,6 +1356,7 @@ GameObject:
   - component: {fileID: 2585470056691376996}
   - component: {fileID: 4876498186068311615}
   - component: {fileID: 582562271607865392}
+  - component: {fileID: 7800741526003656452}
   m_Layer: 5
   m_Name: ToastTips
   m_TagString: Untagged
@@ -1445,8 +1446,11 @@ MonoBehaviour:
     - {fileID: 7264025852583067265}
     VarType: TMPro.TextMeshProUGUI
     VarPrefix: 0
+  m_UIAnimationType: 1
   m_OpenAnimation: {fileID: 4876498186068311615}
   m_CloseAnimation: {fileID: 582562271607865392}
+  m_OpenAnimationName: ToastTips_Open
+  m_CloseAnimationName: ToastTips_Close
   varToastMessageArr:
   - {fileID: 2546160620391925374}
   - {fileID: 7264025851774425985}
@@ -1704,3 +1708,20 @@ MonoBehaviour:
   m_OnComplete:
     m_PersistentCalls:
       m_Calls: []
+--- !u!111 &7800741526003656452
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9007163908963103330}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: 02e900316f790b745b251252a42d75d3, type: 2}
+  - {fileID: 7400000, guid: 29e2f0a21dc369648b20ed9a310a1528, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
