@@ -19,7 +19,7 @@ namespace UGF.EditorTools.ResourceTools
         public string fileSystem = string.Empty;
         public string groups = string.Empty;
         public string assetsDirectoryPath = string.Empty;
-        public LoadType loadType = LoadType.LoadFromFile;
+        public LoadType loadType = LoadType.LoadFromMemoryAndQuickDecrypt;
         public bool packed = true;
         public ResourceFilterType filterType = ResourceFilterType.Root;
         public string searchPatterns = "*.*";
@@ -28,6 +28,7 @@ namespace UGF.EditorTools.ResourceTools
     public enum ResourceFilterType
     {
         Root,
+        RootTopDirectoryOnly,
         Children,
         ChildrenFoldersOnly,
         ChildrenFilesOnly,

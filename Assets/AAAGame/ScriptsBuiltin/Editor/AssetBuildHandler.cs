@@ -129,24 +129,15 @@ namespace UGF.EditorTools
             ResourceEditorController resEditor = new ResourceEditorController();
             if (resEditor.Load())
             {
-                if (resEditor.HasResource(ConstEditor.SharedAssetBundleName, null))
-                {
-                    foreach (var item in resEditor.GetResource(ConstEditor.SharedAssetBundleName, null).GetAssets())
-                    {
-                        resEditor.UnassignAsset(item.Guid);
-                    }
-                    resEditor.Save();
-                }
-
-                var duplicateAssetNames = FindDuplicateAssetNames();
-                if (duplicateAssetNames == null) return true;
+                var duplicateAssetNames = FindDuplicateAssetNames(resEditor);
+                if (duplicateAssetNames == null) return false;
                 bool resolved = ResolveDuplicateAssets(resEditor, duplicateAssetNames);
                 return resolved;
             }
 
             return false;
         }
-        private static bool ResolveDuplicateAssets(ResourceEditorController resEditor, List<string> duplicateAssetNames)
+        private static bool ResolveDuplicateAssets(ResourceEditorController resEditor, HashSet<string> duplicateAssetNames)
         {
             if (!resEditor.HasResource(ConstEditor.SharedAssetBundleName, null))
             {
@@ -158,80 +149,64 @@ namespace UGF.EditorTools
                     return false;
                 }
             }
-
-            var sharedRes = resEditor.GetResource(ConstEditor.SharedAssetBundleName, null);
-            bool hasChanged = false;
-            List<string> sharedResFiles = new List<string>();
-            foreach (var item in sharedRes.GetAssets())
+            Debug.LogFormat("重复依赖资源个数:{0}", duplicateAssetNames.Count);
+            if (duplicateAssetNames.Count > 0)
             {
-                sharedResFiles.Add(item.Name);
-            }
-            Debug.Log($"-------------添加下列冗余资源到{ConstEditor.SharedAssetBundleName}------------");
-            foreach (var assetName in duplicateAssetNames)
-            {
-                Debug.Log($"冗余资源:{assetName}");
-                if (sharedResFiles.Contains(assetName))
+                Debug.Log($"-------------添加下列冗余资源到{ConstEditor.SharedAssetBundleName}------------");
+                var items = resEditor.GetResource(ConstEditor.SharedAssetBundleName, null).GetAssets();
+                foreach (var item in items)
                 {
-                    continue;
-                }
-                if (!resEditor.AssignAsset(AssetDatabase.AssetPathToGUID(assetName), ConstEditor.SharedAssetBundleName, null))
-                {
-                    Debug.LogWarning($"添加资源:{assetName}到{ConstEditor.SharedAssetBundleName}失败!");
-                }
-                hasChanged = true;
-            }
-            Debug.Log($"-------------处理冗余资源结束------------");
-            var sharedAseets = sharedRes.GetAssets();
-            for (int i = sharedAseets.Length - 1; i >= 0; i--)
-            {
-                var asset = sharedAseets[i];
-                if (!duplicateAssetNames.Contains(asset.Name))
-                {
-                    if (!resEditor.UnassignAsset(asset.Guid))
+                    var aseetName = item.Name;
+                    if (duplicateAssetNames.Contains(aseetName))
                     {
-                        Debug.LogWarning($"移除{ConstEditor.SharedAssetBundleName}中的资源:{asset.Name}失败!");
+                        duplicateAssetNames.Remove(aseetName);
                     }
-                    hasChanged = true;
+                    else
+                    {
+                        resEditor.UnassignAsset(AssetDatabase.AssetPathToGUID(aseetName));
+                    }
                 }
+                foreach (var assetName in duplicateAssetNames)
+                {
+                    Debug.Log($"解决冗余资源:{assetName}");
+                    if (!resEditor.AssignAsset(AssetDatabase.AssetPathToGUID(assetName), ConstEditor.SharedAssetBundleName, null))
+                    {
+                        Debug.LogWarning($"添加资源:{assetName}到{ConstEditor.SharedAssetBundleName}失败!");
+                    }
+                }
+                Debug.Log($"-------------处理冗余资源结束------------");
             }
-            if (hasChanged)
-            {
-                resEditor.RemoveUnknownAssets();
-                resEditor.RemoveUnusedResources();
-                return resEditor.Save();
-            }
-            return true;
+            resEditor.RemoveUnknownAssets();
+            resEditor.RemoveUnusedResources();
+            return resEditor.Save();
         }
-        private static List<string> FindDuplicateAssetNames()
+        private static HashSet<string> FindDuplicateAssetNames(ResourceEditorController resEditor)
         {
-            ResourceAnalyzerController resAnalyzer = new ResourceAnalyzerController();
-            if (resAnalyzer.Prepare())
+            HashSet<string> result = new HashSet<string>();
+            Dictionary<string, int> assetReferenceDic = new Dictionary<string, int>();
+            var srcAssetRoot = resEditor.SourceAssetRootPath;
+            var resources = resEditor.GetResources();
+            for (int i = 0; i < resources.Length; i++)
             {
-                resAnalyzer.Analyze();
-                List<string> duplicateAssets = new List<string>();
-                var scatteredAssetNames = resAnalyzer.GetScatteredAssetNames();
-                foreach (var scatteredAsset in scatteredAssetNames)
+                var resource = resources[i];
+                if (resource.FullName == ConstEditor.SharedAssetBundleName) continue;
+                var assets = resource.GetAssets();
+                foreach(var asset in assets)
                 {
-                    var hostAssets = resAnalyzer.GetHostAssets(scatteredAsset);
-                    if (hostAssets == null || hostAssets.Length < 1) continue;
-                    var defaultHostAsset = hostAssets.FirstOrDefault(res => res.Resource.FullName != ConstEditor.SharedAssetBundleName);
-                    if (defaultHostAsset != null)
+                    var files = AssetDatabase.GetDependencies(asset.Name, true);
+                    foreach(var file in files)
                     {
-                        var hostResourceName = defaultHostAsset.Resource.FullName;
-                        foreach (var hostAsset in hostAssets)
+                        if (!file.StartsWith(srcAssetRoot)) continue;
+                        if(assetReferenceDic.TryGetValue(file, out int resIdx) && (i != resIdx))
                         {
-                            if (hostAsset.Resource.FullName == ConstEditor.SharedAssetBundleName) continue;
-                            if (hostResourceName != hostAsset.Resource.Name)
-                            {
-                                duplicateAssets.Add(scatteredAsset);
-                                break;
-                            }
+                            result.Add(file);
+                            continue;
                         }
+                        assetReferenceDic[file] = i;
                     }
                 }
-                return duplicateAssets;
             }
-            return null;
+            return result;
         }
 
         /// <summary>

@@ -8,7 +8,6 @@
       <Resource Name="Entity" LoadType="0" Packed="False" />
       <Resource Name="HotfixDlls" LoadType="0" Packed="False" />
       <Resource Name="Language" LoadType="0" Packed="False" />
-      <Resource Name="Scene" LoadType="0" Packed="False" />
       <Resource Name="ScriptableAssets" LoadType="0" Packed="False" />
       <Resource Name="SharedAssets" LoadType="2" Packed="False" />
       <Resource Name="UI" LoadType="0" Packed="False" />
@@ -16,10 +15,11 @@
     <Assets>
       <Asset Guid="02cbc534a52481241872d42107e29c57" ResourceName="Entity" />
       <Asset Guid="034b209892546994d8037e72ca910089" ResourceName="Language" />
+      <Asset Guid="09045e73e44b1d944bafe57ece728071" ResourceName="UI" />
       <Asset Guid="0b69b108d75f47940881a60045f21976" ResourceName="UI" />
       <Asset Guid="0d39ed0185ca8e74283374bdb1c95e2b" ResourceName="Entity" />
       <Asset Guid="13b0b1255d7d6cf44a4d1987723460ef" ResourceName="ScriptableAssets" />
-      <Asset Guid="18868d941a71f02498051516873367ce" ResourceName="Scene" />
+      <Asset Guid="18d313816561eb94f883cc5522c2158b" ResourceName="UI" />
       <Asset Guid="1b586e20031d8b44a9495620988ad3dc" ResourceName="HotfixDlls" />
       <Asset Guid="1caa4c6fdc3281642b46f7c82c497dc5" ResourceName="Core" />
       <Asset Guid="230b0c809e3e6a647af26c803aa90467" ResourceName="SharedAssets" />
@@ -56,13 +56,11 @@
       <Asset Guid="b8f790017d833da45a5aec7344ed4f97" ResourceName="SharedAssets" />
       <Asset Guid="c4e839cf3d001e0499336fb7f53c0310" ResourceName="DataTable" />
       <Asset Guid="c7a26b8d1ff63834298841254b2332c4" ResourceName="UI" />
-      <Asset Guid="ca4765c7a3113644e9f87e202a7ff91d" ResourceName="Scene" />
       <Asset Guid="ce8c514bb8f800a4bab1b07b067afffc" ResourceName="Entity" />
       <Asset Guid="d6ecbf62a86c5a743be725f48260ac7e" ResourceName="UI" />
       <Asset Guid="d946c3960d3e44847a45f42524ec6aeb" ResourceName="Config" />
       <Asset Guid="e09d64781b233da4c8e75adde91c9652" ResourceName="Entity" />
       <Asset Guid="e1a613ebd6f1d6f4a825d14981f3e88d" ResourceName="DataTable" />
-      <Asset Guid="e28cbf64cd5864f46ad3394fcab85cfd" ResourceName="DataTable" />
       <Asset Guid="e81571591a3393745a08aee12b114309" ResourceName="HotfixDlls" />
       <Asset Guid="ec835c8e8455a4e3eab94be7baf9c04a" ResourceName="UI" />
       <Asset Guid="fb3663d475cbeb74ba97e229b86d2504" ResourceName="Entity" />

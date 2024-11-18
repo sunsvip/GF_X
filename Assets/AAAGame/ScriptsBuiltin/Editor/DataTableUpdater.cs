@@ -22,6 +22,7 @@ namespace UGF.EditorTools
             tableFileChangedList = new List<string>();
             configFileChangedList = new List<string>();
             languageFileChangedList = new List<string>();
+            EditorApplication.update -= OnUpdate;
             EditorApplication.update += OnUpdate;
             var tbWatcher = new FileSystemWatcher(ConstEditor.DataTableExcelPath, "*.xlsx");
             tbWatcher.IncludeSubdirectories = true;
@@ -30,8 +31,11 @@ namespace UGF.EditorTools
             tbWatcher.EnableRaisingEvents = true;
             var fileChangedCb = new FileSystemEventHandler(OnDataTableChanged);
             var fileRenameCb = new RenamedEventHandler(OnDataTableChanged);
+            tbWatcher.Changed -= fileChangedCb;
             tbWatcher.Changed += fileChangedCb;
+            tbWatcher.Deleted -= fileChangedCb;
             tbWatcher.Deleted += fileChangedCb;
+            tbWatcher.Renamed -= fileRenameCb;
             tbWatcher.Renamed += fileRenameCb;
 
             var cfgWatcher = new FileSystemWatcher(ConstEditor.ConfigExcelPath, "*.xlsx");
@@ -40,8 +44,11 @@ namespace UGF.EditorTools
             cfgWatcher.EnableRaisingEvents = true;
             var cfgFileChangedCb = new FileSystemEventHandler(OnConfigChanged);
             var cfgFileRenameCb = new RenamedEventHandler(OnConfigChanged);
+            cfgWatcher.Changed -= cfgFileChangedCb;
             cfgWatcher.Changed += cfgFileChangedCb;
+            cfgWatcher.Deleted -= cfgFileChangedCb;
             cfgWatcher.Deleted += cfgFileChangedCb;
+            cfgWatcher.Renamed -= cfgFileRenameCb;
             cfgWatcher.Renamed += cfgFileRenameCb;
 
             var langWatcher = new FileSystemWatcher(ConstEditor.LanguageExcelPath, "*.xlsx");
@@ -49,7 +56,9 @@ namespace UGF.EditorTools
             langWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
             langWatcher.EnableRaisingEvents = true;
             var langFileChangedCb = new FileSystemEventHandler(OnLanguageChanged);
+            langWatcher.Changed -= langFileChangedCb;
             langWatcher.Changed += langFileChangedCb;
+            langWatcher.Deleted -= langFileChangedCb;
             langWatcher.Deleted += langFileChangedCb;
             appConfigs = AppConfigs.GetInstanceEditor();
             isInitialized = true;
@@ -77,7 +86,7 @@ namespace UGF.EditorTools
                 }
                 foreach (var item in changedFiles)
                 {
-                    GFBuiltin.LogInfo($"-----------------×Ô¶¯Ë¢ĞÂDataTable:{item}-----------------");
+                    GFBuiltin.LogInfo($"-----------------è‡ªåŠ¨åˆ·æ–°DataTable:{item}-----------------");
                 }
                 tableFileChangedList.Clear();
             }
@@ -87,7 +96,7 @@ namespace UGF.EditorTools
                 GameDataGenerator.RefreshAllConfig(changedFiles);
                 foreach (var item in changedFiles)
                 {
-                    GFBuiltin.LogInfo($"-----------------×Ô¶¯Ë¢ĞÂConfig:{item}-----------------");
+                    GFBuiltin.LogInfo($"-----------------è‡ªåŠ¨åˆ·æ–°Config:{item}-----------------");
                 }
                 configFileChangedList.Clear();
             }
@@ -97,13 +106,13 @@ namespace UGF.EditorTools
                 GameDataGenerator.RefreshAllLanguage(changedFiles);
                 foreach (var item in changedFiles)
                 {
-                    GFBuiltin.LogInfo($"-----------------×Ô¶¯Ë¢ĞÂLanguage:{item}-----------------");
+                    GFBuiltin.LogInfo($"-----------------è‡ªåŠ¨åˆ·æ–°Language:{item}-----------------");
                 }
                 languageFileChangedList.Clear();
             }
         }
         /// <summary>
-        /// ¸ù¾İ¸Ä±äµÄExcelÁĞ±í»ñÈ¡ËùÓĞ¶ÔÓ¦µÄÖ÷ÎÄ¼şÁĞ±í
+        /// æ ¹æ®æ”¹å˜çš„Excelåˆ—è¡¨è·å–æ‰€æœ‰å¯¹åº”çš„ä¸»æ–‡ä»¶åˆ—è¡¨
         /// </summary>
         /// <param name="tp"></param>
         /// <param name="relativeMainFiles"></param>
