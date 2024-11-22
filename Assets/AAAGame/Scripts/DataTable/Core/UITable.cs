@@ -28,7 +28,7 @@ public class UITable : DataRowBase
     }
 
         /// <summary>
-        /// 
+        /// 显示顺序,相对于Group,每个Group间隔100
         /// </summary>
         public int SortOrder
         {

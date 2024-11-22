@@ -213,7 +213,51 @@ namespace UGF.EditorTools
                 }
             }
         }
-
+        [MenuItem("GameObject/UIForm Tools/Raycast Target/Disable", false, priority = 1104)]
+        static void DisableRaycastTarget(MenuCommand command)
+        {
+            var gos = Selection.gameObjects;
+            if (gos.Length == 0) return;
+            if (gos.Length > 1 && command.context != gos[0]) return;
+            bool includeChildren = EditorUtility.DisplayDialog("提示", "是否遍历设置子节点?", "是", "否");
+            SetRaycastTarget(gos, false, includeChildren);
+        }
+        [MenuItem("GameObject/UIForm Tools/Raycast Target/Enable", false, priority = 1105)]
+        static void EnableRaycastTarget(MenuCommand command)
+        {
+            var gos = Selection.gameObjects;
+            if (gos.Length == 0) return;
+            if (gos.Length > 1 && command.context != gos[0]) return;
+            bool includeChildren = EditorUtility.DisplayDialog("提示", "是否遍历设置子节点?", "是", "否");
+            SetRaycastTarget(gos, true, includeChildren);
+        }
+        static void SetRaycastTarget(GameObject[] gos, bool enable, bool recursively)
+        {
+            if (recursively)
+            {
+                foreach (var go in gos)
+                {
+                    if (go == null) continue;
+                    var graphicArr = go.GetComponentsInChildren<Graphic>(true);
+                    foreach (var graphic in graphicArr)
+                    {
+                        if (graphic.raycastTarget == enable) continue;
+                        graphic.raycastTarget = enable;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var go in gos)
+                {
+                    if (go == null) continue;
+                    if (go.TryGetComponent<Graphic>(out var graphic) && graphic.raycastTarget != enable)
+                    {
+                        graphic.raycastTarget = enable;
+                    }
+                }
+            }
+        }
         private static void AddClickButtonEvent<T>()
         {
             if (Selection.count == 0) return;

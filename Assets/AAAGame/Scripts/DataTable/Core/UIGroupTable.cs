@@ -37,7 +37,7 @@ public class UIGroupTable : DataRowBase
         }
 
         /// <summary>
-        /// 
+        /// 每个组的起始Order,用于控制显示顺序
         /// </summary>
         public int Depth
         {
