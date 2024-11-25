@@ -7,6 +7,7 @@ using GameFramework.Fsm;
 using System.Collections.Generic;
 using GameFramework;
 using System;
+using GameFramework.Resource;
 
 public class PreloadProcedure : ProcedureBase
 {
@@ -161,7 +162,7 @@ public class PreloadProcedure : ProcedureBase
     }
     private void CreateGFExtension()
     {
-        GF.Resource.LoadAsset(UtilityBuiltin.AssetsPath.GetPrefab("Core/GFExtension"), typeof(GameObject), new GameFramework.Resource.LoadAssetCallbacks(OnLoadGFExtensionSuccess));
+        GF.Resource.LoadAsset(UtilityBuiltin.AssetsPath.GetPrefab("Core/GFExtension"), typeof(GameObject), new GameFramework.Resource.LoadAssetCallbacks(OnLoadGFExtensionSuccess, OnLoadGFExtensionFailed));
     }
 
     private async void InitAndLoadLanguage()
@@ -199,6 +200,10 @@ public class PreloadProcedure : ProcedureBase
             loadedProgress++;
             LoadConfigsAndDataTables();
         }
+    }
+    private void OnLoadGFExtensionFailed(string assetName, LoadResourceStatus status, string errorMessage, object userData)
+    {
+        GF.LogError(Utility.Text.Format("GF框架扩展加载失败:{0}, Error:{1}", assetName, errorMessage));
     }
     private void OnLoadDicSuccess(object sender, GameEventArgs e)
     {

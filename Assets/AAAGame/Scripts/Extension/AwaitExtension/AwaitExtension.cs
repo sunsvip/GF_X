@@ -180,15 +180,15 @@ public static class AwaitExtension
     /// <summary>
     /// 显示实体（可等待）
     /// </summary>
-    public static UniTask<EntityLogic> ShowEntityAwait(this EntityComponent entityComponent, int entityId,
-        Type entityLogicType, string entityAssetName, string entityGroupName, int priority, object userData)
+    public static UniTask<EntityLogic> ShowEntityAwait(this EntityComponent entityComponent, string pfbName,
+        string logicName, Const.EntityGroup eGroup, EntityParams parms)
     {
 #if UNITY_EDITOR
         TipsSubscribeEvent();
 #endif
         var tcs = new UniTaskCompletionSource<EntityLogic>();
-        mEntityTask.Add(entityId, tcs);
-        entityComponent.ShowEntity(entityId, entityLogicType, entityAssetName, entityGroupName, priority, userData);
+        mEntityTask.Add(parms.Id, tcs);
+        entityComponent.ShowEntity(pfbName, logicName, eGroup, parms);
         return tcs.Task;
     }
 

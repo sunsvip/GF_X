@@ -58,4 +58,16 @@ public static class ConfigExtension
 
         return DataTableExtension.ParseArray<T>(cfg.GetString(key));
     }
+    public static Vector2[] GetVector2Array(this ConfigComponent cfg, string key, Vector2[] defaultArr = null)
+    {
+        if (!cfg.HasConfig(key)) return defaultArr;
+
+        return DataTableExtension.ParseVector2Array(cfg.GetString(key));
+    }
+    public static Vector2Int[] GetVector2IntArray(this ConfigComponent cfg, string key, Vector2Int[] defaultArr = null)
+    {
+        if (!cfg.HasConfig(key)) return defaultArr;
+
+        return DataTableExtension.ParseVector2IntArray(cfg.GetString(key));
+    }
 }
