@@ -156,14 +156,22 @@ public static class UIExtension
     public static int OpenUIForm(this UIComponent uiCom, UIViews viewId, UIParams parms = null)
     {
         var uiTb = GF.DataTable.GetDataTable<UITable>();
+        var uiGroupTb = GF.DataTable.GetDataTable<UIGroupTable>();
         int uiId = (int)viewId;
         if (!uiTb.HasDataRow(uiId))
         {
-            Log.Error("UI表不存在id:{0}", uiId);
+            Log.Error("UITable表不存在id:{0}", uiId);
             if (parms != null) GF.VariablePool.ClearVariables(parms.Id);
             return -1;
         }
         var uiRow = uiTb.GetDataRow(uiId);
+        if (!uiGroupTb.HasDataRow(uiRow.UIGroupId))
+        {
+            Log.Error("UIGroupTable表不存在id:{0}", uiId);
+            if (parms != null) GF.VariablePool.ClearVariables(parms.Id);
+            return -1;
+        }
+        var uiGroupRow = uiGroupTb.GetDataRow(uiRow.UIGroupId);
         string uiName = UtilityBuiltin.AssetsPath.GetUIFormPath(uiRow.UIPrefab);
         if (uiCom.IsLoadingUIForm(uiName))
         {
@@ -172,8 +180,8 @@ public static class UIExtension
         }
         parms ??= UIParams.Create();
         parms.AllowEscapeClose ??= uiRow.EscapeClose;
-        parms.SortOrder ??= uiRow.SortOrder;
-        return uiCom.OpenUIForm(uiName, uiRow.UIGroup, uiRow.PauseCoveredUI, parms);
+        parms.SortOrder ??= uiRow.SortOrder + uiGroupRow.Depth;
+        return uiCom.OpenUIForm(uiName, uiGroupRow.Name, uiRow.PauseCoveredUI, parms);
     }
 
     /// <summary>

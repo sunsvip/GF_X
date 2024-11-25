@@ -10,6 +10,12 @@ public class AppConfigs : ScriptableObject
 {
     private static AppConfigs mInstance = null;
 
+    [SerializeField] bool m_LoadFromBytes = false;
+    public bool LoadFromBytes
+    {
+        get => m_LoadFromBytes;
+        set => m_LoadFromBytes = value;
+    }
     [Header("数据表")]
     [SerializeField] string[] mDataTables;
     public string[] DataTables => mDataTables;

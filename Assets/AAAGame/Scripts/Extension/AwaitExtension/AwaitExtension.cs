@@ -95,7 +95,7 @@ public static class AwaitExtension
     /// <summary>
     /// 加载数据表（可等待）
     /// </summary>
-    public static async UniTask<IDataTable<T>> LoadDataTableAwait<T>(this DataTableComponent dataTableComponent, string dataTableName, object userData = null) where T : IDataRow
+    public static async UniTask<IDataTable<T>> LoadDataTableAwait<T>(this DataTableComponent dataTableComponent, string dataTableName, bool useBytes, object userData = null) where T : IDataRow
     {
 #if UNITY_EDITOR
         TipsSubscribeEvent();
@@ -107,8 +107,8 @@ public static class AwaitExtension
         }
 
         var loadTcs = new UniTaskCompletionSource<bool>();
-        dataTableComponent.LoadDataTable(dataTableName, userData);
-        var dataTableAssetName = UtilityBuiltin.AssetsPath.GetDataTablePath(dataTableName);
+        dataTableComponent.LoadDataTable(dataTableName, useBytes, userData);
+        var dataTableAssetName = UtilityBuiltin.AssetsPath.GetDataTablePath(dataTableName, useBytes);
         mDataTableTask.Add(dataTableAssetName, loadTcs);
         bool isLoaded = await loadTcs.Task;
         dataTable = isLoaded ? dataTableComponent.GetDataTable<T>() : null;

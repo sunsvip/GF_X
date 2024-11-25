@@ -1,8 +1,0 @@
-﻿#	游戏配置测试组A		
-#	Key	备注	Value
-	AD_REWARD_MULTI	看广告领取多倍	3
-	DEFAULT_COINS	玩家初始金币数	88
-	AD2MONEY_BASE	看广告得金币基数	500
-	AD2MONEY_EXT	每看一个额外得金币数	10
-	AD2MONEY_LV_MAX	看广告得金币最高等级	50
-	APPSTORE	苹果商店评分跳转连接	https://apps.apple.com/

@@ -74,7 +74,7 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
         base.OnOpen(userData);
         Params = userData as UIParams;
         var cvs = GetComponent<Canvas>();
-        cvs.overrideSorting = false;
+        cvs.overrideSorting = true;
         cvs.sortingOrder = Params.SortOrder ?? 0;
         Interactable = false;
         isOnEscape = Params.AllowEscapeClose ?? false;

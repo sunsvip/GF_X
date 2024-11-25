@@ -6,6 +6,7 @@ using UnityGameFramework.Runtime;
 using GameFramework.Fsm;
 using System.Collections.Generic;
 using GameFramework;
+using System;
 
 public class PreloadProcedure : ProcedureBase
 {
@@ -64,10 +65,10 @@ public class PreloadProcedure : ProcedureBase
     }
     private void InitAppSettings()
     {
-        if (string.IsNullOrWhiteSpace(GF.Setting.GetABTestGroup()))
-        {
-            GF.Setting.SetABTestGroup("B");//设置A/B测试组; 应由服务器分配该新用户所属测试组
-        }
+        //if (string.IsNullOrWhiteSpace(GF.Setting.GetABTestGroup()))
+        //{
+        //    GF.Setting.SetABTestGroup("B");//设置A/B测试组; 应由服务器分配该新用户所属测试组
+        //}
     }
     /// <summary>
     /// 预加载完成之后需要处理的事情
@@ -151,35 +152,19 @@ public class PreloadProcedure : ProcedureBase
         m_DataTablesCount = appConfig.DataTables.Length;
         foreach (var item in appConfig.Configs)
         {
-            LoadConfig(item);
+            GF.Config.LoadConfig(item, appConfig.LoadFromBytes, this);
         }
         foreach (var item in appConfig.DataTables)
         {
-            LoadDataTable(item);
+            GF.DataTable.LoadDataTable(item, appConfig.LoadFromBytes, this);
         }
     }
     private void CreateGFExtension()
     {
         GF.Resource.LoadAsset(UtilityBuiltin.AssetsPath.GetPrefab("Core/GFExtension"), typeof(GameObject), new GameFramework.Resource.LoadAssetCallbacks(OnLoadGFExtensionSuccess));
     }
-    /// <summary>
-    /// 加载配置
-    /// </summary>
-    /// <param name="name"></param>
-    private void LoadConfig(string name)
-    {
-        GF.Config.LoadConfig(name, this);
-    }
-    /// <summary>
-    /// 加载数据表
-    /// </summary>
-    /// <param name="name"></param>
-    private void LoadDataTable(string name)
-    {
-        GF.DataTable.LoadDataTable(name, this);
-    }
 
-    private void InitAndLoadLanguage()
+    private async void InitAndLoadLanguage()
     {
         //初始化语言
         GameFramework.Localization.Language language = GF.Setting.GetLanguage();
@@ -193,16 +178,16 @@ public class PreloadProcedure : ProcedureBase
         }
         var languageName = language.ToString();
         var langTb = GF.DataTable.GetDataTable<LanguagesTable>();
-        var langRow = langTb.GetDataRow(row=>row.LanguageKey == languageName);
+        var langRow = langTb.GetDataRow(row => row.LanguageKey == languageName);
         if (langRow == null)
         {
-            language = GameFramework.Localization.Language.English;//不支持的语言默认用英文
-            langRow = langTb.GetDataRow(row => row.LanguageKey == language.ToString());
+            langRow = langTb.MinIdDataRow;
+            language = Enum.Parse<GameFramework.Localization.Language>(langRow.LanguageKey);//不支持的语言默认用英文
         }
         GF.Setting.SetLanguage(language, false);
         GF.LogInfo(Utility.Text.Format("初始化游戏设置. 游戏语言:{0},系统语言:{1}", language, GFBuiltin.Localization.SystemLanguage));
-
-        GF.Localization.LoadLanguage(langRow.AssetName, this);
+        var appConfig = await AppConfigs.GetInstanceSync();
+        GF.Localization.LoadLanguage(langRow.AssetName, appConfig.LoadFromBytes, this);
     }
 
     private void OnLoadGFExtensionSuccess(string assetName, object asset, float duration, object userData)
@@ -220,6 +205,8 @@ public class PreloadProcedure : ProcedureBase
         LoadDictionarySuccessEventArgs args = e as LoadDictionarySuccessEventArgs;
         if (args.UserData != this) return;
         loadedProgress++;
+        Log.Info("Load Language Success:{0}", args.DictionaryAssetName);
+
     }
     /// <summary>
     /// 加载配置成功回调

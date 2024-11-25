@@ -17,7 +17,7 @@ public static class DataTableExtension
     /// <param name="dataTableName"></param>
     /// <param name="abTestGroupName"></param>
     /// <param name="userData"></param>
-    public static void LoadDataTable(this DataTableComponent dataTableComponent, string dataTableName, string abTestGroupName, object userData = null)
+    public static void LoadDataTable(this DataTableComponent dataTableComponent, string dataTableName, string abTestGroupName, bool useBytes, object userData = null)
     {
         if (string.IsNullOrEmpty(dataTableName))
         {
@@ -48,13 +48,13 @@ public static class DataTableExtension
         if (!string.IsNullOrWhiteSpace(abTestGroupName))
         {
             var abTableFileName = Utility.Text.Format("{0}{1}{2}", dataTableName, ConstBuiltin.AB_TEST_TAG, abTestGroupName);
-            if (GFBuiltin.Resource.HasAsset(UtilityBuiltin.AssetsPath.GetDataTablePath(abTableFileName)) != GameFramework.Resource.HasAssetResult.NotExist)
+            if (GFBuiltin.Resource.HasAsset(UtilityBuiltin.AssetsPath.GetDataTablePath(abTableFileName, useBytes)) != GameFramework.Resource.HasAssetResult.NotExist)
             {
                 tableFileName = abTableFileName;
             }
         }
 
-        string assetName = UtilityBuiltin.AssetsPath.GetDataTablePath(tableFileName);
+        string assetName = UtilityBuiltin.AssetsPath.GetDataTablePath(tableFileName, useBytes);
         dataTable.ReadData(assetName, userData);
     }
 
@@ -65,30 +65,11 @@ public static class DataTableExtension
     /// <param name="dataTableComponent"></param>
     /// <param name="dataTableName"></param>
     /// <param name="userData"></param>
-    public static void LoadDataTable(this DataTableComponent dataTableComponent, string dataTableName, object userData = null)
+    public static void LoadDataTable(this DataTableComponent dataTableComponent, string dataTableName, bool useBytes, object userData = null)
     {
         string abTestGroup = GFBuiltin.Setting.GetABTestGroup();
-        dataTableComponent.LoadDataTable(dataTableName, abTestGroup, userData);
+        dataTableComponent.LoadDataTable(dataTableName, abTestGroup, useBytes, userData);
     }
-    public static Color GetRandomColor(this DataTableComponent dataTableComponent)
-    {
-        var colorRows = GF.DataTable.GetDataTable<ColorTable>().GetAllDataRows();
-        Color resultCol;
-
-        int randomIdx = Utility.Random.GetRandom(0, colorRows.Length);
-
-        if (ColorUtility.TryParseHtmlString(colorRows[randomIdx].ColorHex, out resultCol))
-        {
-            return resultCol;
-        }
-        else
-        {
-            resultCol = Color.white;
-        }
-        return resultCol;
-    }
-
-
     public static Color32 ParseColor32(string value)
     {
         if (string.IsNullOrEmpty(value)) return new Color32(255, 255, 255, 255);

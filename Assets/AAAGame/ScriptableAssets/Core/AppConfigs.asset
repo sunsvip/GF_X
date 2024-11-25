@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78e0103d0a6cf7f499471ab2f4f74182, type: 3}
   m_Name: AppConfigs
   m_EditorClassIdentifier: 
+  m_LoadFromBytes: 0
   mDataTables:
   - CameraViewTable
   - ColorTable

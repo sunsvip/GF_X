@@ -275,7 +275,7 @@ namespace UGF.EditorTools
         private GUIStyle selectedStyle;
         GUIContent procedureTitleContent;
         GUIContent editorConstSettingsContent;
-        //GUIContent gameDataSaveModeContent;
+        GUIContent loadFromBytesContent;
         GUIContent designResolutionContent;
         GUIContent designResolutionBtnContent;
         private void OnEnable()
@@ -290,7 +290,7 @@ namespace UGF.EditorTools
             editorConstSettingsContent = EditorGUIUtility.TrTextContentWithIcon("Path Settings [设置DataTable/Config导入/导出路径]", "Settings");
             designResolutionContent = new GUIContent("UI设计分辨率:");
             designResolutionBtnContent = new GUIContent("确认修改");
-            //gameDataSaveModeContent = new GUIContent("DataTable bytes mode:", "数据表文件存储为二进制");
+            loadFromBytesContent = new GUIContent("Load from bytes(勾选:二进制模式; 不勾选:文本模式)", "数据表/配置表/多语言表使用二进制模式");
             svDataArr = new GameDataScrollView[] { new GameDataScrollView(appConfig, GameDataType.DataTable), new GameDataScrollView(appConfig, GameDataType.Config), new GameDataScrollView(appConfig, GameDataType.Language) };
             ReloadScrollView(appConfig);
         }
@@ -317,7 +317,7 @@ namespace UGF.EditorTools
             }
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.Space(10);
-            //appConfig.DataTableBytesMode = EditorGUILayout.ToggleLeft(gameDataSaveModeContent, appConfig.DataTableBytesMode);
+            appConfig.LoadFromBytes = EditorGUILayout.ToggleLeft(loadFromBytesContent, appConfig.LoadFromBytes);
             procedureFoldout = EditorGUILayout.Foldout(procedureFoldout, procedureTitleContent);
             var perItemWidth = GUILayout.Width(Mathf.Max(EditorGUIUtility.currentViewWidth / ONE_LINE_SHOW_COUNT - 20, 100));
             if (procedureFoldout)

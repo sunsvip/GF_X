@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using GameFramework;
 using System.Security.Cryptography;
 using System.IO;
@@ -110,9 +109,9 @@ public static class UtilityBuiltin
         {
             return Utility.Path.GetRegularPath(System.IO.Path.Combine(args));
         }
-        public static string GetDataTablePath(string name)
+        public static string GetDataTablePath(string name, bool useBytes)
         {
-            return Utility.Text.Format("Assets/AAAGame/DataTable/{0}.txt", name);
+            return Utility.Text.Format("Assets/AAAGame/DataTable/{0}.{1}", name, useBytes ? "bytes": "txt");
         }
 
         public static string GetSoundPath(string name)
@@ -142,9 +141,9 @@ public static class UtilityBuiltin
         {
             return Utility.Text.Format("Assets/AAAGame/Sprites/{0}", fileName);
         }
-        public static string GetConfigPath(string v)
+        public static string GetConfigPath(string v, bool useBytes)
         {
-            return Utility.Text.Format("Assets/AAAGame/Config/{0}.txt", v);
+            return Utility.Text.Format("Assets/AAAGame/Config/{0}.{1}", v, useBytes ? "bytes" : "txt");
         }
         public static string GetScriptableConfigPath(string v)
         {
@@ -156,9 +155,9 @@ public static class UtilityBuiltin
             return Utility.Text.Format("Assets/AAAGame/Prefabs/{0}.prefab", v);
         }
 
-        public static string GetLanguagePath(string v)
+        public static string GetLanguagePath(string v, bool useBytes)
         {
-            return Utility.Text.Format("Assets/AAAGame/Language/{0}.json", v);
+            return Utility.Text.Format("Assets/AAAGame/Language/{0}.{1}", v, useBytes ? "bytes" : "json");
         }
         public static string GetMaterialPath(string v)
         {

@@ -20,11 +20,11 @@ namespace GameFramework.Editor.DataTableTools
         private static readonly Regex EndWithNumberRegex = new Regex(@"\d+$");
         private static readonly Regex NameRegex = new Regex(@"^[A-Z][A-Za-z0-9_]*$");
 
-        public static DataTableProcessor CreateDataTableProcessor(string dataTableName)
+        public static DataTableProcessor CreateDataTableProcessor(string dataTableFile)
         {
-            return new DataTableProcessor(Utility.Path.GetRegularPath(Path.Combine(ConstEditor.DataTablePath, dataTableName + ".txt")), Encoding.Unicode, 1, 2, null, 3, 4, 1);//Encoding.GetEncoding("GB2312")
+            return new DataTableProcessor(dataTableFile, Encoding.Unicode, 1, 2, null, 3, 4, 1);//Encoding.GetEncoding("GB2312")
         }
-        public static bool CheckRawData(DataTableProcessor dataTableProcessor, string dataTableName)
+        public static bool CheckRawData(DataTableProcessor dataTableProcessor, string dataTableFile)
         {
             for (int i = 0; i < dataTableProcessor.RawColumnCount; i++)
             {
@@ -36,7 +36,7 @@ namespace GameFramework.Editor.DataTableTools
 
                 if (!NameRegex.IsMatch(name))
                 {
-                    Debug.LogWarning($"数据表'{dataTableName}'中字段名'{name}'不合法. 字段名必须以大写字母开头、只包含字母下划线字符");
+                    Debug.LogWarning($"数据表'{dataTableFile}'中字段名'{name}'不合法. 字段名必须以大写字母开头、只包含字母下划线字符");
                     return false;
                 }
             }
@@ -44,21 +44,21 @@ namespace GameFramework.Editor.DataTableTools
             return true;
         }
 
-        public static void GenerateDataFile(DataTableProcessor dataTableProcessor, string dataTableName)
+        public static void GenerateDataFile(DataTableProcessor dataTableProcessor, string dataTableFile)
         {
-            string binaryDataFileName = Utility.Path.GetRegularPath(Path.Combine(ConstEditor.DataTablePath, dataTableName + ".bytes"));
+            string binaryDataFileName = Path.ChangeExtension(dataTableFile, ".bytes");
             if (!dataTableProcessor.GenerateDataFile(binaryDataFileName) && File.Exists(binaryDataFileName))
             {
                 File.Delete(binaryDataFileName);
             }
         }
-        public static void GenerateCodeFile(DataTableProcessor dataTableProcessor, string dataTableName)
+        public static void GenerateCodeFile(DataTableProcessor dataTableProcessor, string dataTableFile)
         {
             dataTableProcessor.SetCodeTemplate(ConstEditor.DataTableCodeTemplate, Encoding.UTF8);
             dataTableProcessor.SetCodeGenerator(DataTableCodeGenerator);
-
+            var dataTableName = GameDataGenerator.GetGameDataRelativeName(dataTableFile, ConstEditor.DataTablePath);
             string csharpCodeFileName = Utility.Path.GetRegularPath(Path.Combine(ConstEditor.DataTableCodePath, dataTableName + ".cs"));
-            if (!dataTableProcessor.GenerateCodeFile(csharpCodeFileName, Encoding.UTF8, dataTableName))
+            if (!dataTableProcessor.GenerateCodeFile(csharpCodeFileName, Encoding.UTF8, dataTableFile))
             {
                 GFBuiltin.LogError(Utility.Text.Format("生成{0}数据表结构代码失败:{1}", dataTableName, csharpCodeFileName));
             }
@@ -66,11 +66,11 @@ namespace GameFramework.Editor.DataTableTools
 
         private static void DataTableCodeGenerator(DataTableProcessor dataTableProcessor, StringBuilder codeContent, object userData)
         {
-            string dataTableName = Path.GetFileName((string)userData);
+            string dataTableClassName = Path.GetFileNameWithoutExtension((string)userData);
 
             // codeContent.Replace("__DATA_TABLE_CREATE_TIME__", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
             //codeContent.Replace("__DATA_TABLE_NAME_SPACE__", "StarForce");
-            codeContent.Replace("__DATA_TABLE_CLASS_NAME__", dataTableName);
+            codeContent.Replace("__DATA_TABLE_CLASS_NAME__", dataTableClassName);
             codeContent.Replace("__DATA_TABLE_COMMENT__", dataTableProcessor.GetValue(0, 1));
             codeContent.Replace("__DATA_TABLE_ID_COMMENT__", dataTableProcessor.GetComment(dataTableProcessor.IdColumn));
             codeContent.Replace("__DATA_TABLE_PROPERTIES__", GenerateDataTableProperties(dataTableProcessor));
@@ -311,7 +311,7 @@ namespace GameFramework.Editor.DataTableTools
                     }
                     else
                     {
-                        stringBuilder.AppendFormat("                    {0} = DataTableExtension.Parse{1}(binaryReader.ReadString());", dataTableProcessor.GetName(i), dataTableProcessor.GetType(i).Name).AppendLine();
+                        stringBuilder.AppendFormat("                    {0} = DataTableExtension.Read{1}(binaryReader);", dataTableProcessor.GetName(i), dataTableProcessor.GetType(i).Name).AppendLine();
                     }
                 }
             }

@@ -3,23 +3,23 @@ using GameFramework;
 using UnityGameFramework.Runtime;
 public static class ConfigExtension
 {
-    public static void LoadConfig(this ConfigComponent cfg, string name, string abTestGroup, object userData)
+    public static void LoadConfig(this ConfigComponent cfg, string name, string abTestGroup, bool useBytes, object userData)
     {
         string cfgName = name;
         if (!string.IsNullOrWhiteSpace(abTestGroup))
         {
             var abTestCfgName = Utility.Text.Format("{0}{1}{2}", name, ConstBuiltin.AB_TEST_TAG, abTestGroup);
-            if (GF.Resource.HasAsset(UtilityBuiltin.AssetsPath.GetConfigPath(abTestCfgName)) != GameFramework.Resource.HasAssetResult.NotExist)
+            if (GF.Resource.HasAsset(UtilityBuiltin.AssetsPath.GetConfigPath(abTestCfgName, useBytes)) != GameFramework.Resource.HasAssetResult.NotExist)
             {
                 cfgName = abTestCfgName;
             }
         }
-        cfg.ReadData(UtilityBuiltin.AssetsPath.GetConfigPath(cfgName), userData);
+        cfg.ReadData(UtilityBuiltin.AssetsPath.GetConfigPath(cfgName, useBytes), userData);
     }
-    public static void LoadConfig(this ConfigComponent cfg, string name, object userData)
+    public static void LoadConfig(this ConfigComponent cfg, string name, bool useBytes, object userData)
     {
         string abTestGroup = GFBuiltin.Setting.GetABTestGroup();
-        cfg.LoadConfig(name, abTestGroup, userData);
+        cfg.LoadConfig(name, abTestGroup, useBytes, userData);
     }
     public static Vector2Int GetVector2Int(this ConfigComponent cfg, string key)
     {

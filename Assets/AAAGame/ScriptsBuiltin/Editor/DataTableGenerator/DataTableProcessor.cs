@@ -17,8 +17,8 @@ namespace GameFramework.Editor.DataTableTools
 {
     public sealed partial class DataTableProcessor
     {
-        private const string CommentLineSeparator = "#";
-        private static readonly char[] DataSplitSeparators = new char[] { '\t' };
+        public const string CommentLineSeparator = "#";
+        public static readonly char[] DataSplitSeparators = new char[] { '\t' };
         private static readonly char[] DataTrimSeparators = new char[] { '\"' };
 
         private readonly string[] m_NameRow;

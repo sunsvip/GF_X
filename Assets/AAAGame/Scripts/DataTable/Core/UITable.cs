@@ -55,9 +55,9 @@ public class UITable : DataRowBase
         }
 
         /// <summary>
-        /// UI组
+        /// UI组Id
         /// </summary>
-        public string UIGroup
+        public int UIGroupId
         {
             get;
             private set;
@@ -87,7 +87,7 @@ public class UITable : DataRowBase
             SortOrder = int.Parse(columnStrings[index++]);
             UIPrefab = columnStrings[index++];
             PauseCoveredUI = bool.Parse(columnStrings[index++]);
-            UIGroup = columnStrings[index++];
+            UIGroupId = int.Parse(columnStrings[index++]);
             EscapeClose = bool.Parse(columnStrings[index++]);
 
             return true;
@@ -103,7 +103,7 @@ public class UITable : DataRowBase
                     SortOrder = binaryReader.Read7BitEncodedInt32();
                     UIPrefab = binaryReader.ReadString();
                     PauseCoveredUI = binaryReader.ReadBoolean();
-                    UIGroup = binaryReader.ReadString();
+                    UIGroupId = binaryReader.Read7BitEncodedInt32();
                     EscapeClose = binaryReader.ReadBoolean();
                 }
             }
