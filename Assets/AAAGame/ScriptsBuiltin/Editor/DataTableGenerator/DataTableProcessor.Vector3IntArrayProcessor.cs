@@ -12,7 +12,7 @@ namespace GameFramework.Editor.DataTableTools
 {
     public sealed partial class DataTableProcessor
     {
-        private sealed class Vector4ArrayProcessor : GenericDataProcessor<Vector4[]>
+        private sealed class Vector3IntArrayProcessor : GenericDataProcessor<Vector3Int[]>
         {
             public override bool IsSystem
             {
@@ -26,7 +26,7 @@ namespace GameFramework.Editor.DataTableTools
             {
                 get
                 {
-                    return "Vector4[]";
+                    return "Vector3Int[]";
                 }
             }
 
@@ -36,14 +36,14 @@ namespace GameFramework.Editor.DataTableTools
             {
                 return new string[]
                 {
-                    "vector4[]",
-                    "unityengine.vector4[]]"
+                    "vector3int[]",
+                    "unityengine.vector3int[]"
                 };
             }
 
-            public override Vector4[] Parse(string value)
+            public override Vector3Int[] Parse(string value)
             {
-                return DataTableExtension.ParseVector4Array(value);
+                return DataTableExtension.ParseVector3IntArray(value);
             }
 
             public override void WriteToStream(DataTableProcessor dataTableProcessor, BinaryWriter binaryWriter, string value)
@@ -58,10 +58,9 @@ namespace GameFramework.Editor.DataTableTools
                 for (int i = 0; i < v.Length; i++)
                 {
                     var itm = v[i];
-                    binaryWriter.Write(itm.x);
-                    binaryWriter.Write(itm.y);
-                    binaryWriter.Write(itm.z);
-                    binaryWriter.Write(itm.w);
+                    binaryWriter.Write7BitEncodedInt32(itm.x);
+                    binaryWriter.Write7BitEncodedInt32(itm.y);
+                    binaryWriter.Write7BitEncodedInt32(itm.z);
                 }
             }
         }

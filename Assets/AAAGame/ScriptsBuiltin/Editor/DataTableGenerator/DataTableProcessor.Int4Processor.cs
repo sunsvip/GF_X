@@ -6,13 +6,14 @@
 //------------------------------------------------------------
 
 using System.IO;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace GameFramework.Editor.DataTableTools
 {
     public sealed partial class DataTableProcessor
     {
-        private sealed class Vector4ArrayProcessor : GenericDataProcessor<Vector4[]>
+        private sealed class Int4Processor : GenericDataProcessor<int4>
         {
             public override bool IsSystem
             {
@@ -26,7 +27,7 @@ namespace GameFramework.Editor.DataTableTools
             {
                 get
                 {
-                    return "Vector4[]";
+                    return "int4";
                 }
             }
 
@@ -36,33 +37,23 @@ namespace GameFramework.Editor.DataTableTools
             {
                 return new string[]
                 {
-                    "vector4[]",
-                    "unityengine.vector4[]]"
+                    "int4",
+                    "Unity.Mathematics.int4"
                 };
             }
 
-            public override Vector4[] Parse(string value)
+            public override int4 Parse(string value)
             {
-                return DataTableExtension.ParseVector4Array(value);
+                return DataTableExtension.Parseint4(value);
             }
 
             public override void WriteToStream(DataTableProcessor dataTableProcessor, BinaryWriter binaryWriter, string value)
             {
-                var v = Parse(value);
-                if (v == null)
-                {
-                    binaryWriter.Write7BitEncodedInt32(0);
-                    return;
-                }
-                binaryWriter.Write7BitEncodedInt32(v.Length);
-                for (int i = 0; i < v.Length; i++)
-                {
-                    var itm = v[i];
-                    binaryWriter.Write(itm.x);
-                    binaryWriter.Write(itm.y);
-                    binaryWriter.Write(itm.z);
-                    binaryWriter.Write(itm.w);
-                }
+                int4 vector3 = Parse(value);
+                binaryWriter.Write7BitEncodedInt32(vector3.x);
+                binaryWriter.Write7BitEncodedInt32(vector3.y);
+                binaryWriter.Write7BitEncodedInt32(vector3.z);
+                binaryWriter.Write7BitEncodedInt32(vector3.w);
             }
         }
     }
