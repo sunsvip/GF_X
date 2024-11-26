@@ -18,6 +18,7 @@ MonoBehaviour:
   - ColorTable
   - CombatUnitTable
   - LevelTable
+  - TestTable
   - Core/EntityGroupTable
   - Core/LanguagesTable
   - Core/SoundGroupTable

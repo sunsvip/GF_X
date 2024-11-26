@@ -4,6 +4,7 @@ using UnityEditor;
 using System.IO;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace UGF.EditorTools
 {
@@ -19,6 +20,7 @@ namespace UGF.EditorTools
         private static void Init()
         {
             if (isInitialized) return;
+            InitGlobalCulture();
             tableFileChangedList = new List<string>();
             configFileChangedList = new List<string>();
             languageFileChangedList = new List<string>();
@@ -64,7 +66,12 @@ namespace UGF.EditorTools
             isInitialized = true;
         }
 
-
+        static void InitGlobalCulture()
+        {
+            //CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            //CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
+            CultureInfo.CurrentCulture = CultureInfo.CreateSpecificCulture("en-GB");
+        }
         private static void OnUpdate()
         {
             if (!isInitialized) return;

@@ -16,6 +16,7 @@ public class LaunchProcedure : ProcedureBase
     private void InitSettings()
     {
         CultureInfo.CurrentCulture = CultureInfo.CreateSpecificCulture("en-GB");
+
         GFBuiltin.Debugger.ActiveWindow = AppSettings.Instance.DebugMode;
         GFBuiltin.Debugger.WindowScale = 1.4f;
     }
