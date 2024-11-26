@@ -44,19 +44,17 @@ namespace GameFramework.Editor.DataTableTools
 
             public override int Parse(string value)
             {
-                var enumElements = value.Split('.');
-                if (enumElements.Length != 2)
+                if (DataTableExtension.TryParseEnum(value, out Type enumType, out int enumValue))
                 {
-                    GFBuiltin.LogError(Utility.Text.Format("解析枚举类型失败:{0}, 配置枚举格式为: Enum.Item1", value));
-                    return 0;
+                    return enumValue;
                 }
-                var enumType = Type.GetType(enumElements[0]);
-                return (int)Enum.Parse(enumType, value);
+                throw new GameFrameworkException(Utility.Text.Format("解析枚举类型失败:{0}, 配置枚举格式为: Enum.Item1", value));
             }
 
             public override void WriteToStream(DataTableProcessor dataTableProcessor, BinaryWriter binaryWriter, string value)
             {
-                binaryWriter.Write7BitEncodedInt32(Parse(value));
+                var v = Parse(value);
+                binaryWriter.Write7BitEncodedInt32(v);
             }
         }
     }

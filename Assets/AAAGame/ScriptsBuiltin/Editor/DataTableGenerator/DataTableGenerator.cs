@@ -109,7 +109,7 @@ namespace GameFramework.Editor.DataTableTools
                 if (dataTypeKeyword == "enum")
                 {
                     var firstEnumValue = dataTableProcessor.GetValue(4, i);
-                    if (!TryParseEnum(firstEnumValue, out Type enumType))
+                    if (!DataTableExtension.TryParseEnum(firstEnumValue, out Type enumType))
                     {
                         GFBuiltin.LogError(Utility.Text.Format("解析枚举类型失败:{0}, 配置枚举格式为: EnumType.Item1", firstEnumValue));
                         continue;
@@ -198,7 +198,7 @@ namespace GameFramework.Editor.DataTableTools
                         else if (languageKeyword == "enum")
                         {
                             var firstEnumValue = dataTableProcessor.GetValue(4, i);
-                            if (!TryParseEnum(firstEnumValue, out Type enumType))
+                            if (!DataTableExtension.TryParseEnum(firstEnumValue, out Type enumType))
                             {
                                 GFBuiltin.LogError(Utility.Text.Format("解析枚举类型失败:{0}, 配置枚举格式为: EnumType.Item1", firstEnumValue));
                                 continue;
@@ -267,11 +267,11 @@ namespace GameFramework.Editor.DataTableTools
                     {
                         if (isArrayType == 1)
                         {
-                            stringBuilder.AppendFormat("                    {0} = DataTableExtension.ParseArray<{1}>(binaryReader.ReadString());", dataTableProcessor.GetName(i), languageKeyword.Replace("[]", string.Empty)).AppendLine();
+                            stringBuilder.AppendFormat("                    {0} = binaryReader.ReadArray<{1}>();", dataTableProcessor.GetName(i), languageKeyword.Replace("[]", string.Empty)).AppendLine();
                         }
                         else if (isArrayType == 2)
                         {
-                            stringBuilder.AppendFormat("                    {0} = DataTableExtension.Parse2DArray<{1}>(binaryReader.ReadString());", dataTableProcessor.GetName(i), languageKeyword.Replace("[][]", string.Empty)).AppendLine();
+                            stringBuilder.AppendFormat("                    {0} = binaryReader.Read2DArray<{1}>();", dataTableProcessor.GetName(i), languageKeyword.Replace("[][]", string.Empty)).AppendLine();
                         }
                     }
                     else
@@ -283,12 +283,12 @@ namespace GameFramework.Editor.DataTableTools
                         else if (languageKeyword == "enum")
                         {
                             var firstEnumValue = dataTableProcessor.GetValue(4, i);
-                            if (!TryParseEnum(firstEnumValue, out Type enumType))
+                            if (!DataTableExtension.TryParseEnum(firstEnumValue, out Type enumType))
                             {
                                 GFBuiltin.LogError(Utility.Text.Format("解析枚举类型失败:{0}, 配置枚举格式为: EnumType.Item1", firstEnumValue));
                                 continue;
                             }
-                            stringBuilder.AppendFormat("                    {0} = ({1})binaryReader.Read7BitEncodedInt32();", dataTableProcessor.GetName(i), enumType.FullName.Replace('+', '.')).AppendLine();
+                            stringBuilder.AppendFormat("                    {0} = binaryReader.ReadEnum<{1}>();", dataTableProcessor.GetName(i), enumType.FullName.Replace('+', '.')).AppendLine();
                         }
                         else
                         {
@@ -302,16 +302,16 @@ namespace GameFramework.Editor.DataTableTools
                     {
                         if (isArrayType == 1)
                         {
-                            stringBuilder.AppendFormat("                    {0} = DataTableExtension.Parse{1}Array(binaryReader.ReadString());", dataTableProcessor.GetName(i), languageKeyword.Replace("[]", string.Empty)).AppendLine();
+                            stringBuilder.AppendFormat("                    {0} = binaryReader.Read{1}Array();", dataTableProcessor.GetName(i), languageKeyword.Replace("[]", string.Empty)).AppendLine();
                         }
                         else if (isArrayType == 2)
                         {
-                            stringBuilder.AppendFormat("                    {0} = DataTableExtension.Parse{1}2DArray(binaryReader.ReadString());", dataTableProcessor.GetName(i), languageKeyword.Replace("[][]", string.Empty)).AppendLine();
+                            stringBuilder.AppendFormat("                    {0} = binaryReader.Read{1}2DArray();", dataTableProcessor.GetName(i), languageKeyword.Replace("[][]", string.Empty)).AppendLine();
                         }
                     }
                     else
                     {
-                        stringBuilder.AppendFormat("                    {0} = DataTableExtension.Read{1}(binaryReader);", dataTableProcessor.GetName(i), dataTableProcessor.GetType(i).Name).AppendLine();
+                        stringBuilder.AppendFormat("                    {0} = binaryReader.Read{1}();", dataTableProcessor.GetName(i), dataTableProcessor.GetType(i).Name).AppendLine();
                     }
                 }
             }
@@ -343,21 +343,6 @@ namespace GameFramework.Editor.DataTableTools
 
             return 0;
         }
-        private static bool TryParseEnum(string enumValue, out Type enumType)
-        {
-            enumType = null;
-            var enumElements = enumValue.Split('.');
-            if (enumElements.Length != 2)
-            {
-                return false;
-            }
-            var enumName = enumElements[0];
-            enumType = Utility.Assembly.GetType(enumName);
-            if (enumType == null)
-            {
-                enumType = Utility.Assembly.GetTypes().FirstOrDefault(t => t.IsEnum && (t.Name == enumName));
-            }
-            return enumType != null && enumType.IsEnum;
-        }
+        
     }
 }

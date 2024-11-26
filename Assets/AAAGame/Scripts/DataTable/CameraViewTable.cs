@@ -70,8 +70,8 @@ public class CameraViewTable : DataRowBase
                 using (BinaryReader binaryReader = new BinaryReader(memoryStream, Encoding.UTF8))
                 {
                     m_Id = binaryReader.Read7BitEncodedInt32();
-                    FollowOffset = DataTableExtension.ReadVector3(binaryReader);
-                    AimOffset = DataTableExtension.ReadVector3(binaryReader);
+                    FollowOffset = binaryReader.ReadVector3();
+                    AimOffset = binaryReader.ReadVector3();
                 }
             }
 

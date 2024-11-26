@@ -48,10 +48,10 @@ namespace GameFramework.Editor.DataTableTools
 
             public override void WriteToStream(DataTableProcessor dataTableProcessor, BinaryWriter binaryWriter, string value)
             {
-                Vector3 vector3 = Parse(value);
-                binaryWriter.Write(vector3.x);
-                binaryWriter.Write(vector3.y);
-                binaryWriter.Write(vector3.z);
+                var v = Parse(value);
+                binaryWriter.Write7BitEncodedInt32(v.x);
+                binaryWriter.Write7BitEncodedInt32(v.y);
+                binaryWriter.Write7BitEncodedInt32(v.z);
             }
         }
     }
