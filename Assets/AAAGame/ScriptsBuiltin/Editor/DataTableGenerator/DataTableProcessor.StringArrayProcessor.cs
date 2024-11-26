@@ -49,6 +49,11 @@ namespace GameFramework.Editor.DataTableTools
             public override void WriteToStream(DataTableProcessor dataTableProcessor, BinaryWriter binaryWriter, string value)
             {
                 string[] arr = Parse(value);
+                if(arr == null)
+                {
+                    binaryWriter.Write7BitEncodedInt32(0);
+                    return;
+                }
                 binaryWriter.Write7BitEncodedInt32(arr.Length);
                 for (int i = 0; i < arr.Length; i++)
                 {
