@@ -12,7 +12,7 @@ namespace GameFramework.Editor.DataTableTools
 {
     public sealed partial class DataTableProcessor
     {
-        private sealed class BoolArrayArrayProcessor : GenericDataProcessor<bool[][]>
+        private sealed class Bool2DArrayProcessor : GenericDataProcessor<bool[][]>
         {
             public override bool IsSystem
             {
