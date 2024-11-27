@@ -1,15 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using GameFramework;
+﻿using GameFramework;
 using GameFramework.Procedure;
 using UnityGameFramework.Runtime;
 using GameFramework.Fsm;
 using GameFramework.Event;
-using System;
 
 public class ChangeSceneProcedure : ProcedureBase
 {
+    /// <summary>
+    /// 要加载的场景资源名,相对于场景目录
+    /// </summary>
+    internal const string P_SceneName = "SceneName";
     private bool loadSceneOver = false;
     private string nextScene = string.Empty;
     protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
@@ -38,7 +38,12 @@ public class ChangeSceneProcedure : ProcedureBase
         // 还原游戏速度
         GF.Base.ResetNormalGameSpeed();
 
-        nextScene = procedureOwner.GetData<VarString>("NextScene");
+        if (!procedureOwner.HasData(P_SceneName))
+        {
+            throw new GameFrameworkException("未设置要加载的场景资源名!");
+        }
+        nextScene = procedureOwner.GetData<VarString>(P_SceneName);
+        procedureOwner.RemoveData(P_SceneName);
         GF.Scene.LoadScene(UtilityBuiltin.AssetsPath.GetScenePath(nextScene), this);
     }
 
@@ -75,7 +80,7 @@ public class ChangeSceneProcedure : ProcedureBase
             return;
         }
         //Log.Info("场景加载进度:{0}, {1}", arg.Progress, arg.SceneAssetName);
-        //TODO 显示加载进度
+        //TODO 显示场景加载进度
     }
 
     private void OnLoadSceneSuccess(object sender, GameEventArgs e)
