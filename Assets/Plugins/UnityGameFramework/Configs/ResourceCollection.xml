@@ -8,28 +8,41 @@
       <Resource Name="Entity" LoadType="0" Packed="False" />
       <Resource Name="HotfixDlls" LoadType="0" Packed="False" />
       <Resource Name="Language" LoadType="0" Packed="False" />
+      <Resource Name="Scene" LoadType="0" Packed="False" />
       <Resource Name="ScriptableAssets" LoadType="0" Packed="False" />
       <Resource Name="SharedAssets" LoadType="2" Packed="False" />
       <Resource Name="UI" LoadType="0" Packed="False" />
     </Resources>
     <Assets>
+      <Asset Guid="013ba76f202c1ae4eba4bf69e2b69902" ResourceName="DataTable" />
+      <Asset Guid="0270052d20b603547b304b0ecc0601cf" ResourceName="Language" />
       <Asset Guid="02cbc534a52481241872d42107e29c57" ResourceName="Entity" />
       <Asset Guid="034b209892546994d8037e72ca910089" ResourceName="Language" />
+      <Asset Guid="073b4cca8bda8cf438ac3dfe7a39a235" ResourceName="DataTable" />
       <Asset Guid="09045e73e44b1d944bafe57ece728071" ResourceName="UI" />
       <Asset Guid="0b69b108d75f47940881a60045f21976" ResourceName="UI" />
       <Asset Guid="0d39ed0185ca8e74283374bdb1c95e2b" ResourceName="Entity" />
       <Asset Guid="13b0b1255d7d6cf44a4d1987723460ef" ResourceName="ScriptableAssets" />
+      <Asset Guid="17809c14ab03d914fbb791e882587415" ResourceName="DataTable" />
+      <Asset Guid="17c3f565cf73d4740bfaed4f87e98fa3" ResourceName="Language" />
+      <Asset Guid="18868d941a71f02498051516873367ce" ResourceName="Scene" />
       <Asset Guid="18d313816561eb94f883cc5522c2158b" ResourceName="UI" />
       <Asset Guid="1b586e20031d8b44a9495620988ad3dc" ResourceName="HotfixDlls" />
       <Asset Guid="1caa4c6fdc3281642b46f7c82c497dc5" ResourceName="Core" />
       <Asset Guid="230b0c809e3e6a647af26c803aa90467" ResourceName="SharedAssets" />
       <Asset Guid="2cdf1b85fd520ef46b11f580e9443e78" ResourceName="Language" />
+      <Asset Guid="2e9047e5d41122a42941f2db8472a0c9" ResourceName="DataTable" />
+      <Asset Guid="3d6fc5347ef115746af70b4b42a7f119" ResourceName="DataTable" />
       <Asset Guid="3fdcbb5b7d730f341bf585839b5502a5" ResourceName="UI" />
       <Asset Guid="47898ae6a0dbd6146949c86694773439" ResourceName="Entity" />
+      <Asset Guid="4d9df7336d07eec4a95b89ac70eb06ea" ResourceName="DataTable" />
       <Asset Guid="53b9781b792f33841a6a088ec392fbd8" ResourceName="SharedAssets" />
+      <Asset Guid="587466d76b832b24883e5b64a9e9bff1" ResourceName="DataTable" />
       <Asset Guid="588ff96c6882fb3448095d7a881bced3" ResourceName="SharedAssets" />
+      <Asset Guid="5d19fed2387fc3c4ca37fc9bf11e7190" ResourceName="Language" />
       <Asset Guid="60088dd3b0214654ba9150c7fdda1a8d" ResourceName="DataTable" />
       <Asset Guid="63f5f6812a8f9724cac670756d524631" ResourceName="DataTable" />
+      <Asset Guid="65286f6b2b857384abd71e30d9309f34" ResourceName="Config" />
       <Asset Guid="66210d36a4cf7514e8d9e60ae298c2c4" ResourceName="DataTable" />
       <Asset Guid="6792e8ab386017841ab27626b9753bec" ResourceName="UI" />
       <Asset Guid="68e6db2ebdc24f95958faec2be5558d6" ResourceName="SharedAssets" />
@@ -48,23 +61,29 @@
       <Asset Guid="8a4e2875174034b4aabb43c9ca9028a1" ResourceName="SharedAssets" />
       <Asset Guid="8e978eccab638cf429b4757490af6554" ResourceName="Entity" />
       <Asset Guid="92cb04501693359419a839b8d33aace7" ResourceName="UI" />
+      <Asset Guid="93e5244c613569f4ca34418e4a2b59b4" ResourceName="DataTable" />
       <Asset Guid="98662c21c0b96bc48a6440a4fe486556" ResourceName="DataTable" />
+      <Asset Guid="9acbc6465cea7234d986cec615965aef" ResourceName="DataTable" />
       <Asset Guid="9deca69555354744b9e1fbdffb007bd8" ResourceName="SharedAssets" />
-      <Asset Guid="9f8375e22b5a1e3499c99ed3facbac63" ResourceName="Config" />
       <Asset Guid="a29db755b6ae1104a94df297de29cfc8" ResourceName="SharedAssets" />
       <Asset Guid="a8043c8d11e46d648bb702e4a3572406" ResourceName="Entity" />
       <Asset Guid="b8f790017d833da45a5aec7344ed4f97" ResourceName="SharedAssets" />
+      <Asset Guid="c1bf70ce98a49bd4f8b60847ce98cfa8" ResourceName="Language" />
       <Asset Guid="c4e839cf3d001e0499336fb7f53c0310" ResourceName="DataTable" />
       <Asset Guid="c7a26b8d1ff63834298841254b2332c4" ResourceName="UI" />
+      <Asset Guid="ca4765c7a3113644e9f87e202a7ff91d" ResourceName="Scene" />
       <Asset Guid="ce8c514bb8f800a4bab1b07b067afffc" ResourceName="Entity" />
       <Asset Guid="d6ecbf62a86c5a743be725f48260ac7e" ResourceName="UI" />
       <Asset Guid="d946c3960d3e44847a45f42524ec6aeb" ResourceName="Config" />
+      <Asset Guid="dd49d0e931c6ab4498d652aff8dcdf6b" ResourceName="DataTable" />
       <Asset Guid="e09d64781b233da4c8e75adde91c9652" ResourceName="Entity" />
       <Asset Guid="e1a613ebd6f1d6f4a825d14981f3e88d" ResourceName="DataTable" />
+      <Asset Guid="e654726d8f557ef4ca2996e321af04e5" ResourceName="DataTable" />
       <Asset Guid="e81571591a3393745a08aee12b114309" ResourceName="HotfixDlls" />
       <Asset Guid="ec835c8e8455a4e3eab94be7baf9c04a" ResourceName="UI" />
       <Asset Guid="fb3663d475cbeb74ba97e229b86d2504" ResourceName="Entity" />
       <Asset Guid="fca0697f771517f41a13845450b0f97a" ResourceName="Entity" />
+      <Asset Guid="fd6f9ae5eba339e4f88c00782aadfa70" ResourceName="Language" />
     </Assets>
   </ResourceCollection>
 </UnityGameFramework>

@@ -91,7 +91,7 @@ MonoBehaviour:
     assetsDirectoryPath: Assets/AAAGame/Scene
     loadType: 0
     packed: 0
-    filterType: 3
+    filterType: 0
     searchPatterns: '*.unity'
   - valid: 1
     name: ScriptableAssets
