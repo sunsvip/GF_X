@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
-
-public partial class LanguagesDialog : UIFormBase
+﻿public partial class LanguagesDialog : UIFormBase
 {
     public const string P_LangChangedCb = "LangChangedCb";
     VarAction m_VarAction;

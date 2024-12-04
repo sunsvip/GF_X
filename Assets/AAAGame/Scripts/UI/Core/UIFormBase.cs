@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using GameFramework.ObjectPool;
 
 /// <summary>
 /// UI基类, 所有UI界面需继承此类
@@ -44,7 +45,7 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
     protected Canvas UICanvas { get; private set; }
 
     private bool isOnEscape;
-    IList<KeyValuePair<Type, string>> m_ItemPools = null;
+    IList<IObjectPool<UIItemObject>> m_ItemPools = null;
     /// <summary>
     /// 子UI界面, 会随着父界面关闭而关闭
     /// </summary>
@@ -154,22 +155,22 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
     private void UnspawnAllItemObjects()
     {
         if (m_ItemPools == null) return;
-        const string FUNC_NAME = "UnspawnAll";
         foreach (var item in m_ItemPools)
         {
-            var pool = GF.ObjectPool.GetObjectPool(item.Key, item.Value);
-            var unspawnAllFunc = pool.GetType().GetMethod(FUNC_NAME, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            unspawnAllFunc.Invoke(pool, null);
+            item.ReleaseAllUnused();
+            item.UnspawnAll();
         }
     }
     private void DestroyAllItemPool()
     {
         if (m_ItemPools == null) return;
 
-        foreach (var item in m_ItemPools)
+        for (int i = 0; i < m_ItemPools.Count; i++)
         {
-            GF.ObjectPool.DestroyObjectPool(item.Key, item.Value);
+            var item = m_ItemPools[i];
+            GF.ObjectPool.DestroyObjectPool(item);
         }
+        m_ItemPools.Clear();
     }
 
     /// <summary>
@@ -192,17 +193,14 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
         else
         {
             pool = GF.ObjectPool.CreateSingleSpawnObjectPool<T>(itemTempleId, autoReleaseInterval, capacity, expireTime, 0);
-            if (m_ItemPools == null) m_ItemPools = new List<KeyValuePair<Type, string>>();
-            m_ItemPools.Add(KeyValuePair.Create(typeof(T), itemTempleId));
+            if (m_ItemPools == null) m_ItemPools = new List<IObjectPool<UIItemObject>>();
+            m_ItemPools.Add((IObjectPool<UIItemObject>)(object)pool);
         }
 
         var spawn = pool.Spawn();
         if (spawn == null)
         {
             var itemInstance = Instantiate(itemTemple, instanceRoot);
-            //itemInstance.transform.localPosition = Vector3.zero;
-            //itemInstance.transform.localRotation = Quaternion.identity;
-            //if (!itemInstance.activeSelf) itemInstance.SetActive(true);
             spawn = UIItemObject.Create<T>(itemInstance);
             pool.Register(spawn, true);
         }
@@ -243,6 +241,7 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
         if (!GF.ObjectPool.HasObjectPool<T>(itemTempleId)) return;
 
         var pool = GF.ObjectPool.GetObjectPool<T>(itemTempleId);
+        pool.ReleaseAllUnused();
         pool.UnspawnAll();
     }
     /// <summary>
@@ -334,7 +333,7 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
                 break;
             case UIFormAnimationType.Animation:
                 {
-                    if (m_UIAnimation!= null && !string.IsNullOrWhiteSpace(m_OpenAnimationName) && m_UIAnimation.Play(m_OpenAnimationName))
+                    if (m_UIAnimation != null && !string.IsNullOrWhiteSpace(m_OpenAnimationName) && m_UIAnimation.Play(m_OpenAnimationName))
                     {
                         float duration = m_UIAnimation.GetClip(m_OpenAnimationName).length;
                         UniTask.Delay(TimeSpan.FromSeconds(duration)).ContinueWith(() =>
