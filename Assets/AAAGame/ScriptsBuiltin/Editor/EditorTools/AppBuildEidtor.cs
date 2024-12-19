@@ -640,11 +640,7 @@ namespace UGF.EditorTools
                     EditorGUILayout.BeginHorizontal();
                     {
                         EditorGUILayout.LabelField("Keystore Password", GUILayout.Width(160f));
-#if UNITY_6000_0_OR_NEWER
                         AppBuildSettings.Instance.KeystorePass = PlayerSettings.Android.keystorePass = EditorGUILayout.PasswordField(AppBuildSettings.Instance.KeystorePass);
-#else
-                        AppBuildSettings.Instance.KeystorePass = PlayerSettings.keystorePass = EditorGUILayout.PasswordField(AppBuildSettings.Instance.KeystorePass);
-#endif
                     }
                     EditorGUILayout.EndHorizontal();
                     EditorGUILayout.BeginHorizontal();
@@ -656,11 +652,7 @@ namespace UGF.EditorTools
                     EditorGUILayout.BeginHorizontal();
                     {
                         EditorGUILayout.LabelField("Alias Password", GUILayout.Width(160f));
-#if UNITY_6000_0_OR_NEWER
                         AppBuildSettings.Instance.KeyAliasPass = PlayerSettings.Android.keyaliasPass = EditorGUILayout.PasswordField(AppBuildSettings.Instance.KeyAliasPass);
-#else
-                        AppBuildSettings.Instance.KeyAliasPass = PlayerSettings.keyaliasPass = EditorGUILayout.PasswordField(AppBuildSettings.Instance.KeyAliasPass);
-#endif
                     }
                     EditorGUILayout.EndHorizontal();
                 }
@@ -1192,12 +1184,9 @@ namespace UGF.EditorTools
 #if UNITY_ANDROID
             PlayerSettings.Android.useCustomKeystore = AppBuildSettings.Instance.AndroidUseKeystore;
             PlayerSettings.Android.keystoreName = AppBuildSettings.Instance.AndroidKeystoreName;
-#if UNITY_6000_0_OR_NEWER
             PlayerSettings.Android.keystorePass = AppBuildSettings.Instance.KeystorePass;
-#else
-            PlayerSettings.keystorePass = AppBuildSettings.Instance.KeystorePass;
-#endif
             PlayerSettings.Android.keyaliasName = AppBuildSettings.Instance.AndroidKeyAliasName;
+            PlayerSettings.Android.keyaliasPass = AppBuildSettings.Instance.KeyAliasPass;
             EditorUserBuildSettings.buildAppBundle = configJson.BuildAppBundle;
             PlayerSettings.Android.bundleVersionCode = configJson.VersionCode;
 #endif
