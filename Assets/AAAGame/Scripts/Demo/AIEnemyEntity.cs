@@ -28,7 +28,11 @@ public class AIEnemyEntity : CombatUnitEntity
             offsetPos.y = 0;
             var moveDir = Vector3.Normalize(offsetPos);
             var targetVelocity = CombatUnitRow.MoveSpeed * moveDir;
+#if UNITY_6000_0_OR_NEWER
+            m_Rigidbody.linearVelocity = Vector3.Lerp(m_Rigidbody.linearVelocity, targetVelocity, 1 / math.distancesq(targetVelocity, m_Rigidbody.linearVelocity));
+#else
             m_Rigidbody.velocity = Vector3.Lerp(m_Rigidbody.velocity, targetVelocity, 1 / math.distancesq(targetVelocity, m_Rigidbody.velocity));
+#endif
         }
     }
     protected override bool ApplyDamage(CombatUnitEntity attacker, int damgeValue)
@@ -36,7 +40,11 @@ public class AIEnemyEntity : CombatUnitEntity
         bool bekilled = base.ApplyDamage(attacker, damgeValue);
         if (Hp > 0)
         {
+#if UNITY_6000_0_OR_NEWER
+            m_Rigidbody.linearVelocity = Vector3.Normalize(CachedTransform.position - attacker.CachedTransform.position) * 10f;
+#else
             m_Rigidbody.velocity = Vector3.Normalize(CachedTransform.position - attacker.CachedTransform.position) * 10f;
+#endif
         }
         return bekilled;
     }

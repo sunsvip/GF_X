@@ -1925,8 +1925,12 @@ public class UltimateJoystickEditor : Editor
 
 	static void CreateEventSystem ()
 	{
+#if UNITY_6000_0_OR_NEWER
+		Object esys = Object.FindAnyObjectByType<EventSystem>();
+#else
 		Object esys = Object.FindObjectOfType<EventSystem>();
-		if( esys == null )
+#endif
+        if ( esys == null )
 		{
 			GameObject eventSystem = new GameObject( "EventSystem" );
 			esys = eventSystem.AddComponent<EventSystem>();
@@ -1937,9 +1941,12 @@ public class UltimateJoystickEditor : Editor
 	
 	public static void RequestCanvas ( GameObject child )
 	{
+#if UNITY_6000_0_OR_NEWER
+        Canvas[] allCanvas = Object.FindObjectsByType<Canvas>(FindObjectsSortMode.None);
+#else
 		Canvas[] allCanvas = Object.FindObjectsOfType( typeof( Canvas ) ) as Canvas[];
-
-		for( int i = 0; i < allCanvas.Length; i++ )
+#endif
+        for ( int i = 0; i < allCanvas.Length; i++ )
 		{
 			if( allCanvas[ i ].enabled == true && allCanvas[ i ].renderMode != RenderMode.WorldSpace )
 			{

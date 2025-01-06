@@ -4,8 +4,6 @@ using UnityGameFramework.Runtime;
 
 public partial class MenuUIForm : UIFormBase
 {
-    [SerializeField] bool showLvSwitch = false;
-
     protected override void OnOpen(object userData)
     {
         base.OnOpen(userData);
@@ -63,14 +61,5 @@ public partial class MenuUIForm : UIFormBase
     private void SetMoneyText(int money)
     {
         moneyText.text = UtilityBuiltin.Valuer.ToCoins(money);
-    }
-    public void SwitchLevel(int dir)
-    {
-        GF.DataModel.GetOrCreate<PlayerDataModel>().LevelId += dir;
-        var menuProcedure = GF.Procedure.CurrentProcedure as MenuProcedure;
-        if (null != menuProcedure)
-        {
-            menuProcedure.ShowLevel();
-        }
     }
 }
