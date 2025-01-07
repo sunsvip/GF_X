@@ -6,7 +6,10 @@
         "UnityGameFramework.Runtime",
         "ZString",
         "GameFramework",
-        "HybridCLR.Runtime"
+        "HybridCLR.Runtime",
+        "Unity.Mathematics",
+        "Unity.Jobs",
+        "Unity.Collections"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

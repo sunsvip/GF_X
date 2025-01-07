@@ -1,8 +1,0 @@
-﻿#	颜色表		
-#	Id		ColorHex
-#	int		string
-#		备注	
-	1	Green	#61F34A
-	2	Orange	#F3AA38
-	3	Red	#F3534B
-	4	Purple	#A100FF

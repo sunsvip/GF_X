@@ -25,7 +25,7 @@ public partial class GameOverUIForm : UIFormBase
         base.OnButtonClick(sender, btSelf);
         if(btSelf == varBackBtn)
         {
-            (GF.Procedure.CurrentProcedure as GameOverProcedure).BackHome();
+            //(GF.Procedure.CurrentProcedure as GameOverProcedure).BackHome();
         }
     }
 }
