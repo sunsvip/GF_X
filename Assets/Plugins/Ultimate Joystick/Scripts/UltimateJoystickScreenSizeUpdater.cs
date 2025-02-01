@@ -6,21 +6,23 @@ using UnityEngine.EventSystems;
 
 public class UltimateJoystickScreenSizeUpdater : UIBehaviour
 {
-	protected override void OnRectTransformDimensionsChange ()
-	{
-		if( gameObject == null || !gameObject.activeInHierarchy )
-			return;
+    protected override void OnRectTransformDimensionsChange()
+    {
+        if (gameObject == null || !gameObject.activeInHierarchy)
+            return;
 
-		StartCoroutine( "YieldPositioning" );
-	}
+        StartCoroutine("YieldPositioning");
+    }
 
-	IEnumerator YieldPositioning ()
-	{
-		yield return new WaitForEndOfFrame();
-
+    IEnumerator YieldPositioning()
+    {
+        yield return new WaitForEndOfFrame();
+#if UNITY_6000_0_OR_NEWER
+        UltimateJoystick[] allJoysticks = FindObjectsByType<UltimateJoystick>(FindObjectsSortMode.None);
+#else
 		UltimateJoystick[] allJoysticks = FindObjectsOfType( typeof( UltimateJoystick ) ) as UltimateJoystick[];
-
-		for( int i = 0; i < allJoysticks.Length; i++ )
-			allJoysticks[ i ].UpdatePositioning();
-	}
+#endif
+        for (int i = 0; i < allJoysticks.Length; i++)
+            allJoysticks[i].UpdatePositioning();
+    }
 }

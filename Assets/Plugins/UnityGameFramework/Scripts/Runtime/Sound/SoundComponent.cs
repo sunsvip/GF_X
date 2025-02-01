@@ -686,7 +686,11 @@ namespace UnityGameFramework.Runtime
 
         private void RefreshAudioListener()
         {
+#if UNITY_6000_0_OR_NEWER
+            m_AudioListener.enabled = FindObjectsByType<AudioListener>(FindObjectsSortMode.None).Length <= 1;
+#else
             m_AudioListener.enabled = FindObjectsOfType<AudioListener>().Length <= 1;
+#endif
         }
     }
 }
