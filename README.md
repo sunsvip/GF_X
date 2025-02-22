@@ -1,5 +1,5 @@
 # GF_X
-点击链接加入群聊【GF_X自动化游戏框架】：http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=sA2mRXcNn1vQb5dz8pe1wndL9jr8gOKA&authKey=hk7wZDWjniHi2kJexJxSMZsgmXgf%2B3JDRQWCaYih9mF7V%2ByZ%2F%2BzMG4fThy2vF2Ze&noverify=0&group_code=1035236947
+点击链接加入群聊【GF_X自动化游戏框架】：[QQ交流群:1035236947](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=sA2mRXcNn1vQb5dz8pe1wndL9jr8gOKA&authKey=hk7wZDWjniHi2kJexJxSMZsgmXgf%2B3JDRQWCaYih9mF7V%2ByZ%2F%2BzMG4fThy2vF2Ze&noverify=0&group_code=1035236947)
 #### 介绍
 [GameFramework](https://github.com/EllanJiang/GameFramework) + [HybridCLR](https://github.com/focus-creative-games/hybridclr)，此框架主打一个原汁原味，不修改GameFramework源码。仅仅通过静态扩展方式，极度简化或扩展框架接口，并编写了大量自动化工具，主打一个工业化生产工作流，追求极致性能和开发效率。
 作为极其懒惰、从不加班的设计开发工程师，我的宗旨是拒绝一切高重复度工作，能自动的绝不手动。如果您拥有相同的观点，请和我一起维护完善此项目！
