@@ -9,29 +9,29 @@ using UnityGameFramework.Runtime;
 public enum PlayerDataType
 {
     /// <summary>
-    /// Íæ¼Ò½ğ±Ò
+    /// ç©å®¶é‡‘å¸
     /// </summary>
     Coins,
     /// <summary>
-    /// Íæ¼Ò×êÊ¯
+    /// ç©å®¶é’»çŸ³
     /// </summary>
     Diamond,
     /// <summary>
-    /// Íæ¼ÒÑªÁ¿
+    /// ç©å®¶è¡€é‡
     /// </summary>
     Hp,
     /// <summary>
-    /// Íæ¼ÒÄÜÁ¿
+    /// ç©å®¶èƒ½é‡
     /// </summary>
     Energy,
     /// <summary>
-    /// ¹Ø¿¨Id
+    /// å…³å¡Id
     /// </summary>
     LevelId
 }
 
 /// <summary>
-/// Íæ¼ÒÊı¾İÀà, ½ğ±Ò/ÑªÁ¿µÈ
+/// ç©å®¶æ•°æ®ç±», é‡‘å¸/è¡€é‡ç­‰
 /// </summary>
 public class PlayerDataModel : DataModelStorageBase
 {
@@ -48,7 +48,7 @@ public class PlayerDataModel : DataModelStorageBase
         set => SetData(PlayerDataType.Coins, Mathf.Max(0, value));
     }
     /// <summary>
-    /// ¹Ø¿¨
+    /// å…³å¡
     /// </summary>
     public int LevelId
     {
@@ -64,27 +64,7 @@ public class PlayerDataModel : DataModelStorageBase
     {
         m_PlayerDataDic = new Dictionary<PlayerDataType, int>();
     }
-    protected override void OnCreate(RefParams userdata)
-    {
-        base.OnCreate(userdata);
-        GF.Event.Subscribe(GFEventArgs.EventId, OnGFEventCallback);
-    }
 
-
-    protected override void OnRelease()
-    {
-        base.OnRelease();
-        GF.Event.Unsubscribe(GFEventArgs.EventId, OnGFEventCallback);
-    }
-
-    private void OnGFEventCallback(object sender, GameEventArgs e)
-    {
-        var args = e as GFEventArgs;
-        if(args.EventType == GFEventType.ApplicationQuit)
-        {
-            GF.DataModel.ReleaseDataModel<PlayerDataModel>();
-        }
-    }
     protected override void OnInitialDataModel()
     {
         m_PlayerDataDic[PlayerDataType.Coins] = GF.Config.GetInt("DefaultCoins");

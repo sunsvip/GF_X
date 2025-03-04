@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GameFramework.Event;
 using UnityGameFramework.Runtime;
 namespace GameFramework
 {
+
     public class DataModelComponent : GameFrameworkComponent
     {
         private Dictionary<TypeIdPair, DataModelBase> m_DataModels;
@@ -21,6 +23,23 @@ namespace GameFramework
         {
             base.Awake();
             m_DataModels = new Dictionary<TypeIdPair, DataModelBase>();
+        }
+
+        private void Start()
+        {
+            GF.Event.Subscribe(GFEventArgs.EventId, OnGFEventCallback);
+        }
+        //private void OnDestroy()
+        //{
+        //    GF.Event.Unsubscribe(GFEventArgs.EventId, OnGFEventCallback);
+        //}
+        private void OnGFEventCallback(object sender, GameEventArgs e)
+        {
+            var args = e as GFEventArgs;
+            if (args.EventType == GFEventType.ApplicationQuit)
+            {
+                ReleaseAll();
+            }
         }
         /// <summary>
         /// 清除所有已存在的数据模型
@@ -308,7 +327,7 @@ namespace GameFramework
             TypeIdPair TypeIdPair = new TypeIdPair(typeof(T), id);
             if (HasDataModel<T>(id))
             {
-                throw new GameFrameworkException(Utility.Text.Format("Already exist data model '{0}'.", TypeIdPair.ToString()));
+                throw new GameFrameworkException(Utility.Text.Format("Already exist data model '{0}'.", TypeIdPair));
             }
 
             T DataModel = ReferencePool.Acquire<T>();
@@ -338,7 +357,7 @@ namespace GameFramework
             TypeIdPair TypeIdPair = new TypeIdPair(dataRowType, id);
             if (HasDataModel(dataRowType, id))
             {
-                throw new GameFrameworkException(Utility.Text.Format("Already exist data model '{0}'.", TypeIdPair.ToString()));
+                throw new GameFrameworkException(Utility.Text.Format("Already exist data model '{0}'.", TypeIdPair));
             }
 
             DataModelBase DataModel = ReferencePool.Acquire(dataRowType) as DataModelBase;
