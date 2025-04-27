@@ -108,7 +108,7 @@ namespace GameFramework.Editor.DataTableTools
                 string dataComment = dataTableProcessor.GetComment(i);
                 if (dataTypeKeyword == "enum")
                 {
-                    var firstEnumValue = dataTableProcessor.GetValue(4, i);
+                    var firstEnumValue = GetFirstEnumValue(dataTableProcessor, i);
                     if (!DataTableExtension.TryParseEnum(firstEnumValue, out Type enumType))
                     {
                         GFBuiltin.LogError(Utility.Text.Format("解析枚举类型失败:{0}, 配置枚举格式为: EnumType.Item1", firstEnumValue));
@@ -197,7 +197,7 @@ namespace GameFramework.Editor.DataTableTools
                         }
                         else if (languageKeyword == "enum")
                         {
-                            var firstEnumValue = dataTableProcessor.GetValue(4, i);
+                            var firstEnumValue = GetFirstEnumValue(dataTableProcessor, i);
                             if (!DataTableExtension.TryParseEnum(firstEnumValue, out Type enumType))
                             {
                                 GFBuiltin.LogError(Utility.Text.Format("解析枚举类型失败:{0}, 配置枚举格式为: EnumType.Item1", firstEnumValue));
@@ -282,7 +282,7 @@ namespace GameFramework.Editor.DataTableTools
                         }
                         else if (languageKeyword == "enum")
                         {
-                            var firstEnumValue = dataTableProcessor.GetValue(4, i);
+                            var firstEnumValue = GetFirstEnumValue(dataTableProcessor, i);
                             if (!DataTableExtension.TryParseEnum(firstEnumValue, out Type enumType))
                             {
                                 GFBuiltin.LogError(Utility.Text.Format("解析枚举类型失败:{0}, 配置枚举格式为: EnumType.Item1", firstEnumValue));
@@ -324,6 +324,17 @@ namespace GameFramework.Editor.DataTableTools
                 .Append("        }");
 
             return stringBuilder.ToString();
+        }
+        private static string GetFirstEnumValue(DataTableProcessor dataTableProcessor, int col)
+        {
+            for (int i = 4; i < dataTableProcessor.RawRowCount; i++)
+            {
+                if (!dataTableProcessor.IsCommentRow(i))
+                {
+                    return dataTableProcessor.GetValue(i, col);
+                }
+            }
+            return string.Empty;
         }
         /// <summary>
         /// 0:非数组; 1:一维数组; 2:二维数组
