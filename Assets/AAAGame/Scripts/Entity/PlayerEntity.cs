@@ -28,7 +28,7 @@ public class PlayerEntity : CombatUnitEntity
         set
         {
             mCtrlable = value;
-            GF.StaticUI.JoystickEnable = mCtrlable;
+            GF.StaticUI.Joystick.Enable = mCtrlable;
         }
     }
 
@@ -208,9 +208,9 @@ public class PlayerEntity : CombatUnitEntity
     }
     private void Move(float elapseSeconds)
     {
-        float movePower = GF.StaticUI.Joystick.GetDistance();
+        float movePower = GF.StaticUI.Joystick.Distance;
         m_Animator.SetFloat(ANIM_MOVE_KEY, movePower);
-        joystickForward.Set(GF.StaticUI.Joystick.GetHorizontalAxis(), 0, GF.StaticUI.Joystick.GetVerticalAxis());
+        joystickForward.Set(GF.StaticUI.Joystick.Horizontal, 0, GF.StaticUI.Joystick.Vertical);
         if (m_AttackTargets[0] != null)
         {
             var selfPos = CachedTransform.position;

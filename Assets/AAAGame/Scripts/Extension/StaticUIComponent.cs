@@ -9,31 +9,31 @@ public class StaticUIComponent : GameFrameworkComponent
     [Header("Waiting View:")]
     [SerializeField] GameObject waitingView = null;
 
-    [SerializeField] UltimateJoystick mJoystick;
-    public bool JoystickEnable
-    {
-        get { return mJoystick.gameObject.activeSelf; }
-        set
-        {
-            if (value)
-            {
-                mJoystick.EnableJoystick();
-                mJoystick.UpdatePositioning();
-            }
-            else
-            {
-                mJoystick.DisableJoystick();
-            }
-        }
-    }
-    public UltimateJoystick Joystick { get { return mJoystick; } }
-
-    private async void Start()
+    //[SerializeField] UltimateJoystick mJoystick;
+    //public bool JoystickEnable
+    //{
+    //    get { return mJoystick.gameObject.activeSelf; }
+    //    set
+    //    {
+    //        if (value)
+    //        {
+    //            mJoystick.EnableJoystick();
+    //            mJoystick.UpdatePositioning();
+    //        }
+    //        else
+    //        {
+    //            mJoystick.DisableJoystick();
+    //        }
+    //    }
+    //}
+    //public UltimateJoystick Joystick { get { return mJoystick; } }
+    [SerializeField] SimpleJoystick m_Joystick;
+    public SimpleJoystick Joystick { get => m_Joystick; }
+    private void Start()
     {
         UpdateCanvasScaler();
         waitingView.SetActive(false);
-        await UniTask.DelayFrame(1);
-        JoystickEnable = false;
+        Joystick.Enable = false;
     }
 
     public void UpdateCanvasScaler()
