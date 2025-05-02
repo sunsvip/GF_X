@@ -1,29 +1,31 @@
 # GF_X
 点击链接加入群聊【GF_X自动化游戏框架】：[QQ交流群:1035236947](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=sA2mRXcNn1vQb5dz8pe1wndL9jr8gOKA&authKey=hk7wZDWjniHi2kJexJxSMZsgmXgf%2B3JDRQWCaYih9mF7V%2ByZ%2F%2BzMG4fThy2vF2Ze&noverify=0&group_code=1035236947)
 #### 介绍
-[GameFramework](https://github.com/EllanJiang/GameFramework) + [HybridCLR](https://github.com/focus-creative-games/hybridclr)，此框架主打一个原汁原味，不修改GameFramework源码。仅仅通过静态扩展方式，极度简化或扩展框架接口，并编写了大量自动化工具，主打一个工业化生产工作流，追求极致性能和开发效率。
-作为极其懒惰、从不加班的设计开发工程师，我的宗旨是拒绝一切高重复度工作，能自动的绝不手动。如果您拥有相同的观点，请和我一起维护完善此项目！
+[GameFramework](https://github.com/EllanJiang/GameFramework) + [HybridCLR](https://github.com/focus-creative-games/hybridclr)，此框架不修改GameFramework源码(仅修改以适配更高Unity版本)。通过静态扩展方式，极度简化或扩展框架接口，并编写了大量自动化工具，主打一个工业化生产工作流，追求极致性能和开发效率，使GF对新手友好，开箱即用。
+作为极其懒惰、从不加班的设计开发工程师，我的宗旨是拒绝一切高重复度工作，框架层零投入，用户只需专注业务逻辑。
 
 框架详细功能说明文档：[【Unity自动化游戏框架】通用自动化游戏框架 爽到起飞的工作流 巨幅提升效率 质量 产能 功能展示](https://blog.csdn.net/final5788/article/details/138164034)
 
 视频教程(免费持续更新)：[【GF_X通用自动化游戏框架系列视频教程】](https://www.bilibili.com/video/BV1AT2rYVE3V/?share_source=copy_web&vd_source=47daa1bb9519dea051e24cd30d7be9be)
 
-#### 软件架构
-软件架构说明
 ### GF_X功能说明：
-1. 简化和扩展GameFramework接口，并支持GF所有异步加载的方法通过UniTask"同步"加载。
-2. 增加各种编辑器工具，简化工作流。如:生成数据表/配置表, 自动解决AB包重复依赖, 代码裁剪link.xml配置工具,语言国际化生成工具，一键切换单机/全热更/增量热更，一键打包/打热更工具。
+1. 简化和扩展GameFramework接口，新手友好，开箱即用。并支持GF所有异步加载的方法通过UniTask"可等待"加载。
+2. 高效自动化工作流
+   ①打包工具：一键打包/打热更，一键切换单机/热更。支持Jenkins远程打包/打热更。自动处理AB包资源重复依赖。
+   ②包体优化工具集：批量压缩图片文件、修改压缩格式，批量创建图集、图集变体。压缩动画文件。
+   ③数据表/常量表/多语言表：excel表修改后自动导表、生成表结构代码。excel表自动生成数据类型下拉列表。
+   ④多语言工具：一键扫描生成多语言表，一键新增语言，自动翻译。告别冗余，一键精准控制保留行。
+   ⑤实用工具集/批处理工具：代码裁剪link.xml配置工具, 艺术字生成，图集生成，一键生成TMP_SpriteAsset, SpriteAtlas转Sprite图集。批量替换Prefab字体。
+   ⑥UI工具：零代码添加UI变量，自动隔离式生成变量代码，零侵入。一键添加按钮事件、批量设置Rasycast。可视化UI动效。
 3. 支持A/B Test; 使用GF.Setting.SetABTestGroup("GroupName")对用户分配测试组，不同测试组会读取对应组的配置表/数据表。
-4. UI变量生成工具，一键生成UI变量绑定代码，一键添加按钮事件。
+4. 扩展模块以应对极致的性能要求，如实现万人同屏。
 5. 其它N多扩展功能自行探索。
 #### 安装教程
-
 1.  首次使用需安装HybridCLR环境，点击Unity顶部菜单栏 【HybridCLR->Installer】安装HybridCLR环境;
 2.  Unity工具栏 【Build App/Hotfix】按钮打开一键打包界面; 首次打热更App需点击【Build App】按钮右侧的下拉菜单，点击【Full Build】构建；
 3.  Build App出包，Build Resource打热更;
 
 #### 使用说明
-
 1.  开发目录为Assets/AAAGame, Script为热更新脚本目录，ScriptBuiltin为内置程序集；
 2.  Assets/AAAGame/Scene/Launch场景为游戏的启动场景
 
