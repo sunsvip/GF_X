@@ -1,4 +1,4 @@
-using GameFramework;
+﻿using GameFramework;
 using GameFramework.DataTable;
 using System;
 using System.IO;
@@ -121,14 +121,12 @@ public static class DataTableExtension
     {
         return new Rect(binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle());
     }
-
     public static Vector2 ParseVector2(string value)
     {
         if (string.IsNullOrWhiteSpace(value)) return Vector2.zero;
         string[] splitValue = value.Split(',');
         return new Vector2(float.Parse(splitValue[0]), float.Parse(splitValue[1]));
     }
-
     public static Vector2 ReadVector2(this BinaryReader binaryReader)
     {
         return new Vector2(binaryReader.ReadSingle(), binaryReader.ReadSingle());
@@ -136,8 +134,8 @@ public static class DataTableExtension
 
     public static Vector2[] ParseVector2Array(string value)
     {
-        if (string.IsNullOrWhiteSpace(value)) return null;
         string[] arr = ParseArrayElements(value);
+        if (arr == null) return null;
         Vector2[] result = new Vector2[arr.Length];
         for (int i = 0; i < arr.Length; i++)
         {
@@ -167,8 +165,8 @@ public static class DataTableExtension
     }
     public static Vector2Int[] ParseVector2IntArray(string value)
     {
-        if (string.IsNullOrWhiteSpace(value)) return null;
         string[] arr = ParseArrayElements(value);
+        if (arr == null) return null;
         Vector2Int[] result = new Vector2Int[arr.Length];
         for (int i = 0; i < arr.Length; i++)
         {
@@ -193,15 +191,14 @@ public static class DataTableExtension
 
         return new Vector3(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]));
     }
-
     public static Vector3 ReadVector3(this BinaryReader binaryReader)
     {
         return new Vector3(binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle());
     }
     public static Vector3[] ParseVector3Array(string value)
     {
-        if (string.IsNullOrWhiteSpace(value)) return null;
         string[] arr = ParseArrayElements(value);
+        if (arr == null) return null;
         Vector3[] result = new Vector3[arr.Length];
         for (int i = 0; i < arr.Length; i++)
         {
@@ -231,8 +228,8 @@ public static class DataTableExtension
     }
     public static Vector3Int[] ParseVector3IntArray(string value)
     {
-        if (string.IsNullOrWhiteSpace(value)) return null;
         string[] arr = ParseArrayElements(value);
+        if (arr == null) return null;
         Vector3Int[] result = new Vector3Int[arr.Length];
         for (int i = 0; i < arr.Length; i++)
         {
@@ -260,11 +257,11 @@ public static class DataTableExtension
     {
         return new Vector4(binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle(), binaryReader.ReadSingle());
     }
-
     public static Vector4[] ParseVector4Array(string value)
     {
-        if (string.IsNullOrWhiteSpace(value)) return null;
         string[] arr = ParseArrayElements(value);
+        if (arr == null) return null;
+
         Vector4[] result = new Vector4[arr.Length];
         for (int i = 0; i < arr.Length; i++)
         {
@@ -322,28 +319,30 @@ public static class DataTableExtension
     /// <returns></returns>
     public static TEnum ParseEnum<TEnum>(string value) where TEnum : struct, Enum
     {
-        if (string.IsNullOrWhiteSpace(value)) return default(TEnum);
-        string[] splitValue = value.Split('|', StringSplitOptions.RemoveEmptyEntries);
-        if (splitValue.Length == 1)
+        if (!string.IsNullOrEmpty(value))
         {
-            var valueStr = splitValue[0].Split('.')[1];
-            if (Enum.TryParse<TEnum>(valueStr, out TEnum result))
+            string[] splitValue = value.Split('|', StringSplitOptions.RemoveEmptyEntries);
+            if (splitValue.Length == 1)
             {
-                return result;
-            }
-        }
-        else
-        {
-            int resultEnum = 0;
-            foreach (string s in splitValue)
-            {
-                var strTrim = s.Split('.')[1].Trim();
-                if (Enum.TryParse<TEnum>(strTrim, true, out TEnum result))
+                var valueStr = splitValue[0].Split('.')[1];
+                if (Enum.TryParse<TEnum>(valueStr, out TEnum result))
                 {
-                    resultEnum |= Convert.ToInt32(result);
+                    return result;
                 }
             }
-            return (TEnum)Enum.ToObject(typeof(TEnum), resultEnum);
+            else
+            {
+                int resultEnum = 0;
+                foreach (string s in splitValue)
+                {
+                    var strTrim = s.Split('.')[1].Trim();
+                    if (Enum.TryParse<TEnum>(strTrim, true, out TEnum result))
+                    {
+                        resultEnum |= Convert.ToInt32(result);
+                    }
+                }
+                return (TEnum)Enum.ToObject(typeof(TEnum), resultEnum);
+            }
         }
         return default(TEnum);
     }
@@ -505,6 +504,14 @@ public static class DataTableExtension
         return arr;
     }
 
+    public static Type ParseType(string value)
+    {
+        return Type.GetType(value);
+    }
+    public static Type ReadType(this BinaryReader binaryReader)
+    {
+        return ParseType(binaryReader.ReadString());
+    }
     private static string[] ParseArrayElements(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -539,7 +546,7 @@ public static class DataTableExtension
         {
             enumType = Utility.Assembly.GetTypes().FirstOrDefault(t => t.IsEnum && (t.Name == enumName));
         }
-        if(enumType != null)
+        if (enumType != null)
         {
             value = (int)Enum.Parse(enumType, enumElements[1]);
         }

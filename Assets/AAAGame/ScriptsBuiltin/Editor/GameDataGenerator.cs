@@ -37,15 +37,7 @@ namespace UGF.EditorTools
             RefreshAllDataTable();
             RefreshAllConfig();
             RefreshAllLanguage();
-            try
-            {
-                GenerateUIViewScript();
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogErrorFormat("生成UIView.cs失败:{0}", e.Message);
-                throw;
-            }
+            GenerateUIFormNamesScript();
             GenerateGroupEnumScript();
             AssetDatabase.Refresh();
         }
@@ -151,7 +143,7 @@ namespace UGF.EditorTools
                     var itemObj = Activator.CreateInstance(item);
                     var itemType = itemObj.GetType();
                     string typeName = itemType.GetProperty("LanguageKeyword").GetValue(itemObj) as string;
-                    int priority = (int)itemType.GetProperty("PopPriority").GetValue(itemObj);
+                    int priority = (int)itemType.GetProperty("ShowOrder").GetValue(itemObj);
                     types.Add(KeyValuePair.Create<int, string>(priority, typeName));
                 }
             }
@@ -248,7 +240,7 @@ namespace UGF.EditorTools
         /// <summary>
         /// 生成UI界面枚举类型
         /// </summary>
-        public static void GenerateUIViewScript()
+        public static void GenerateUIFormNamesScript()
         {
             var excelDir = ConstEditor.DataTableExcelPath;
             if (!Directory.Exists(excelDir))
@@ -276,9 +268,10 @@ namespace UGF.EditorTools
             }
             excelSheet.Dispose();
             excelPackage.Dispose();
+            var className = Path.GetFileNameWithoutExtension(ConstEditor.UIViewScriptFile);
             StringBuilder sBuilder = new StringBuilder();
             sBuilder.AppendLine("/**此代码由工具自动生成,请勿手动修改!**/");
-            sBuilder.AppendLine("public enum UIViews : int");
+            sBuilder.AppendLine(Utility.Text.Format("public enum {0} : int", className));
             sBuilder.AppendLine("{");
             int curIndex = 0;
             foreach (KeyValuePair<int, string> uiItem in uiViewDic)
@@ -290,7 +283,7 @@ namespace UGF.EditorTools
             }
             sBuilder.AppendLine("}");
             File.WriteAllText(ConstEditor.UIViewScriptFile, sBuilder.ToString());
-            Debug.LogFormat("-------------------成功生成UIViews.cs-----------------");
+            Debug.LogFormat("-------------------成功生成:{0}-----------------", ConstEditor.UIViewScriptFile);
         }
         /// <summary>
         /// 多语言Excel导出json
@@ -332,12 +325,60 @@ namespace UGF.EditorTools
                 return false;
             }
         }
+        static bool ExcelSheet2TxtFile(ExcelWorksheet excelSheet, string outTxtFile)
+        {
+            StringBuilder excelTxt = new StringBuilder();
+            StringBuilder lineTxt = new StringBuilder();
+            for (int rowIndex = excelSheet.Dimension.Start.Row; rowIndex <= excelSheet.Dimension.End.Row; rowIndex++)
+            {
+                lineTxt.Clear();
+                string rowTxt = string.Empty;
+                for (int colIndex = excelSheet.Dimension.Start.Column; colIndex <= excelSheet.Dimension.End.Column; colIndex++)
+                {
+                    string cellContent = excelSheet.GetValue<string>(rowIndex, colIndex);
+                    if (!string.IsNullOrEmpty(cellContent))
+                    {
+                        cellContent = Regex.Replace(cellContent, "\n", @"\n");
+                    }
+                    lineTxt.Append(cellContent);
+                    if (colIndex < excelSheet.Dimension.End.Column)
+                    {
+                        lineTxt.Append('\t');
+                    }
+                }
+                string lineStr = lineTxt.ToString();
+                if (string.IsNullOrWhiteSpace(lineStr))
+                {
+                    continue;
+                }
+                excelTxt.Append(lineStr);
+                if (rowIndex < excelSheet.Dimension.End.Row)
+                {
+                    excelTxt.AppendLine();
+                }
+            }
+            try
+            {
+                var outTxtDir = Path.GetDirectoryName(outTxtFile);
+                if (!Directory.Exists(outTxtDir))
+                {
+                    Directory.CreateDirectory(outTxtDir);
+                }
+                File.WriteAllText(outTxtFile, excelTxt.ToString(), Encoding.UTF8);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"excel导出:{outTxtFile}失败:{e.Message}");
+                return false;
+            }
+        }
         /// <summary>
         /// Excel转换为Txt
         /// </summary>
         public static bool Excel2TxtFile(string excelFileName, string outTxtFile)
         {
-            bool result = false;
+            bool result = true;
             var fileInfo = new FileInfo(excelFileName);
             string tmpExcelFile = UtilityBuiltin.AssetsPath.GetCombinePath(fileInfo.Directory.FullName, Utility.Text.Format("{0}.temp", fileInfo.Name));
             //Debug.Log($">>>>>>>>Excel2Txt: excel:{excelFileName}, outTxtFile:{outTxtFile}");
@@ -346,44 +387,26 @@ namespace UGF.EditorTools
                 File.Copy(excelFileName, tmpExcelFile, true);
                 using (var excelPackage = new ExcelPackage(tmpExcelFile))
                 {
-                    var excelSheet = excelPackage.Workbook.Worksheets[0];
-                    StringBuilder excelTxt = new StringBuilder();
-                    StringBuilder lineTxt = new StringBuilder();
-                    for (int rowIndex = excelSheet.Dimension.Start.Row; rowIndex <= excelSheet.Dimension.End.Row; rowIndex++)
-                    {
-                        lineTxt.Clear();
-                        string rowTxt = string.Empty;
-                        for (int colIndex = excelSheet.Dimension.Start.Column; colIndex <= excelSheet.Dimension.End.Column; colIndex++)
-                        {
-                            string cellContent = excelSheet.GetValue<string>(rowIndex, colIndex);
-                            if (!string.IsNullOrEmpty(cellContent))
-                            {
-                                cellContent = Regex.Replace(cellContent, "\n", @"\n");
-                            }
-                            lineTxt.Append(cellContent);
-                            if (colIndex < excelSheet.Dimension.End.Column)
-                            {
-                                lineTxt.Append('\t');
-                            }
-                        }
-                        string lineStr = lineTxt.ToString();
-                        if (string.IsNullOrWhiteSpace(lineStr))
-                        {
-                            continue;
-                        }
-                        excelTxt.Append(lineStr);
-                        if (rowIndex < excelSheet.Dimension.End.Row)
-                        {
-                            excelTxt.AppendLine();
-                        }
-                    }
-                    var outTxtDir = Path.GetDirectoryName(outTxtFile);
-                    if (!Directory.Exists(outTxtDir))
-                    {
-                        Directory.CreateDirectory(outTxtDir);
-                    }
-                    File.WriteAllText(outTxtFile, excelTxt.ToString(), Encoding.UTF8);
-                    result = true;
+                    result = ExcelSheet2TxtFile(excelPackage.Workbook.Worksheets[0], outTxtFile);
+                    //int sheetCount = excelPackage.Workbook.Worksheets.Count;
+                    //if (sheetCount == 1)
+                    //{
+                    //    result = ExcelSheet2TxtFile(excelPackage.Workbook.Worksheets[0], outTxtFile);
+                    //}
+                    //else
+                    //{
+                    //    var outputDir = Path.GetDirectoryName(outTxtFile);
+                    //    var outputFileName = Path.GetFileNameWithoutExtension(outTxtFile);
+                    //    var outputFileExtension = Path.GetExtension(outTxtFile);
+
+                    //    for (int i = 0; i < sheetCount; i++)
+                    //    {
+                    //        var excelSheet = excelPackage.Workbook.Worksheets[i];
+                    //        string sheetName = string.IsNullOrWhiteSpace(excelSheet.Name) ? i.ToString() : excelSheet.Name;
+                    //        var fileName = UtilityBuiltin.AssetsPath.GetCombinePath(outputDir, Utility.Text.Format("{0}_{1}{2}", outputFileName, sheetName, outputFileExtension));
+                    //        result &= ExcelSheet2TxtFile(excelSheet, fileName);
+                    //    }
+                    //}
                 }
             }
             catch (Exception e)
@@ -447,17 +470,16 @@ namespace UGF.EditorTools
                 var excelFileName = excelFiles[i];
                 string outputFileName = GetGameDataExcelOutputFile(GameDataType.Config, excelFileName);
                 EditorUtility.DisplayProgressBar($"导出Config:({i}/{totalExcelCount})", $"{excelFileName} -> {outputFileName}", i / (float)totalExcelCount);
-
+                if (Excel2TxtFile(excelFileName, outputFileName))
+                {
+                    GFBuiltin.LogInfo(Utility.Text.Format("导出Config文件成功: '{0}'.", outputFileName));
+                }
                 if (appConfig.LoadFromBytes)
                 {
                     if (ExportConfig2BytesFile(outputFileName))
                     {
                         GFBuiltin.LogInfo(Utility.Text.Format("导出Config二进制文件成功: '{0}'.", outputFileName));
                     }
-                }
-                else if (Excel2TxtFile(excelFileName, outputFileName))
-                {
-                    GFBuiltin.LogInfo(Utility.Text.Format("导出Config文件成功: '{0}'.", outputFileName));
                 }
             }
             EditorUtility.ClearProgressBar();
@@ -489,11 +511,10 @@ namespace UGF.EditorTools
                         GF.LogInfo($"导出DataTable成功:{excelFileName} -> {outputPath}");
                         if (appConfig.LoadFromBytes)
                         {
-                            var dataTableName = Path.GetFileNameWithoutExtension(excelFileName);
                             DataTableProcessor dataTableProcessor = DataTableGenerator.CreateDataTableProcessor(outputPath);
                             if (!DataTableGenerator.CheckRawData(dataTableProcessor, outputPath))
                             {
-                                Debug.LogError(Utility.Text.Format("Check raw data failure. DataTableName='{0}'", dataTableName));
+                                Debug.LogError(Utility.Text.Format("Check raw data failure. DataTable file='{0}'", outputPath));
                                 EditorUtility.ClearProgressBar();
                                 break;
                             }

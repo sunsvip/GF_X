@@ -5,15 +5,15 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using System;
 using System.IO;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace GameFramework.Editor.DataTableTools
 {
     public sealed partial class DataTableProcessor
     {
-        private sealed class Int4ArrayProcessor : GenericDataProcessor<int4[]>
+        private sealed class TypeProcessor : GenericDataProcessor<Type>
         {
             public override bool IsSystem
             {
@@ -27,42 +27,29 @@ namespace GameFramework.Editor.DataTableTools
             {
                 get
                 {
-                    return "int4[]";
+                    return "Type";
                 }
             }
 
-            public override int ShowOrder => 20;
+            public override int ShowOrder => 50;
 
             public override string[] GetTypeStrings()
             {
                 return new string[]
                 {
-                    "int4[]",
-                    "Unity.Mathematics.int4[]"
+                    "type",
+                    "system.type"
                 };
             }
 
-            public override int4[] Parse(string value)
+            public override Type Parse(string value)
             {
-                return DataTableExtension.Parseint4Array(value);
+                return DataTableExtension.ParseType(value);
             }
 
             public override void WriteToStream(DataTableProcessor dataTableProcessor, BinaryWriter binaryWriter, string value)
             {
-                var v = Parse(value);
-                if (v == null)
-                {
-                    binaryWriter.Write7BitEncodedInt32(0);
-                    return;
-                }
-                for (int i = 0; i < v.Length; i++)
-                {
-                    var itm = v[i];
-                    binaryWriter.Write7BitEncodedInt32(itm.x);
-                    binaryWriter.Write7BitEncodedInt32(itm.y);
-                    binaryWriter.Write7BitEncodedInt32(itm.z);
-                    binaryWriter.Write7BitEncodedInt32(itm.w);
-                }
+                binaryWriter.Write(value);
             }
         }
     }

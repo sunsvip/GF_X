@@ -56,9 +56,16 @@ namespace GameFramework.Editor.DataTableTools
         {
             dataTableProcessor.SetCodeTemplate(ConstEditor.DataTableCodeTemplate, Encoding.UTF8);
             dataTableProcessor.SetCodeGenerator(DataTableCodeGenerator);
-            var dataTableName = GameDataGenerator.GetGameDataRelativeName(dataTableFile, ConstEditor.DataTablePath);
+
+            var outputDir = Path.GetDirectoryName(dataTableFile);
+            var outputName = Path.GetFileNameWithoutExtension(dataTableFile);
+            outputName = outputName.Split('_')[0];
+            var outputExt = Path.GetExtension(dataTableFile);
+            string tbFileName = UtilityBuiltin.AssetsPath.GetCombinePath(outputDir, outputName + outputExt);
+            var dataTableName = GameDataGenerator.GetGameDataRelativeName(tbFileName, ConstEditor.DataTablePath);
+
             string csharpCodeFileName = Utility.Path.GetRegularPath(Path.Combine(ConstEditor.DataTableCodePath, dataTableName + ".cs"));
-            if (!dataTableProcessor.GenerateCodeFile(csharpCodeFileName, Encoding.UTF8, dataTableFile))
+            if (!dataTableProcessor.GenerateCodeFile(csharpCodeFileName, Encoding.UTF8))
             {
                 GFBuiltin.LogError(Utility.Text.Format("生成{0}数据表结构代码失败:{1}", dataTableName, csharpCodeFileName));
             }
@@ -354,6 +361,6 @@ namespace GameFramework.Editor.DataTableTools
 
             return 0;
         }
-        
+
     }
 }

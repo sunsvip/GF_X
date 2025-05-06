@@ -1,4 +1,4 @@
-//------------------------------------------------------------
+﻿//------------------------------------------------------------
 // Game Framework
 // Copyright © 2013-2020 Jiang Yin. All rights reserved.
 // Homepage: https://gameframework.cn/
@@ -30,7 +30,7 @@ namespace GameFramework.Editor.DataTableTools
                 }
             }
 
-            public override int PopPriority => 90;
+            public override int ShowOrder => 90;
 
             public override string[] GetTypeStrings()
             {
