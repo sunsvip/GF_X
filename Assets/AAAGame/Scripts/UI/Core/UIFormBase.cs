@@ -79,7 +79,14 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
         cvs.sortingOrder = Params.SortOrder ?? 0;
         Interactable = false;
         isOnEscape = Params.AllowEscapeClose ?? false;
-        Internal_PlayOpenUIAnimation(OnOpenAnimationComplete);
+        if (Params.OpenAnimationEnable)
+        {
+            Internal_PlayOpenUIAnimation(OnOpenAnimationComplete);
+        }
+        else
+        {
+            OnOpenAnimationComplete();
+        }
         Params.OpenCallback?.Invoke(this);
     }
 
@@ -266,7 +273,14 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
     public void CloseWithAnimation()
     {
         Interactable = false;
-        Internal_PlayCloseUIAnimation(OnCloseAnimationComplete);
+        if (Params.CloseAnimationEnable)
+        {
+            Internal_PlayCloseUIAnimation(OnCloseAnimationComplete);
+        }
+        else 
+        {
+            OnCloseAnimationComplete();
+        }
     }
 
     private void Internal_PlayCloseUIAnimation(GameFrameworkAction onAnimComplete)
