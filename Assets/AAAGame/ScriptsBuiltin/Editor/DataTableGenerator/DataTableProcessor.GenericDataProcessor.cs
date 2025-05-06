@@ -14,7 +14,7 @@ namespace GameFramework.Editor.DataTableTools
             /// <summary>
             /// Excel表中在下拉列表中展示的优先级
             /// </summary>
-            public abstract int PopPriority { get; }
+            public abstract int ShowOrder { get; }
             public override System.Type Type
             {
                 get

@@ -30,7 +30,7 @@ namespace GameFramework.Editor.DataTableTools
                 }
             }
 
-            public override int PopPriority => 990;
+            public override int ShowOrder => 990;
 
             public override string[] GetTypeStrings()
             {
@@ -48,7 +48,8 @@ namespace GameFramework.Editor.DataTableTools
 
             public override void WriteToStream(DataTableProcessor dataTableProcessor, BinaryWriter binaryWriter, string value)
             {
-                binaryWriter.Write(Parse(value).Ticks);
+                var dateTime = Parse(value);
+                binaryWriter.Write(dateTime.Ticks);
             }
         }
     }

@@ -429,7 +429,7 @@ namespace GameFramework.Editor.DataTableTools
                 StringBuilder stringBuilder = new StringBuilder(m_CodeTemplate);
                 if (m_CodeGenerator != null)
                 {
-                    m_CodeGenerator(this, stringBuilder, userData);
+                    m_CodeGenerator(this, stringBuilder, outputFileName);
                 }
                 var outputDir = Path.GetDirectoryName(outputFileName);
                 if (!Directory.Exists(outputDir))

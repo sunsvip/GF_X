@@ -64,27 +64,7 @@ public class PlayerDataModel : DataModelStorageBase
     {
         m_PlayerDataDic = new Dictionary<PlayerDataType, int>();
     }
-    protected override void OnCreate(RefParams userdata)
-    {
-        base.OnCreate(userdata);
-        GF.Event.Subscribe(GFEventArgs.EventId, OnGFEventCallback);
-    }
 
-
-    protected override void OnRelease()
-    {
-        base.OnRelease();
-        GF.Event.Unsubscribe(GFEventArgs.EventId, OnGFEventCallback);
-    }
-
-    private void OnGFEventCallback(object sender, GameEventArgs e)
-    {
-        var args = e as GFEventArgs;
-        if(args.EventType == GFEventType.ApplicationQuit)
-        {
-            GF.DataModel.ReleaseDataModel<PlayerDataModel>();
-        }
-    }
     protected override void OnInitialDataModel()
     {
         m_PlayerDataDic[PlayerDataType.Coins] = GF.Config.GetInt("DefaultCoins");

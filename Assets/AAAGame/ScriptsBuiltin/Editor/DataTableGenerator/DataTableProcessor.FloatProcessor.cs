@@ -29,7 +29,7 @@ namespace GameFramework.Editor.DataTableTools
                 }
             }
 
-            public override int PopPriority => 10;
+            public override int ShowOrder => 10;
 
             public override string[] GetTypeStrings()
             {

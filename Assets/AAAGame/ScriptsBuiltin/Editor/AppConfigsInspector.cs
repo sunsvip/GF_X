@@ -191,7 +191,7 @@ namespace UGF.EditorTools
                 {
                     case GameDataType.DataTable:
                         GameDataGenerator.RefreshAllDataTable(GameDataGenerator.GameDataExcelRelative2FullPath(CfgType, GetGameDataList()));
-                        GameDataGenerator.GenerateUIViewScript();
+                        GameDataGenerator.GenerateUIFormNamesScript();
                         break;
                     case GameDataType.Config:
                         GameDataGenerator.RefreshAllConfig(GameDataGenerator.GameDataExcelRelative2FullPath(CfgType, GetGameDataList()));

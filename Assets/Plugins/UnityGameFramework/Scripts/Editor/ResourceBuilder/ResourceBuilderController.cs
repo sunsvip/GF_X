@@ -1410,8 +1410,11 @@ namespace UnityGameFramework.Editor.ResourceTools
 
         private BuildAssetBundleOptions GetBuildAssetBundleOptions()
         {
+#if UNITY_2022_3_OR_NEWER
+            BuildAssetBundleOptions buildOptions = BuildAssetBundleOptions.None;
+#else
             BuildAssetBundleOptions buildOptions = BuildAssetBundleOptions.DeterministicAssetBundle;
-
+#endif
             if (ForceRebuildAssetBundleSelected)
             {
                 buildOptions |= BuildAssetBundleOptions.ForceRebuildAssetBundle;

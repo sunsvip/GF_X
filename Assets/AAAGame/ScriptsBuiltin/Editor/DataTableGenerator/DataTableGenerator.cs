@@ -56,9 +56,16 @@ namespace GameFramework.Editor.DataTableTools
         {
             dataTableProcessor.SetCodeTemplate(ConstEditor.DataTableCodeTemplate, Encoding.UTF8);
             dataTableProcessor.SetCodeGenerator(DataTableCodeGenerator);
-            var dataTableName = GameDataGenerator.GetGameDataRelativeName(dataTableFile, ConstEditor.DataTablePath);
+
+            var outputDir = Path.GetDirectoryName(dataTableFile);
+            var outputName = Path.GetFileNameWithoutExtension(dataTableFile);
+            outputName = outputName.Split('_')[0];
+            var outputExt = Path.GetExtension(dataTableFile);
+            string tbFileName = UtilityBuiltin.AssetsPath.GetCombinePath(outputDir, outputName + outputExt);
+            var dataTableName = GameDataGenerator.GetGameDataRelativeName(tbFileName, ConstEditor.DataTablePath);
+
             string csharpCodeFileName = Utility.Path.GetRegularPath(Path.Combine(ConstEditor.DataTableCodePath, dataTableName + ".cs"));
-            if (!dataTableProcessor.GenerateCodeFile(csharpCodeFileName, Encoding.UTF8, dataTableFile))
+            if (!dataTableProcessor.GenerateCodeFile(csharpCodeFileName, Encoding.UTF8))
             {
                 GFBuiltin.LogError(Utility.Text.Format("生成{0}数据表结构代码失败:{1}", dataTableName, csharpCodeFileName));
             }
@@ -108,7 +115,7 @@ namespace GameFramework.Editor.DataTableTools
                 string dataComment = dataTableProcessor.GetComment(i);
                 if (dataTypeKeyword == "enum")
                 {
-                    var firstEnumValue = dataTableProcessor.GetValue(4, i);
+                    var firstEnumValue = GetFirstEnumValue(dataTableProcessor, i);
                     if (!DataTableExtension.TryParseEnum(firstEnumValue, out Type enumType))
                     {
                         GFBuiltin.LogError(Utility.Text.Format("解析枚举类型失败:{0}, 配置枚举格式为: EnumType.Item1", firstEnumValue));
@@ -197,7 +204,7 @@ namespace GameFramework.Editor.DataTableTools
                         }
                         else if (languageKeyword == "enum")
                         {
-                            var firstEnumValue = dataTableProcessor.GetValue(4, i);
+                            var firstEnumValue = GetFirstEnumValue(dataTableProcessor, i);
                             if (!DataTableExtension.TryParseEnum(firstEnumValue, out Type enumType))
                             {
                                 GFBuiltin.LogError(Utility.Text.Format("解析枚举类型失败:{0}, 配置枚举格式为: EnumType.Item1", firstEnumValue));
@@ -282,7 +289,7 @@ namespace GameFramework.Editor.DataTableTools
                         }
                         else if (languageKeyword == "enum")
                         {
-                            var firstEnumValue = dataTableProcessor.GetValue(4, i);
+                            var firstEnumValue = GetFirstEnumValue(dataTableProcessor, i);
                             if (!DataTableExtension.TryParseEnum(firstEnumValue, out Type enumType))
                             {
                                 GFBuiltin.LogError(Utility.Text.Format("解析枚举类型失败:{0}, 配置枚举格式为: EnumType.Item1", firstEnumValue));
@@ -325,6 +332,17 @@ namespace GameFramework.Editor.DataTableTools
 
             return stringBuilder.ToString();
         }
+        private static string GetFirstEnumValue(DataTableProcessor dataTableProcessor, int col)
+        {
+            for (int i = 4; i < dataTableProcessor.RawRowCount; i++)
+            {
+                if (!dataTableProcessor.IsCommentRow(i))
+                {
+                    return dataTableProcessor.GetValue(i, col);
+                }
+            }
+            return string.Empty;
+        }
         /// <summary>
         /// 0:非数组; 1:一维数组; 2:二维数组
         /// </summary>
@@ -343,6 +361,6 @@ namespace GameFramework.Editor.DataTableTools
 
             return 0;
         }
-        
+
     }
 }

@@ -26,37 +26,36 @@ namespace UGF.EditorTools
             languageFileChangedList = new List<string>();
             EditorApplication.update -= OnUpdate;
             EditorApplication.update += OnUpdate;
-            var tbWatcher = new FileSystemWatcher(ConstEditor.DataTableExcelPath, "*.xlsx");
-            tbWatcher.IncludeSubdirectories = true;
+            var tbWatcher = new FileSystemWatcher(ConstEditor.DataTableExcelPath, "*.xlsx")
+            {
+                IncludeSubdirectories = true,
 
-            tbWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName;
-            tbWatcher.EnableRaisingEvents = true;
+                NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName,
+                EnableRaisingEvents = true
+            };
             var fileChangedCb = new FileSystemEventHandler(OnDataTableChanged);
-            var fileRenameCb = new RenamedEventHandler(OnDataTableChanged);
             tbWatcher.Changed -= fileChangedCb;
             tbWatcher.Changed += fileChangedCb;
             tbWatcher.Deleted -= fileChangedCb;
             tbWatcher.Deleted += fileChangedCb;
-            tbWatcher.Renamed -= fileRenameCb;
-            tbWatcher.Renamed += fileRenameCb;
 
-            var cfgWatcher = new FileSystemWatcher(ConstEditor.ConfigExcelPath, "*.xlsx");
-            cfgWatcher.IncludeSubdirectories = true;
-            cfgWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName;
-            cfgWatcher.EnableRaisingEvents = true;
+            var cfgWatcher = new FileSystemWatcher(ConstEditor.ConfigExcelPath, "*.xlsx")
+            {
+                IncludeSubdirectories = true,
+                NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName,
+                EnableRaisingEvents = true
+            };
             var cfgFileChangedCb = new FileSystemEventHandler(OnConfigChanged);
-            var cfgFileRenameCb = new RenamedEventHandler(OnConfigChanged);
             cfgWatcher.Changed -= cfgFileChangedCb;
             cfgWatcher.Changed += cfgFileChangedCb;
             cfgWatcher.Deleted -= cfgFileChangedCb;
             cfgWatcher.Deleted += cfgFileChangedCb;
-            cfgWatcher.Renamed -= cfgFileRenameCb;
-            cfgWatcher.Renamed += cfgFileRenameCb;
-
-            var langWatcher = new FileSystemWatcher(ConstEditor.LanguageExcelPath, "*.xlsx");
-            langWatcher.IncludeSubdirectories = true;
-            langWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
-            langWatcher.EnableRaisingEvents = true;
+            var langWatcher = new FileSystemWatcher(ConstEditor.LanguageExcelPath, "*.xlsx")
+            {
+                IncludeSubdirectories = true,
+                NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite,
+                EnableRaisingEvents = true
+            };
             var langFileChangedCb = new FileSystemEventHandler(OnLanguageChanged);
             langWatcher.Changed -= langFileChangedCb;
             langWatcher.Changed += langFileChangedCb;
@@ -65,13 +64,11 @@ namespace UGF.EditorTools
             appConfigs = AppConfigs.GetInstanceEditor();
             isInitialized = true;
         }
-
         static void InitGlobalCulture()
         {
-            //CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
-            //CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
             CultureInfo.CurrentCulture = CultureInfo.CreateSpecificCulture("en-GB");
         }
+
         private static void OnUpdate()
         {
             if (!isInitialized) return;
@@ -82,7 +79,7 @@ namespace UGF.EditorTools
                 GameDataGenerator.RefreshAllDataTable(changedFiles);
                 if (changedFiles.Contains(ConstEditor.UITableExcelFullPath))
                 {
-                    GameDataGenerator.GenerateUIViewScript();
+                    GameDataGenerator.GenerateUIFormNamesScript();
                 }
                 if (changedFiles.Contains(ConstEditor.EntityGroupTableExcelFullPath) ||
                         changedFiles.Contains(ConstEditor.SoundGroupTableExcelFullPath) ||

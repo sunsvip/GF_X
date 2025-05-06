@@ -54,6 +54,20 @@ public static class UIExtension
         return UtilityEx.IsPointerOverUIObject(mousePosition);
     }
     /// <summary>
+    /// 世界坐标转换到UI屏幕坐标
+    /// </summary>
+    /// <param name="uiCom"></param>
+    /// <param name="worldPos">世界坐标点</param>
+    /// <returns></returns>
+    public static Vector3 PositionWorldToUI(this UIComponent uiCom, Vector3 worldPos, RectTransform targetRect)
+    {
+        var viewPos = GF.Scene.MainCamera.WorldToViewportPoint(worldPos);
+        var uiPos = GF.UICamera.ViewportToScreenPoint(viewPos);
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(targetRect, uiPos, GF.UICamera, out var localPoint);
+        return localPoint;
+    }
+    /// <summary>
     /// 加载Sprite图集
     /// </summary>
     /// <param name="uiCom"></param>
@@ -106,7 +120,7 @@ public static class UIExtension
     {
         if (GF.Resource.HasAsset(spriteName) == GameFramework.Resource.HasAssetResult.NotExist)
         {
-            Log.Warning("UIExtension.SetSprite()失败, 资源不存在:{0}", spriteName);
+            Log.Warning("UIExtension.LoadTexture()失败, 资源不存在:{0}", spriteName);
             return;
         }
         GF.Resource.LoadAsset(spriteName, new GameFramework.Resource.LoadAssetCallbacks((string assetName, object asset, float duration, object userData) =>
@@ -139,10 +153,16 @@ public static class UIExtension
         {
             return;
         }
+
         var uiParams = UIParams.Create();
         uiParams.Set<VarString>(ToastTips.P_Text, text);
         uiParams.Set<VarFloat>(ToastTips.P_Duration, duration);
         uiParams.Set<VarUInt32>(ToastTips.P_Style, (uint)style);
+        var tipsGroup = ui.GetUIGroup(Const.UIGroup.Tips.ToString());
+        if (tipsGroup.CurrentUIForm != null)
+        {
+            uiParams.SortOrder = ((tipsGroup.CurrentUIForm as UIForm).Logic as UIFormBase).Params.SortOrder + 1;
+        }
         ui.OpenUIForm(UIViews.ToastTips, uiParams);
     }
 
