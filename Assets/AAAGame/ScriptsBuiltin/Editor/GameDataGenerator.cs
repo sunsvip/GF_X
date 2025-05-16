@@ -338,7 +338,7 @@ namespace UGF.EditorTools
                     string cellContent = excelSheet.GetValue<string>(rowIndex, colIndex);
                     if (!string.IsNullOrEmpty(cellContent))
                     {
-                        cellContent = Regex.Replace(cellContent, "\n", @"\n");
+                        cellContent = Regex.Replace(cellContent, @"[\r\n]+", string.Empty);
                     }
                     lineTxt.Append(cellContent);
                     if (colIndex < excelSheet.Dimension.End.Column)
