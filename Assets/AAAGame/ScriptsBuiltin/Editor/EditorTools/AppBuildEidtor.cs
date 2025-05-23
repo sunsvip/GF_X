@@ -16,6 +16,7 @@ using Cysharp.Threading.Tasks;
 using UnityEditor.Build;
 using System.Xml;
 using UGF.EditorTools.ResourceTools;
+using Obfuz.Unity;
 
 namespace UGF.EditorTools
 {
@@ -276,7 +277,7 @@ namespace UGF.EditorTools
                 {
                     EditorGUILayout.LabelField("Build Resources Settings", EditorStyles.boldLabel);
                     AppBuildSettings.Instance.UseResourceRule = EditorGUILayout.ToggleLeft("Enable [Rule Editor]", AppBuildSettings.Instance.UseResourceRule, GUILayout.Width(160));
-                    if(AppBuildSettings.Instance.UseResourceRule && GUILayout.Button("Rule Editor", GUILayout.Width(160)))
+                    if (AppBuildSettings.Instance.UseResourceRule && GUILayout.Button("Rule Editor", GUILayout.Width(160)))
                     {
                         ResourceRuleEditor.Open();
                         GUIUtility.ExitGUI();
@@ -294,6 +295,12 @@ namespace UGF.EditorTools
                     {
                         EditorGUILayout.LabelField("Force Rebuild AssetBundle", GUILayout.Width(160f));
                         m_Controller.ForceRebuildAssetBundleSelected = EditorGUILayout.Toggle(m_Controller.ForceRebuildAssetBundleSelected);
+                    }
+                    EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        EditorGUILayout.LabelField("Enable Obfuz", GUILayout.Width(160f));
+                        Obfuz.Settings.ObfuzSettings.Instance.enable = EditorGUILayout.Toggle(Obfuz.Settings.ObfuzSettings.Instance.enable);
                     }
                     EditorGUILayout.EndHorizontal();
                     EditorGUILayout.BeginHorizontal();
@@ -618,11 +625,6 @@ namespace UGF.EditorTools
                         AppBuildSettings.Instance.AndroidKeystoreName = PlayerSettings.Android.keystoreName = EditorGUILayout.TextField(AppBuildSettings.Instance.AndroidKeystoreName);
                         if (GUILayout.Button("Select Keystore", GUILayout.Width(160f)))
                         {
-
-                            //string projectRoot = Directory.GetParent(Application.dataPath).FullName;
-                            //var keystoreDir = string.IsNullOrWhiteSpace(AppBuildSettings.Instance.AndroidKeystoreName) ? projectRoot : Path.GetDirectoryName(AppBuildSettings.Instance.AndroidKeyAliasName);
-                            //var openPath = Directory.Exists(keystoreDir) ? keystoreDir : projectRoot;
-                            //string path = EditorUtility.OpenFilePanel("Select Keystore", openPath, "keystore,jks,ks");
                             string path = EditorUtilityExtension.OpenRelativeFilePanel("Select Keystore", AppBuildSettings.Instance.AndroidKeystoreName, "keystore,jks,ks");
                             if (!string.IsNullOrWhiteSpace(path))
                             {
@@ -657,7 +659,7 @@ namespace UGF.EditorTools
                     EditorGUILayout.EndHorizontal();
                 }
 
-#elif UNITY_IOS          
+#elif UNITY_IOS
                 EditorGUILayout.BeginHorizontal();
                 {
                     EditorGUILayout.LabelField("Build Number", GUILayout.Width(160f));
@@ -665,7 +667,7 @@ namespace UGF.EditorTools
                 }
                 EditorGUILayout.EndHorizontal();
 #endif
-                    }
+            }
             EditorGUILayout.EndVertical();
         }
         private void DrawHotfixConfigPanel()
@@ -889,6 +891,8 @@ namespace UGF.EditorTools
             {
                 throw new BuildFailedException($"You have not initialized HybridCLR, please install it via menu 'HybridCLR/Installer'");
             }
+            //if (generateAotDll && Obfuz.Settings.ObfuzSettings.Instance.enable)
+            //    HybridCLRExtensionTool.GenerateLinkXml();
             BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
             HybridCLRExtensionTool.CompileTargetDll(false);
             Il2CppDefGeneratorCommand.GenerateIl2CppDef();
@@ -897,11 +901,15 @@ namespace UGF.EditorTools
             LinkGeneratorCommand.GenerateLinkXml(target);
             if (generateAotDll)
             {
+                if (Obfuz.Settings.ObfuzSettings.Instance.enable)
+                {
+                    ObfuzMenu.GenerateEncryptionVM();
+                    ObfuzMenu.SaveSecretFile();
+                }
                 // 生成裁剪后的aot dll
                 StripAOTDllCommand.GenerateStripedAOTDlls(target);
                 HybridCLRExtensionTool.CopyAotDllsToProject(target);
             }
-
             // 桥接函数生成依赖于AOT dll，必须保证已经build过，生成AOT dll
             MethodBridgeGeneratorCommand.GenerateMethodBridgeAndReversePInvokeWrapper(target);
             AOTReferenceGeneratorCommand.GenerateAOTGenericReference(target);
@@ -1010,6 +1018,7 @@ namespace UGF.EditorTools
         {
             EditorUtility.SetDirty(AppSettings.Instance);
             AppBuildSettings.Save();
+            EditorUtility.SetDirty(Obfuz.Settings.ObfuzSettings.Instance);
             if (m_Controller.Save())
             {
                 Debug.Log("Save configuration success.");

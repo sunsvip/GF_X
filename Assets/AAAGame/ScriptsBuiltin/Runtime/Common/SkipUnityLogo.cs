@@ -1,9 +1,11 @@
 #if !UNITY_EDITOR
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Scripting;
 
 [Preserve]
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.All)]
 public class SkipUnityLogo
 {
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
@@ -12,7 +14,7 @@ public class SkipUnityLogo
 #if UNITY_WEBGL
         Application.focusChanged += Application_focusChanged;
 #else
-        System.Threading.Tasks.Task.Run(AsyncSkip);
+        UniTask.RunOnThreadPool(AsyncSkip).Forget();
 #endif
     }
 

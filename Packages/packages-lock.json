@@ -5,7 +5,21 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "2414e77fefdd5d6fe44510437d2394eecaf989f0"
+      "hash": "7a0032934b438ad20a4a691f8093ce1865824c42"
+    },
+    "com.code-philosophy.obfuz": {
+      "version": "https://gitee.com/focus-creative-games/obfuz.git?path=com.code-philosophy.obfuz",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "32d1aac9ba62195a54ed71b1985b1559c7ee4aa6"
+    },
+    "com.code-philosophy.obfuz4hybridclr": {
+      "version": "https://gitee.com/focus-creative-games/obfuz.git?path=com.code-philosophy.obfuz4hybridclr",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "32d1aac9ba62195a54ed71b1985b1559c7ee4aa6"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
@@ -14,7 +28,7 @@
       "dependencies": {}
     },
     "com.unity.ai.navigation": {
-      "version": "1.1.5",
+      "version": "1.1.6",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -23,7 +37,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.burst": {
-      "version": "1.8.19",
+      "version": "1.8.21",
       "depth": 1,
       "source": "registry",
       "dependencies": {

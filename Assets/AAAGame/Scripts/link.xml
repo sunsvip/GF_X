@@ -1,4 +1,3 @@
 <linker>
-	<assembly fullname="UltimateJoystick" preserve="all" />
 	<assembly fullname="Hotfix" preserve="all" />
 </linker>

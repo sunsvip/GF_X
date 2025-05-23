@@ -8,7 +8,7 @@ using System.Linq;
 using GameFramework;
 using GameFramework.Resource;
 using System.IO;
-
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public class LoadHotfixDllProcedure : ProcedureBase
 {
     /// <summary>

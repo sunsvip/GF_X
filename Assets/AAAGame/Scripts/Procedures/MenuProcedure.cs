@@ -4,6 +4,7 @@ using GameFramework.Fsm;
 using GameFramework.Procedure;
 using UnityEngine;
 using UnityGameFramework.Runtime;
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public class MenuProcedure : ProcedureBase
 {
     int menuUIFormId;

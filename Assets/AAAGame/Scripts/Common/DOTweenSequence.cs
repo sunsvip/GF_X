@@ -560,6 +560,7 @@ public class SequenceTweenMoveDrawer : PropertyDrawer
 }
 #endregion
 #endif
+[Obfuz.ObfuzIgnore]
 public class DOTweenSequence : MonoBehaviour
 {
     [HideInInspector][SerializeField] SequenceAnimation[] m_Sequence;
@@ -819,7 +820,7 @@ public class DOTweenSequence : MonoBehaviour
         m_Tween?.Kill();
         m_Tween = null;
     }
-
+    [Serializable]
     public enum DOTweenType
     {
         DOMove,
@@ -1340,6 +1341,7 @@ public class DOTweenSequence : MonoBehaviour
             return (angle + 360) % 360;
         }
     }
+    [Serializable]
     public enum AddType
     {
         Append,

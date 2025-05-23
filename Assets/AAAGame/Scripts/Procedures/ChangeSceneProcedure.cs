@@ -3,7 +3,7 @@ using GameFramework.Procedure;
 using UnityGameFramework.Runtime;
 using GameFramework.Fsm;
 using GameFramework.Event;
-
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public class ChangeSceneProcedure : ProcedureBase
 {
     /// <summary>

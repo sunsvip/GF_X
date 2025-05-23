@@ -30,6 +30,7 @@
       <Asset Guid="1b586e20031d8b44a9495620988ad3dc" ResourceName="HotfixDlls" />
       <Asset Guid="1caa4c6fdc3281642b46f7c82c497dc5" ResourceName="Core" />
       <Asset Guid="230b0c809e3e6a647af26c803aa90467" ResourceName="SharedAssets" />
+      <Asset Guid="2c78f416dca004249a1530266216114a" ResourceName="SharedAssets" />
       <Asset Guid="2cdf1b85fd520ef46b11f580e9443e78" ResourceName="Language" />
       <Asset Guid="2e9047e5d41122a42941f2db8472a0c9" ResourceName="DataTable" />
       <Asset Guid="3d6fc5347ef115746af70b4b42a7f119" ResourceName="DataTable" />
@@ -79,7 +80,6 @@
       <Asset Guid="e09d64781b233da4c8e75adde91c9652" ResourceName="Entity" />
       <Asset Guid="e1a613ebd6f1d6f4a825d14981f3e88d" ResourceName="DataTable" />
       <Asset Guid="e654726d8f557ef4ca2996e321af04e5" ResourceName="DataTable" />
-      <Asset Guid="e81571591a3393745a08aee12b114309" ResourceName="HotfixDlls" />
       <Asset Guid="ec835c8e8455a4e3eab94be7baf9c04a" ResourceName="UI" />
       <Asset Guid="fb3663d475cbeb74ba97e229b86d2504" ResourceName="Entity" />
       <Asset Guid="fca0697f771517f41a13845450b0f97a" ResourceName="Entity" />

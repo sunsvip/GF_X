@@ -23,40 +23,10 @@ public class BuiltinViewComponent : GameFrameworkComponent
     [SerializeField] TextMeshProUGUI tipsContentText;
     [SerializeField] Button tipsPositiveBtn;
     [SerializeField] Button tipsNegativeBtn;
-    //[Header("Waiting View:")]
-    //[SerializeField] GameObject waitingView = null;
-
-    //public void WaitAndShowVideoAd(float loadingOutTime, GameFrameworkAction onAdReady)
-    //{
-    //    adLoadingMask.SetActive(true);
-    //    StopAllCoroutines();
-    //    StartCoroutine(WaitAdLoading(loadingOutTime, onAdReady));
-    //}
-    //IEnumerator WaitAdLoading(float loadingOutTime, GameFrameworkAction onAdReady)
-    //{
-    //    float adLoadCd = 0;
-
-    //    while (adLoadCd < loadingOutTime)
-    //    {
-    //        if (GFBuiltin.AD.IsRewardedAdReady())
-    //        {
-    //            onAdReady?.Invoke();
-    //            break;
-    //        }
-    //        yield return new WaitForSeconds(0.2f);
-    //        adLoadCd += 0.2f;
-    //    }
-    //    if (adLoadCd >= loadingOutTime)
-    //    {
-    //        GFBuiltin.AD.ShowToast("Loading failed! Please try again later.");
-    //        //GFBuiltin.UserData.RecodEvent("missing_videoAd");
-    //    }
-    //    adLoadingMask.SetActive(false);
-    //}
+    
     private void Start()
     {
         ShowLoadingProgress();
-        //waitingView.SetActive(false);
     }
     public void ShowLoadingProgress(float defaultProgress = 0)
     {

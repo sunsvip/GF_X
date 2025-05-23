@@ -4,6 +4,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 内置Const(非热更)
 /// </summary>
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName | Obfuz.ObfuzScope.PropertyName)]
 public static class ConstBuiltin
 {
     public static readonly string HOT_FIX_DLL_DIR = "AAAGame/HotfixDlls";

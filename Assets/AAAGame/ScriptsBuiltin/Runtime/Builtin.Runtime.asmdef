@@ -6,7 +6,8 @@
         "UnityGameFramework.Runtime",
         "ZString",
         "GameFramework",
-        "HybridCLR.Runtime"
+        "UniTask",
+        "Obfuz.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

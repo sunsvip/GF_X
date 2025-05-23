@@ -1146,7 +1146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Skin: {fileID: 0}
-  m_ActiveWindow: 1
+  m_ActiveWindow: 0
   m_ShowFullWindow: 0
   m_ConsoleWindow:
     m_LockScroll: 1
