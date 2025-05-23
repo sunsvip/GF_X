@@ -1,4 +1,5 @@
-﻿public partial class LanguagesDialog : UIFormBase
+﻿[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
+public partial class LanguagesDialog : UIFormBase
 {
     public const string P_LangChangedCb = "LangChangedCb";
     VarAction m_VarAction;

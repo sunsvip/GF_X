@@ -9,7 +9,7 @@ public static class ConstBuiltin
 {
     public static readonly string HOT_FIX_DLL_DIR = "AAAGame/HotfixDlls";
     public static readonly string AOT_DLL_DIR = "AotDlls";//相对于Resources目录
-    public static readonly string CheckVersionUrl = "http://127.0.0.1:80/";//热更新检测地址
+    public static readonly string CheckVersionUrl = "http://127.0.0.1/1_0_0_1/";//热更新检测地址
     public static readonly string VersionFile = "version.json";
     public static readonly bool NoNetworkAllow = true;//热更模式时没网络是否允许进入游戏
     internal const string DES_KEY = "VaBwUXzd";//网络数据DES加密

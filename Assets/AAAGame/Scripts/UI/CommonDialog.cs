@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public class CommonDialog : UIFormBase
 {
     [SerializeField] Text title;

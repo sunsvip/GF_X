@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityGameFramework.Runtime;
 
+[Obfuz.ObfuzIgnore]
 public class CustomSoundAgentHelper : SoundAgentHelperBase
 {
     private Transform m_CachedTransform = null;

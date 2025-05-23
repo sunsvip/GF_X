@@ -4,6 +4,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 热更Const
 /// </summary>
+[Obfuz.ObfuzIgnore]
 public static partial class Const
 {
     internal const long DefaultVibrateDuration = 50;//安卓手机震动强度

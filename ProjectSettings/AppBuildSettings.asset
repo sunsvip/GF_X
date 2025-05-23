@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e20b7dce61bc8644b557801325f3cbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UpdatePrefixUri: http://127.0.0.1:80/1_0_0_1/
+  UpdatePrefixUri: http://127.0.0.1/1_0_0_1/
   ApplicableGameVersion: 1.0.0|1.0.1|1.0.2
   ForceUpdateApp: 0
   AppUpdateUrl: https://play.google.com/store/apps/details?id=

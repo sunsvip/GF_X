@@ -22,7 +22,7 @@ MonoBehaviour:
     additionalAssemblySearchPaths: []
     obfuscateObfuzRuntime: 1
   obfuscationPassSettings:
-    enabledPasses: 513
+    enabledPasses: -1
     ruleFiles: []
   secretSettings:
     defaultStaticSecretKey: GFXStaticKey
@@ -33,7 +33,7 @@ MonoBehaviour:
   encryptionVMSettings:
     codeGenerationSecretKey: Obfuz
     encryptionOpCodeCount: 256
-    codeOutputPath: Assets/Plugins/Obfuz/GeneratedEncryptionVirtualMachine.cs
+    codeOutputPath: Assets/AAAGame/ScriptsBuiltin/Runtime/Obfuz/GeneratedEncryptionVirtualMachine.cs
   symbolObfusSettings:
     debug: 0
     obfuscatedNamePrefix: $

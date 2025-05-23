@@ -138,6 +138,9 @@ namespace UGF.EditorTools
             {
                 SetResourceMode(AppSettings.Instance.ResourceMode);
             }
+
+            RefreshHybridCLREnable();
+            RefreshObfuzEnable();
         }
 
         private void Update()
@@ -300,7 +303,13 @@ namespace UGF.EditorTools
                     EditorGUILayout.BeginHorizontal();
                     {
                         EditorGUILayout.LabelField("Enable Obfuz", GUILayout.Width(160f));
+                        EditorGUI.BeginChangeCheck();
                         Obfuz.Settings.ObfuzSettings.Instance.enable = EditorGUILayout.Toggle(Obfuz.Settings.ObfuzSettings.Instance.enable);
+                        if (EditorGUI.EndChangeCheck())
+                        {
+                            RefreshObfuzEnable();
+                            Obfuz.Settings.ObfuzSettings.Save();
+                        }
                     }
                     EditorGUILayout.EndHorizontal();
                     EditorGUILayout.BeginHorizontal();
@@ -465,7 +474,21 @@ namespace UGF.EditorTools
                 }
             }
         }
-
+        private void RefreshObfuzEnable()
+        {
+            if (Obfuz.Settings.ObfuzSettings.Instance.enable)
+            {
+#if !ENABLE_OBFUZ
+                HybridCLRExtensionTool.EnableObfuz();
+#endif
+            }
+            else
+            {
+#if ENABLE_OBFUZ
+                HybridCLRExtensionTool.DisableObfuz();
+#endif
+            }
+        }
         private void RefreshHybridCLREnable()
         {
             if (AppSettings.Instance.ResourceMode != ResourceMode.Unspecified)
@@ -891,8 +914,8 @@ namespace UGF.EditorTools
             {
                 throw new BuildFailedException($"You have not initialized HybridCLR, please install it via menu 'HybridCLR/Installer'");
             }
-            //if (generateAotDll && Obfuz.Settings.ObfuzSettings.Instance.enable)
-            //    HybridCLRExtensionTool.GenerateLinkXml();
+            if (generateAotDll && Obfuz.Settings.ObfuzSettings.Instance.enable)
+                HybridCLRExtensionTool.GenerateLinkXml();
             BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
             HybridCLRExtensionTool.CompileTargetDll(false);
             Il2CppDefGeneratorCommand.GenerateIl2CppDef();

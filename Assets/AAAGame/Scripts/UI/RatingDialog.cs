@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public partial class RatingDialog : UIFormBase
 {
     const int MIN_STAR = 4;

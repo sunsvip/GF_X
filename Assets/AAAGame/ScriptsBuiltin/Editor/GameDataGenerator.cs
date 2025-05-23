@@ -271,6 +271,7 @@ namespace UGF.EditorTools
             var className = Path.GetFileNameWithoutExtension(ConstEditor.UIViewScriptFile);
             StringBuilder sBuilder = new StringBuilder();
             sBuilder.AppendLine("/**此代码由工具自动生成,请勿手动修改!**/");
+            sBuilder.AppendLine("[Obfuz.ObfuzIgnore]");
             sBuilder.AppendLine(Utility.Text.Format("public enum {0} : int", className));
             sBuilder.AppendLine("{");
             int curIndex = 0;

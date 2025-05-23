@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using UnityEngine.UI;
+[Obfuz.ObfuzIgnore]
 public class CustomUIGroupHelper : UIGroupHelperBase
 {
     private Canvas m_CachedCanvas = null;

@@ -262,7 +262,7 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
             }
         }
     }
-
+    [Obfuz.ObfuzIgnore]
     public void CloseWithAnimation()
     {
         Interactable = false;
@@ -350,18 +350,19 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
         }
     }
 
-
+    [Obfuz.ObfuzIgnore]
     public virtual void OnClickClose()
     {
         GF.Sound.PlayEffect("ui/ui_click.wav");
         GF.UI.Close(this.UIForm);
     }
-
+    [Obfuz.ObfuzIgnore]
     public void ClickUIButton(string bt_tag)
     {
         GF.Sound.PlayEffect("ui/ui_click.wav");
         OnButtonClick(this, bt_tag);
     }
+    [Obfuz.ObfuzIgnore]
     public void ClickUIButton(Button btSelf)
     {
         GF.Sound.PlayEffect("ui/ui_click.wav");
@@ -407,6 +408,7 @@ public interface ISerializeFieldTool
 {
     public SerializeFieldData[] SerializeFieldArr { get; set; }
 }
+[Serializable]
 public enum UIFormAnimationType
 {
     DOTween,

@@ -1,6 +1,6 @@
 ﻿using Cysharp.Text;
 using GameFramework;
-
+[Obfuz.ObfuzIgnore]
 public class ZStringTextHelper : Utility.Text.ITextHelper
 {
     string Utility.Text.ITextHelper.Format<T>(string format, T arg)

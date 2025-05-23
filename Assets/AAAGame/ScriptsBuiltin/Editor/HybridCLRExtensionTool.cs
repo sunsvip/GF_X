@@ -20,43 +20,44 @@ namespace UGF.EditorTools
     public class HybridCLRExtensionTool
     {
         const string DISABLE_HYBRIDCLR = "DISABLE_HYBRIDCLR";
+        const string ENABLE_OBFUZ = "ENABLE_OBFUZ";
         [MenuItem("HybridCLR/CompileDll And Copy【生成热更dll】", false, 4)]
         public static void CompileTargetDll()
         {
             CompileTargetDll(false);
         }
-        //[MenuItem("HybridCLR/Obfuz GenerateLinkXml", false, 5)]
-        //public static void GenerateLinkXml()
-        //{
-        //    CompileDllCommand.CompileDllActiveBuildTarget();
-        //    BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
-        //    var obfuzSettings = ObfuzSettings.Instance;
+        [MenuItem("HybridCLR/Obfuz GenerateLinkXml", false, 5)]
+        public static void GenerateLinkXml()
+        {
+            CompileDllCommand.CompileDllActiveBuildTarget();
+            BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
+            var obfuzSettings = ObfuzSettings.Instance;
 
-        //    var assemblySearchDirs = new List<string>
-        //{
-        //    SettingsUtil.GetHotUpdateDllsOutputDirByTarget(target),
-        //};
-        //    ObfuscatorBuilder builder = ObfuscatorBuilder.FromObfuzSettings(obfuzSettings, target, true);
-        //    builder.InsertTopPriorityAssemblySearchPaths(assemblySearchDirs);
+            var assemblySearchDirs = new List<string>
+        {
+            SettingsUtil.GetHotUpdateDllsOutputDirByTarget(target),
+        };
+            ObfuscatorBuilder builder = ObfuscatorBuilder.FromObfuzSettings(obfuzSettings, target, true);
+            builder.InsertTopPriorityAssemblySearchPaths(assemblySearchDirs);
 
-        //    Obfuscator obfuz = builder.Build();
-        //    obfuz.Run();
+            Obfuscator obfuz = builder.Build();
+            obfuz.Run();
 
 
-        //    List<string> hotfixAssemblies = SettingsUtil.HotUpdateAssemblyNamesExcludePreserved;
+            List<string> hotfixAssemblies = SettingsUtil.HotUpdateAssemblyNamesExcludePreserved;
 
-        //    var analyzer = new HybridCLR.Editor.Link.Analyzer(new HybridCLR.Editor.Meta.PathAssemblyResolver(builder.ObfuscatedAssemblyOutputPath));
-        //    var refTypes = analyzer.CollectRefs(hotfixAssemblies);
+            var analyzer = new HybridCLR.Editor.Link.Analyzer(new HybridCLR.Editor.Meta.PathAssemblyResolver(builder.ObfuscatedAssemblyOutputPath));
+            var refTypes = analyzer.CollectRefs(hotfixAssemblies);
 
-        //    // HyridCLR中 LinkXmlWritter不是public的，在其他程序集无法访问，只能通过反射操作
-        //    var linkXmlWriter = typeof(SettingsUtil).Assembly.GetType("HybridCLR.Editor.Link.LinkXmlWriter");
-        //    var writeMethod = linkXmlWriter.GetMethod("Write", BindingFlags.Public | BindingFlags.Instance);
-        //    var instance = Activator.CreateInstance(linkXmlWriter);
-        //    string linkXmlOutputPath = $"{Application.dataPath}/Plugins/Obfuz/link.xml";
-        //    writeMethod.Invoke(instance, new object[] { linkXmlOutputPath, refTypes });
-        //    Debug.Log($"[GenerateLinkXmlForObfuscatedAssembly] output:{linkXmlOutputPath}");
-        //    AssetDatabase.Refresh();
-        //}
+            // HyridCLR中 LinkXmlWritter不是public的，在其他程序集无法访问，只能通过反射操作
+            var linkXmlWriter = typeof(SettingsUtil).Assembly.GetType("HybridCLR.Editor.Link.LinkXmlWriter");
+            var writeMethod = linkXmlWriter.GetMethod("Write", BindingFlags.Public | BindingFlags.Instance);
+            var instance = Activator.CreateInstance(linkXmlWriter);
+            string linkXmlOutputPath = $"{Application.dataPath}/Plugins/Obfuz/link.xml";
+            writeMethod.Invoke(instance, new object[] { linkXmlOutputPath, refTypes });
+            Debug.Log($"[GenerateLinkXmlForObfuscatedAssembly] output:{linkXmlOutputPath}");
+            AssetDatabase.Refresh();
+        }
         public static void CompileTargetDll(bool includeAotDll)
         {
             var activeTarget = EditorUserBuildSettings.activeBuildTarget;
@@ -196,10 +197,48 @@ namespace UGF.EditorTools
             HybridCLR.Editor.Settings.HybridCLRSettings.Save();
             EditorUtility.DisplayDialog("HybridCLR", "切换到单机模式,已禁用HybridCLR热更! 记得在ResourceEditor中移除热更dll资源.", "知道了");
         }
+        public static void DisableObfuz()
+        {
+#if UNITY_2021_1_OR_NEWER
+            var bTarget = GetCurrentNamedBuildTarget();
+            PlayerSettings.GetScriptingDefineSymbols(bTarget, out string[] defines);
+#else
+        var bTarget = GetCurrentBuildTarget();
+        PlayerSettings.GetScriptingDefineSymbolsForGroup(bTarget, out string[] defines);
+#endif
+            if (ArrayUtility.Contains(defines, ENABLE_OBFUZ))
+            {
+                ArrayUtility.Remove<string>(ref defines, ENABLE_OBFUZ);
+#if UNITY_2021_1_OR_NEWER
+                PlayerSettings.SetScriptingDefineSymbols(bTarget, defines);
+#else
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(bTarget, defines);
+#endif
+            }
+        }
+        public static void EnableObfuz()
+        {
+#if UNITY_2021_1_OR_NEWER
+            var bTarget = GetCurrentNamedBuildTarget();
+            PlayerSettings.GetScriptingDefineSymbols(bTarget, out string[] defines);
+#else
+        var bTarget = GetCurrentBuildTarget();
+        PlayerSettings.GetScriptingDefineSymbolsForGroup(bTarget, out string[] defines);
+#endif
+            if (!ArrayUtility.Contains(defines, ENABLE_OBFUZ))
+            {
+                ArrayUtility.Add<string>(ref defines, ENABLE_OBFUZ);
+#if UNITY_2021_1_OR_NEWER
+                PlayerSettings.SetScriptingDefineSymbols(bTarget, defines);
+#else
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(bTarget, defines);
+#endif
+            }
+        }
         private static void RefreshPlayerSettings()
         {
 #if DISABLE_HYBRIDCLR
-        PlayerSettings.gcIncremental = true;
+            PlayerSettings.gcIncremental = true;
 #else
             PlayerSettings.gcIncremental = false;
             PlayerSettings.SetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup, ScriptingImplementation.IL2CPP);

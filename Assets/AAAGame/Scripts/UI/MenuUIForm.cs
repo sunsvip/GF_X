@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using GameFramework.Event;
 using UnityGameFramework.Runtime;
-
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public partial class MenuUIForm : UIFormBase
 {
     protected override void OnOpen(object userData)
