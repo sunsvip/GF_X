@@ -21,12 +21,12 @@ namespace UGF.EditorTools
     {
         const string DISABLE_HYBRIDCLR = "DISABLE_HYBRIDCLR";
         const string ENABLE_OBFUZ = "ENABLE_OBFUZ";
-        [MenuItem("HybridCLR/CompileDll And Copy【生成热更dll】", false, 4)]
+        [MenuItem("HybridCLR/CompileDll And Copy[生成热更dll]", false, 4)]
         public static void CompileTargetDll()
         {
             CompileTargetDll(false);
         }
-        [MenuItem("HybridCLR/Obfuz GenerateLinkXml", false, 5)]
+        [MenuItem("HybridCLR/Obfuz GenerateLinkXml[混淆后代码裁剪配置]", false, 5)]
         public static void GenerateLinkXml()
         {
             CompileDllCommand.CompileDllActiveBuildTarget();
@@ -46,7 +46,7 @@ namespace UGF.EditorTools
 
             List<string> hotfixAssemblies = SettingsUtil.HotUpdateAssemblyNamesExcludePreserved;
 
-            var analyzer = new HybridCLR.Editor.Link.Analyzer(new HybridCLR.Editor.Meta.PathAssemblyResolver(builder.ObfuscatedAssemblyOutputPath));
+            var analyzer = new HybridCLR.Editor.Link.Analyzer(new HybridCLR.Editor.Meta.PathAssemblyResolver(builder.CoreSettingsFacade.obfuscatedAssemblyOutputPath));
             var refTypes = analyzer.CollectRefs(hotfixAssemblies);
 
             // HyridCLR中 LinkXmlWritter不是public的，在其他程序集无法访问，只能通过反射操作
