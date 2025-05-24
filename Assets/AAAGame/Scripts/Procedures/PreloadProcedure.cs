@@ -8,7 +8,8 @@ using System.Collections.Generic;
 using GameFramework;
 using System;
 using GameFramework.Resource;
-
+using Cysharp.Threading.Tasks;
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public class PreloadProcedure : ProcedureBase
 {
     private int totalProgress;

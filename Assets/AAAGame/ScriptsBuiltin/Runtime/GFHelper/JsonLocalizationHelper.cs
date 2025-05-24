@@ -4,7 +4,7 @@ using UnityEngine;
 using GameFramework;
 using UnityGameFramework.Runtime;
 using GameFramework.Localization;
-
+[Obfuz.ObfuzIgnore]
 public class JsonLocalizationHelper : DefaultLocalizationHelper
 {
     public override bool ParseData(ILocalizationManager localizationManager, string dictionaryString, object userData)

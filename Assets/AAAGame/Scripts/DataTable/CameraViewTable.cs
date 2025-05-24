@@ -12,7 +12,7 @@ using System.Text;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
-[System.Reflection.Obfuscation(Feature = "renaming", ApplyToMembers = false)]
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName | Obfuz.ObfuzScope.MethodName)]
 /// <summary>
 /// 相机视角
 /// </summary>

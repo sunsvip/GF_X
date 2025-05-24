@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-
+[Serializable]
 public enum PivotAxis
 {
     // Rotate about all axes.
@@ -14,7 +15,6 @@ public enum PivotAxis
 public class BillboardEntity : SampleEntity
 {
     PivotAxis PivotAxis = PivotAxis.Free;
-
     protected override void OnShow(object userData)
     {
         base.OnShow(userData);

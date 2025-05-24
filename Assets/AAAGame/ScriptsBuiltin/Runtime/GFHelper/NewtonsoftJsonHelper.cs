@@ -4,6 +4,7 @@ using UnityEngine;
 using GameFramework;
 using System;
 using Newtonsoft.Json;
+[Obfuz.ObfuzIgnore]
 public class NewtonsoftJsonHelper : Utility.Json.IJsonHelper
 {
     public string ToJson(object obj)

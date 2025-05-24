@@ -560,6 +560,7 @@ public class SequenceTweenMoveDrawer : PropertyDrawer
 }
 #endregion
 #endif
+[Obfuz.ObfuzIgnore]
 public class DOTweenSequence : MonoBehaviour
 {
     [HideInInspector][SerializeField] SequenceAnimation[] m_Sequence;
@@ -753,6 +754,7 @@ public class DOTweenSequence : MonoBehaviour
                     Debug.LogErrorFormat("Tweener is null. Index:{0}, Animation Type:{1}, Component Type:{2}", i, item.AnimationType, item.Target == null ? "null" : item.Target.GetType().Name);
                     continue;
                 }
+                tweener.SetUpdate(!m_IgnoreTimeScale);
                 switch (item.AddType)
                 {
                     case AddType.Append:
@@ -775,6 +777,7 @@ public class DOTweenSequence : MonoBehaviour
                     Debug.LogErrorFormat("Tweener is null. Index:{0}, Animation Type:{1}, Component Type:{2}", i, item.AnimationType, item.Target == null ? "null" : item.Target.GetType().Name);
                     continue;
                 }
+                tweener.SetUpdate(!m_IgnoreTimeScale);
                 switch (item.AddType)
                 {
                     case AddType.Append:
@@ -819,7 +822,7 @@ public class DOTweenSequence : MonoBehaviour
         m_Tween?.Kill();
         m_Tween = null;
     }
-
+    [Serializable]
     public enum DOTweenType
     {
         DOMove,
@@ -1340,6 +1343,7 @@ public class DOTweenSequence : MonoBehaviour
             return (angle + 360) % 360;
         }
     }
+    [Serializable]
     public enum AddType
     {
         Append,

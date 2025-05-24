@@ -1,1 +1,1 @@
-﻿["UltimateJoystick.dll","Hotfix.dll"]
+﻿["Hotfix.dll"]

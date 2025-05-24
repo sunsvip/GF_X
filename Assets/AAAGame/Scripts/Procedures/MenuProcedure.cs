@@ -4,9 +4,7 @@ using GameFramework.Fsm;
 using GameFramework.Procedure;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-/// <summary>
-/// 主菜单流程
-/// </summary>
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public class MenuProcedure : ProcedureBase
 {
     protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)

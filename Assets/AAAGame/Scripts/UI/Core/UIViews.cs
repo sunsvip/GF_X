@@ -1,4 +1,5 @@
 /**此代码由工具自动生成,请勿手动修改!**/
+[Obfuz.ObfuzIgnore]
 public enum UIViews : int
 {
 	MenuUIForm = 1,

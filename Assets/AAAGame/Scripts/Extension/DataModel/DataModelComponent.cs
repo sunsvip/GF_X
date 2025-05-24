@@ -370,37 +370,8 @@ namespace GameFramework
         /// 销毁数据模型。
         /// </summary>
         /// <typeparam name="T">数据模型行的类型。</typeparam>
-        public bool ReleaseDataModel<T>() where T : DataModelBase
-        {
-            return InternalReleaseDataModel(new TypeIdPair(typeof(T)));
-        }
-
-        /// <summary>
-        /// 销毁数据模型。
-        /// </summary>
-        /// <param name="dataRowType">数据模型行的类型。</param>
-        /// <returns>是否销毁数据模型成功。</returns>
-        public bool ReleaseDataModel(Type dataRowType)
-        {
-            if (dataRowType == null)
-            {
-                throw new GameFrameworkException("Data row type is invalid.");
-            }
-
-            if (!typeof(DataModelBase).IsAssignableFrom(dataRowType))
-            {
-                throw new GameFrameworkException(Utility.Text.Format("Data row type '{0}' is invalid.", dataRowType.FullName));
-            }
-
-            return InternalReleaseDataModel(new TypeIdPair(dataRowType));
-        }
-
-        /// <summary>
-        /// 销毁数据模型。
-        /// </summary>
-        /// <typeparam name="T">数据模型行的类型。</typeparam>
         /// <param name="id">数据模型名称。</param>
-        public bool ReleaseDataModel<T>(int id) where T : DataModelBase
+        public bool ReleaseDataModel<T>(int id = 0) where T : DataModelBase
         {
             return InternalReleaseDataModel(new TypeIdPair(typeof(T), id));
         }
@@ -411,7 +382,7 @@ namespace GameFramework
         /// <param name="dataRowType">数据模型行的类型。</param>
         /// <param name="name">数据模型名称。</param>
         /// <returns>是否销毁数据模型成功。</returns>
-        public bool ReleaseDataModel(Type dataRowType, int id)
+        public bool ReleaseDataModel(Type dataRowType, int id = 0)
         {
             if (dataRowType == null)
             {
@@ -424,22 +395,6 @@ namespace GameFramework
             }
 
             return InternalReleaseDataModel(new TypeIdPair(dataRowType, id));
-        }
-
-        /// <summary>
-        /// 销毁数据模型。
-        /// </summary>
-        /// <typeparam name="T">数据模型行的类型。</typeparam>
-        /// <param name="DataModel">要销毁的数据模型。</param>
-        /// <returns>是否销毁数据模型成功。</returns>
-        public bool ReleaseDataModel<T>(DataModelBase DataModel) where T : DataModelBase
-        {
-            if (DataModel == null)
-            {
-                throw new GameFrameworkException("DataModel is invalid.");
-            }
-
-            return InternalReleaseDataModel(new TypeIdPair(typeof(T), DataModel.Id));
         }
 
         /// <summary>

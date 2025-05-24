@@ -8,7 +8,7 @@ using System.Linq;
 using GameFramework;
 using GameFramework.Resource;
 using System.IO;
-
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public class LoadHotfixDllProcedure : ProcedureBase
 {
     /// <summary>
@@ -18,6 +18,18 @@ public class LoadHotfixDllProcedure : ProcedureBase
     private bool hotfixListIsLoaded;
     private int totalProgress;
     private int loadedProgress;
+
+#if ENABLE_OBFUZ
+    /// <summary>
+    /// 初始化Obfuz
+    /// </summary>
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+    private static void SetUpStaticSecretKey()
+    {
+        Debug.Log("Setup Obfuz StaticSecret...");
+        Obfuz.EncryptionService<Obfuz.DefaultStaticEncryptionScope>.Encryptor = new Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine(Resources.Load<TextAsset>("Obfuz/defaultStaticSecretKey").bytes);
+    }
+#endif
     protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
     {
         base.OnEnter(procedureOwner);

@@ -1,8 +1,10 @@
 {
   "dependencies": {
     "com.code-philosophy.hybridclr": "https://gitee.com/focus-creative-games/hybridclr_unity.git",
+    "com.code-philosophy.obfuz": "https://gitee.com/focus-creative-games/obfuz.git?path=com.code-philosophy.obfuz",
+    "com.code-philosophy.obfuz4hybridclr": "https://gitee.com/focus-creative-games/obfuz.git?path=com.code-philosophy.obfuz4hybridclr",
     "com.unity.2d.sprite": "1.0.0",
-    "com.unity.ai.navigation": "1.1.5",
+    "com.unity.ai.navigation": "1.1.6",
     "com.unity.cinemachine": "2.10.3",
     "com.unity.collab-proxy": "2.7.1",
     "com.unity.collections": "2.5.1",

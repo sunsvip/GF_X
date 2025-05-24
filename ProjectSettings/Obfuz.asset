@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c414eef017e565c4db1442ec64ec52fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enable: 0
+  assemblySettings:
+    assembliesToObfuscate:
+    - Hotfix
+    - Builtin.Runtime
+    nonObfuscatedButReferencingObfuscatedAssemblies:
+    - Assembly-CSharp-firstpass
+    additionalAssemblySearchPaths: []
+    obfuscateObfuzRuntime: 1
+  obfuscationPassSettings:
+    enabledPasses: -1
+    ruleFiles: []
+  secretSettings:
+    defaultStaticSecretKey: GFXStaticKey
+    defaultDynamicSecretKey: GFXDynamicKey
+    secretKeyOutputPath: Assets/Resources/Obfuz
+    randomSeed: 0
+    assembliesUsingDynamicSecretKeys: []
+  encryptionVMSettings:
+    codeGenerationSecretKey: Obfuz
+    encryptionOpCodeCount: 256
+    codeOutputPath: Assets/AAAGame/ScriptsBuiltin/Runtime/Obfuz/GeneratedEncryptionVirtualMachine.cs
+  symbolObfusSettings:
+    debug: 0
+    obfuscatedNamePrefix: $
+    useConsistentNamespaceObfuscation: 1
+    symbolMappingFile: Assets/Plugins/Obfuz/SymbolObfus/symbol-mapping.xml
+    ruleFiles: []
+  constEncryptSettings:
+    encryptionLevel: 1
+    ruleFiles: []
+  fieldEncryptSettings:
+    encryptionLevel: 1
+    ruleFiles: []
+  callObfusSettings:
+    obfuscationLevel: 1
+    ruleFiles: []

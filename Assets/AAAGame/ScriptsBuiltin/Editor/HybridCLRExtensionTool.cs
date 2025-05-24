@@ -1,10 +1,17 @@
 #if UNITY_EDITOR
 using GameFramework;
+using HybridCLR.Editor;
+using HybridCLR.Editor.Commands;
 using Newtonsoft.Json.Linq;
+using Obfuz.Settings;
+using Obfuz;
+using Obfuz.Unity;
+using Obfuz4HybridCLR;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,21 +20,62 @@ namespace UGF.EditorTools
     public class HybridCLRExtensionTool
     {
         const string DISABLE_HYBRIDCLR = "DISABLE_HYBRIDCLR";
-        [MenuItem("HybridCLR/CompileDll And Copy【生成热更dll】", false, 4)]
+        const string ENABLE_OBFUZ = "ENABLE_OBFUZ";
+        [MenuItem("HybridCLR/CompileDll And Copy[生成热更dll]", false, 4)]
         public static void CompileTargetDll()
         {
             CompileTargetDll(false);
         }
+        [MenuItem("HybridCLR/Obfuz GenerateLinkXml[混淆后代码裁剪配置]", false, 5)]
+        public static void GenerateLinkXml()
+        {
+            CompileDllCommand.CompileDllActiveBuildTarget();
+            BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
+            var obfuzSettings = ObfuzSettings.Instance;
+
+            var assemblySearchDirs = new List<string>
+        {
+            SettingsUtil.GetHotUpdateDllsOutputDirByTarget(target),
+        };
+            ObfuscatorBuilder builder = ObfuscatorBuilder.FromObfuzSettings(obfuzSettings, target, true);
+            builder.InsertTopPriorityAssemblySearchPaths(assemblySearchDirs);
+
+            Obfuscator obfuz = builder.Build();
+            obfuz.Run();
+
+
+            List<string> hotfixAssemblies = SettingsUtil.HotUpdateAssemblyNamesExcludePreserved;
+
+            var analyzer = new HybridCLR.Editor.Link.Analyzer(new HybridCLR.Editor.Meta.PathAssemblyResolver(builder.CoreSettingsFacade.obfuscatedAssemblyOutputPath));
+            var refTypes = analyzer.CollectRefs(hotfixAssemblies);
+
+            // HyridCLR中 LinkXmlWritter不是public的，在其他程序集无法访问，只能通过反射操作
+            var linkXmlWriter = typeof(SettingsUtil).Assembly.GetType("HybridCLR.Editor.Link.LinkXmlWriter");
+            var writeMethod = linkXmlWriter.GetMethod("Write", BindingFlags.Public | BindingFlags.Instance);
+            var instance = Activator.CreateInstance(linkXmlWriter);
+            string linkXmlOutputPath = $"{Application.dataPath}/Plugins/Obfuz/link.xml";
+            writeMethod.Invoke(instance, new object[] { linkXmlOutputPath, refTypes });
+            Debug.Log($"[GenerateLinkXmlForObfuscatedAssembly] output:{linkXmlOutputPath}");
+            AssetDatabase.Refresh();
+        }
         public static void CompileTargetDll(bool includeAotDll)
         {
-            HybridCLR.Editor.Commands.CompileDllCommand.CompileDllActiveBuildTarget();
+            var activeTarget = EditorUserBuildSettings.activeBuildTarget;
+            if (Obfuz.Settings.ObfuzSettings.Instance.enable)
+            {
+                ObfuscateUtil.CompileAndObfuscateHotUpdateAssemblies(activeTarget);
+            }
+            else
+            {
+                HybridCLR.Editor.Commands.CompileDllCommand.CompileDllActiveBuildTarget();
+            }
             var desDir = UtilityBuiltin.AssetsPath.GetCombinePath(Application.dataPath, ConstBuiltin.HOT_FIX_DLL_DIR);
             var dllFils = Directory.GetFiles(desDir, "*.dll.bytes");
             for (int i = dllFils.Length - 1; i >= 0; i--)
             {
                 File.Delete(dllFils[i]);
             }
-            string[] failList = CopyHotfixDllTo(EditorUserBuildSettings.activeBuildTarget, desDir, includeAotDll);
+            string[] failList = CopyHotfixDllTo(activeTarget, desDir, includeAotDll);
             string content = $"Compile dlls and copy to '{ConstBuiltin.HOT_FIX_DLL_DIR}' success.";
             if (failList.Length > 0)
             {
@@ -149,10 +197,50 @@ namespace UGF.EditorTools
             HybridCLR.Editor.Settings.HybridCLRSettings.Save();
             EditorUtility.DisplayDialog("HybridCLR", "切换到单机模式,已禁用HybridCLR热更! 记得在ResourceEditor中移除热更dll资源.", "知道了");
         }
+        public static void DisableObfuz()
+        {
+#if UNITY_2021_1_OR_NEWER
+            var bTarget = GetCurrentNamedBuildTarget();
+            PlayerSettings.GetScriptingDefineSymbols(bTarget, out string[] defines);
+#else
+        var bTarget = GetCurrentBuildTarget();
+        PlayerSettings.GetScriptingDefineSymbolsForGroup(bTarget, out string[] defines);
+#endif
+            if (ArrayUtility.Contains(defines, ENABLE_OBFUZ))
+            {
+                ArrayUtility.Remove<string>(ref defines, ENABLE_OBFUZ);
+#if UNITY_2021_1_OR_NEWER
+                PlayerSettings.SetScriptingDefineSymbols(bTarget, defines);
+#else
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(bTarget, defines);
+#endif
+            }
+        }
+        public static void EnableObfuz()
+        {
+            ObfuzMenu.GenerateEncryptionVM();
+            ObfuzMenu.SaveSecretFile();
+#if UNITY_2021_1_OR_NEWER
+            var bTarget = GetCurrentNamedBuildTarget();
+            PlayerSettings.GetScriptingDefineSymbols(bTarget, out string[] defines);
+#else
+        var bTarget = GetCurrentBuildTarget();
+        PlayerSettings.GetScriptingDefineSymbolsForGroup(bTarget, out string[] defines);
+#endif
+            if (!ArrayUtility.Contains(defines, ENABLE_OBFUZ))
+            {
+                ArrayUtility.Add<string>(ref defines, ENABLE_OBFUZ);
+#if UNITY_2021_1_OR_NEWER
+                PlayerSettings.SetScriptingDefineSymbols(bTarget, defines);
+#else
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(bTarget, defines);
+#endif
+            }
+        }
         private static void RefreshPlayerSettings()
         {
 #if DISABLE_HYBRIDCLR
-        PlayerSettings.gcIncremental = true;
+            PlayerSettings.gcIncremental = true;
 #else
             PlayerSettings.gcIncremental = false;
             PlayerSettings.SetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup, ScriptingImplementation.IL2CPP);
@@ -254,6 +342,56 @@ namespace UGF.EditorTools
 #endif
         }
 #endif
+        public static string GetStripAssembliesDir(BuildTarget target)
+        {
+            string projectDir = SettingsUtil.ProjectDir;
+            switch (target)
+            {
+                case BuildTarget.StandaloneWindows:
+                case BuildTarget.StandaloneWindows64:
+                    return $"{projectDir}/Library/Bee/artifacts/WinPlayerBuildProgram/ManagedStripped";
+                case BuildTarget.StandaloneLinux64:
+                    return $"{projectDir}/Library/Bee/artifacts/LinuxPlayerBuildProgram/ManagedStripped";
+                case BuildTarget.WSAPlayer:
+                    return $"{projectDir}/Library/Bee/artifacts/UWPPlayerBuildProgram/ManagedStripped";
+                case BuildTarget.Android:
+                    return $"{projectDir}/Library/Bee/artifacts/Android/ManagedStripped";
+#if TUANJIE_2022_3_OR_NEWER
+                case BuildTarget.HMIAndroid:
+                    return $"{projectDir}/Library/Bee/artifacts/HMIAndroid/ManagedStripped";
+#endif
+                case BuildTarget.iOS:
+#if UNITY_TVOS
+                case BuildTarget.tvOS:
+#endif
+                    return $"{projectDir}/Library/Bee/artifacts/iOS/ManagedStripped";
+#if UNITY_VISIONOS
+                case BuildTarget.VisionOS:
+#if UNITY_6000_0_OR_NEWER
+                return $"{projectDir}/Library/Bee/artifacts/VisionOS/ManagedStripped";
+#else
+                return $"{projectDir}/Library/Bee/artifacts/iOS/ManagedStripped";
+#endif
+#endif
+                case BuildTarget.WebGL:
+                    return $"{projectDir}/Library/Bee/artifacts/WebGL/ManagedStripped";
+                case BuildTarget.StandaloneOSX:
+                    return $"{projectDir}/Library/Bee/artifacts/MacStandalonePlayerBuildProgram/ManagedStripped";
+                case BuildTarget.PS4:
+                    return $"{projectDir}/Library/Bee/artifacts/PS4PlayerBuildProgram/ManagedStripped";
+                case BuildTarget.PS5:
+                    return $"{projectDir}/Library/Bee/artifacts/PS5PlayerBuildProgram/ManagedStripped";
+#if UNITY_WEIXINMINIGAME
+                case BuildTarget.WeixinMiniGame:
+                    return $"{projectDir}/Library/Bee/artifacts/WeixinMiniGame/ManagedStripped";
+#endif
+#if UNITY_OPENHARMONY
+                case BuildTarget.OpenHarmony:
+                    return $"{projectDir}/Library/Bee/artifacts/OpenHarmonyPlayerBuildProgram/ManagedStripped";
+#endif
+                default: return "";
+            }
+        }
     }
 
 }

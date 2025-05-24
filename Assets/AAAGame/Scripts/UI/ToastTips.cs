@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public partial class ToastTips : UIFormBase
 {
     public const string P_Duration = "Duration";

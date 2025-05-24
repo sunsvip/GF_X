@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.All)]
 public class GFBuiltin : MonoBehaviour
 {
     public static GFBuiltin Instance { get; private set; }

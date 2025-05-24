@@ -16,6 +16,7 @@ using ResourceVerifySuccessEventArgs = UnityGameFramework.Runtime.ResourceVerify
 using ResourceVerifyFailureEventArgs = UnityGameFramework.Runtime.ResourceVerifyFailureEventArgs;
 
 [Serializable]
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.All)]
 public class VersionInfo
 {
     public int InternalResourceVersion;//资源版本号
@@ -36,6 +37,7 @@ public class VersionInfo
 /// 1.如果是单机模式直接初始化资源
 /// 2.如果是热更新模式先检测更新再初始化资源
 /// </summary>
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public class UpdateResourcesProcedure : ProcedureBase
 {
     private bool initComplete = false;

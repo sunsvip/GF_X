@@ -184,7 +184,7 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
     /// <returns></returns>
     protected T SpawnItem<T>(GameObject itemTemple, Transform instanceRoot, float autoReleaseInterval = 10f, int capacity = 50, float expireTime = 50) where T : UIItemObject, new()
     {
-        var itemTempleId = itemTemple.GetHashCode().ToString();
+        var itemTempleId = itemTemple.GetInstanceID().ToString();
         GameFramework.ObjectPool.IObjectPool<T> pool;
         if (GF.ObjectPool.HasObjectPool<T>(itemTempleId))
         {
@@ -224,7 +224,7 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
     /// <param name="itemInstance">要回收的Item实例</param>
     protected void UnspawnItem<T>(GameObject itemTemple, GameObject itemInstance) where T : UIItemObject, new()
     {
-        var itemTempleId = itemTemple.GetHashCode().ToString();
+        var itemTempleId = itemTemple.GetInstanceID().ToString();
         if (!GF.ObjectPool.HasObjectPool<T>(itemTempleId)) return;
 
         var pool = GF.ObjectPool.GetObjectPool<T>(itemTempleId);
@@ -237,7 +237,7 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
     /// <param name="itemTemple"></param>
     protected void UnspawnAllItem<T>(GameObject itemTemple) where T : UIItemObject, new()
     {
-        var itemTempleId = itemTemple.GetHashCode().ToString();
+        var itemTempleId = itemTemple.GetInstanceID().ToString();
         if (!GF.ObjectPool.HasObjectPool<T>(itemTempleId)) return;
 
         var pool = GF.ObjectPool.GetObjectPool<T>(itemTempleId);
@@ -262,7 +262,7 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
             }
         }
     }
-
+    [Obfuz.ObfuzIgnore]
     public void CloseWithAnimation()
     {
         Interactable = false;
@@ -350,18 +350,19 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
         }
     }
 
-
+    [Obfuz.ObfuzIgnore]
     public virtual void OnClickClose()
     {
         GF.Sound.PlayEffect("ui/ui_click.wav");
         GF.UI.Close(this.UIForm);
     }
-
+    [Obfuz.ObfuzIgnore]
     public void ClickUIButton(string bt_tag)
     {
         GF.Sound.PlayEffect("ui/ui_click.wav");
         OnButtonClick(this, bt_tag);
     }
+    [Obfuz.ObfuzIgnore]
     public void ClickUIButton(Button btSelf)
     {
         GF.Sound.PlayEffect("ui/ui_click.wav");
@@ -407,6 +408,7 @@ public interface ISerializeFieldTool
 {
     public SerializeFieldData[] SerializeFieldArr { get; set; }
 }
+[Serializable]
 public enum UIFormAnimationType
 {
     DOTween,

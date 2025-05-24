@@ -2,9 +2,7 @@
 using GameFramework.Fsm;
 using GameFramework.Procedure;
 using UnityGameFramework.Runtime;
-/// <summary>
-/// 游戏结算流程
-/// </summary>
+[Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public class GameOverProcedure : ProcedureBase
 {
     
