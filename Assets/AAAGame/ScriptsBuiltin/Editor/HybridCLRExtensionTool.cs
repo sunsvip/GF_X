@@ -14,6 +14,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using System.Text;
 
 namespace UGF.EditorTools
 {
@@ -134,6 +135,7 @@ namespace UGF.EditorTools
                 Directory.Delete(aotSaveDir, true);
             }
             Directory.CreateDirectory(aotSaveDir);
+            var aotDllEncryptCode = UTF8Encoding.UTF8.GetBytes(ConstBuiltin.AOT_DLLS_KEY);
             foreach (var dll in HybridCLR.Editor.SettingsUtil.AOTAssemblyNames)
             {
                 string dllPath = UtilityBuiltin.AssetsPath.GetCombinePath(aotDllDir, dll.EndsWith(".dll") ? dll : dll + ".dll");
@@ -144,7 +146,13 @@ namespace UGF.EditorTools
                     continue;
                 }
                 string dllBytesPath = UtilityBuiltin.AssetsPath.GetCombinePath(aotSaveDir, Utility.Text.Format("{0}.bytes", dll));
-                File.Copy(dllPath, dllBytesPath, true);
+
+                var dllBytes = File.ReadAllBytes(dllPath);
+                if (AppSettings.Instance.EncryptAOTDlls != null && AppSettings.Instance.EncryptAOTDlls.Contains(dll))
+                {
+                    Utility.Encryption.GetQuickSelfXorBytes(dllBytes, aotDllEncryptCode);
+                }
+                File.WriteAllBytes(dllBytesPath, dllBytes);
             }
 
             return failList.ToArray();
@@ -319,7 +327,7 @@ namespace UGF.EditorTools
 #elif UNITY_IOS
         return UnityEditor.BuildTargetGroup.iOS;
 #elif UNITY_STANDALONE
-        return UnityEditor.BuildTargetGroup.Standalone;
+            return UnityEditor.BuildTargetGroup.Standalone;
 #elif UNITY_WEBGL
         return UnityEditor.BuildTargetGroup.WebGL;
 #else
@@ -334,7 +342,7 @@ namespace UGF.EditorTools
 #elif UNITY_IOS
         return UnityEditor.Build.NamedBuildTarget.iOS;
 #elif UNITY_STANDALONE
-        return UnityEditor.Build.NamedBuildTarget.Standalone;
+            return UnityEditor.Build.NamedBuildTarget.Standalone;
 #elif UNITY_WEBGL
         return UnityEditor.Build.NamedBuildTarget.WebGL;
 #else

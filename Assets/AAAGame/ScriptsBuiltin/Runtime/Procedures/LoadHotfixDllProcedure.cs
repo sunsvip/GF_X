@@ -8,6 +8,7 @@ using System.Linq;
 using GameFramework;
 using GameFramework.Resource;
 using System.IO;
+using System.Text;
 [Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
 public class LoadHotfixDllProcedure : ProcedureBase
 {
@@ -85,10 +86,14 @@ public class LoadHotfixDllProcedure : ProcedureBase
         loadedProgress = 0;
         hotfixListIsLoaded = true;
 
-#if !UNITY_EDITOR && !DISABLE_HYBRIDCLR
-        hotfixListIsLoaded = false;
-        LoadAotDlls();
-        LoadHotfixDlls();
+        //#if !UNITY_EDITOR && !DISABLE_HYBRIDCLR
+#if !DISABLE_HYBRIDCLR
+        if (!GFBuiltin.Base.EditorResourceMode)
+        {
+            hotfixListIsLoaded = false;
+            LoadAotDlls();
+            LoadHotfixDlls();
+        }
 #endif
     }
 #if !DISABLE_HYBRIDCLR
@@ -103,9 +108,16 @@ public class LoadHotfixDllProcedure : ProcedureBase
     }
     private void LoadMetadata(TextAsset[] aotMetaDlls)
     {
+        var encryptDllList = AppSettings.Instance.EncryptAOTDlls;
+        var encryptCode = UTF8Encoding.UTF8.GetBytes(ConstBuiltin.AOT_DLLS_KEY);
         foreach (var dll in aotMetaDlls)
         {
-            var resultCode = LoadMetadataForAOT(dll.bytes);
+            var dllBytes = dll.bytes;
+            if (encryptDllList != null && encryptDllList.Contains(dll.name))
+            {
+                dllBytes = Utility.Encryption.GetQuickXorBytes(dllBytes, encryptCode);
+            }
+            var resultCode = LoadMetadataForAOT(dllBytes);
             GFBuiltin.LogInfo(Utility.Text.Format("补充元数据:{0}. ret:{1}", dll.name, resultCode));
             if (resultCode == HybridCLR.LoadImageErrorCode.OK)
             {
@@ -169,7 +181,7 @@ public class LoadHotfixDllProcedure : ProcedureBase
         if (hotfixDlls.Contains(args.DllName))
         {
             hotfixDlls.Remove(args.DllName);
-            if(hotfixDlls.Count == 1)
+            if (hotfixDlls.Count == 1)
             {
                 var mainDll = UtilityBuiltin.AssetsPath.GetHotfixDll(hotfixDlls.Last());
                 LoadHotfixDll(mainDll, this);
@@ -185,28 +197,6 @@ public class LoadHotfixDllProcedure : ProcedureBase
     public void LoadHotfixDll(string dllAssetName, object userData)
     {
         GFBuiltin.Resource.LoadAsset(dllAssetName, typeof(TextAsset), new LoadAssetCallbacks(OnLoadDllSuccess, OnLoadDllFail), userData);
-    }
-    /// <summary>
-    /// 加载并初始化元数据
-    /// </summary>
-    /// <param name="dllAssetName"></param>
-    /// <param name="loadCallback"></param>
-    public void LoadMetadataForAOTAssembly(string dllAssetName, GameFrameworkAction<string, int> loadCallback)
-    {
-        GFBuiltin.Resource.LoadAsset(dllAssetName, new LoadAssetCallbacks((assetName, asset, duration, userData) =>
-        {
-            var textAsset = asset as TextAsset;
-            if (textAsset == null) loadCallback.Invoke(dllAssetName, (int)HybridCLR.LoadImageErrorCode.AOT_ASSEMBLY_NOT_FIND);
-            else
-            {
-                var resultCode = LoadMetadataForAOT(textAsset.bytes);
-                loadCallback.Invoke(dllAssetName, (int)resultCode);
-            }
-
-        }, (assetName, status, errorMessage, userData) =>
-        {
-            loadCallback.Invoke(dllAssetName, (int)HybridCLR.LoadImageErrorCode.AOT_ASSEMBLY_NOT_FIND);
-        }));
     }
 
     private void OnLoadDllFail(string assetName, LoadResourceStatus status, string errorMessage, object userData)

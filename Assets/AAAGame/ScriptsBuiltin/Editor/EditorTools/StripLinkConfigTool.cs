@@ -126,6 +126,7 @@ namespace UGF.EditorTools
         {
             HybridCLR.Editor.Settings.HybridCLRSettings.Instance.patchAOTAssemblies = strings;
             HybridCLRExtensionTool.CopyAotDllsToProject(EditorUserBuildSettings.activeBuildTarget);
+            HybridCLR.Editor.Settings.HybridCLRSettings.Save();
             AssetDatabase.Refresh();
             return true;
         }
