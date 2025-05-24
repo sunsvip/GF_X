@@ -754,6 +754,7 @@ public class DOTweenSequence : MonoBehaviour
                     Debug.LogErrorFormat("Tweener is null. Index:{0}, Animation Type:{1}, Component Type:{2}", i, item.AnimationType, item.Target == null ? "null" : item.Target.GetType().Name);
                     continue;
                 }
+                tweener.SetUpdate(!m_IgnoreTimeScale);
                 switch (item.AddType)
                 {
                     case AddType.Append:
@@ -776,6 +777,7 @@ public class DOTweenSequence : MonoBehaviour
                     Debug.LogErrorFormat("Tweener is null. Index:{0}, Animation Type:{1}, Component Type:{2}", i, item.AnimationType, item.Target == null ? "null" : item.Target.GetType().Name);
                     continue;
                 }
+                tweener.SetUpdate(!m_IgnoreTimeScale);
                 switch (item.AddType)
                 {
                     case AddType.Append:

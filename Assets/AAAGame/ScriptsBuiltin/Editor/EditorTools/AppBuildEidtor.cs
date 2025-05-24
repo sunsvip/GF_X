@@ -81,7 +81,6 @@ namespace UGF.EditorTools
             {
                 AssetDatabase.CreateAsset(CreateInstance<AppSettings>(), "Assets/Resources/AppSettings.asset");
             }
-            RefreshHybridCLREnable();
 
             m_Controller = new ResourceBuilderController();
             m_Controller.OnLoadingResource += OnLoadingResource;

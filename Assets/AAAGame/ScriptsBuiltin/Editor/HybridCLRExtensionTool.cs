@@ -218,6 +218,8 @@ namespace UGF.EditorTools
         }
         public static void EnableObfuz()
         {
+            ObfuzMenu.GenerateEncryptionVM();
+            ObfuzMenu.SaveSecretFile();
 #if UNITY_2021_1_OR_NEWER
             var bTarget = GetCurrentNamedBuildTarget();
             PlayerSettings.GetScriptingDefineSymbols(bTarget, out string[] defines);
