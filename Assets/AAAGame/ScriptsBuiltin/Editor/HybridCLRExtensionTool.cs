@@ -276,6 +276,7 @@ namespace UGF.EditorTools
                     return;
                 }
             }
+            Environment.SetEnvironmentVariable("UNITY_IL2CPP_PATH", disableHybridCLR ? "" : HybridCLR.Editor.SettingsUtil.LocalIl2CppDir);
             if (disableHybridCLR)
             {
                 bool changed = false;
@@ -293,8 +294,6 @@ namespace UGF.EditorTools
                     File.WriteAllText(builtinFile, jsonData.ToString(Newtonsoft.Json.Formatting.Indented));
                     AssetDatabase.Refresh();
                 }
-                Environment.SetEnvironmentVariable("UNITY_IL2CPP_PATH", string.Empty);
-                Debug.Log("Remove UNITY_IL2CPP_PATH");
             }
             else
             {
@@ -312,11 +311,6 @@ namespace UGF.EditorTools
                     refAsmbs.Add("HybridCLR.Runtime");
                     File.WriteAllText(builtinFile, jsonData.ToString(Newtonsoft.Json.Formatting.Indented));
                     AssetDatabase.Refresh();
-                }
-                if (Directory.Exists(HybridCLR.Editor.SettingsUtil.LocalIl2CppDir))
-                {
-                    Environment.SetEnvironmentVariable("UNITY_IL2CPP_PATH", HybridCLR.Editor.SettingsUtil.LocalIl2CppDir);
-                    Debug.Log("Set UNITY_IL2CPP_PATH:" + HybridCLR.Editor.SettingsUtil.LocalIl2CppDir);
                 }
             }
         }
