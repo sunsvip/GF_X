@@ -8,7 +8,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		"Cinemachine.dll",
 		"DOTween.dll",
 		"GameFramework.dll",
-		"Obfuz.Runtime.dll",
 		"System.Core.dll",
 		"System.dll",
 		"UniTask.dll",
@@ -23,7 +22,6 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// }} 
 
 	// {{ AOT generic types
-	// $b.$d<$b.$C>
 	// Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask.<>c<$N.$O<object>,object>
 	// Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask.<>c<$N.$P,byte>
 	// Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask.<>c<$N.$p<object>,object>

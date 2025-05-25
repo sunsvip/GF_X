@@ -1,19 +1,14 @@
 <mapping>
   <assembly name="Builtin.Runtime">
-    <type fullName="ConstBuiltin" newFullName="" status="NotRenamed">
+    <type fullName="ConstBuiltin" newFullName="$j" status="Renamed">
       <field signature="string HOT_FIX_DLL_DIR" newName="$a" />
       <field signature="string AOT_DLL_DIR" newName="$A" />
       <field signature="string CheckVersionUrl" newName="$b" />
       <field signature="string VersionFile" newName="$B" />
       <field signature="bool NoNetworkAllow" newName="$c" />
       <field signature="string DES_KEY" newName="$C" />
-      <field signature="string RES_KEY" newName="$d" />
+      <field signature="string AOT_DLLS_KEY" newName="$d" />
       <field signature="char AB_TEST_TAG" newName="$D" />
-    </type>
-    <type fullName="ConstBuiltin/Setting" newFullName="" status="NotRenamed">
-      <field signature="string Language" newName="$a" />
-      <field signature="string QuitAppTime" newName="$A" />
-      <field signature="string ABTestGroup" newName="$b" />
     </type>
     <type fullName="ScreenFitMode" newFullName="$a" status="Renamed">
       <field signature="[Builtin.Runtime]ScreenFitMode Width" newName="$a" />
@@ -143,18 +138,10 @@
       <method signature="void LoadHotfixDllProcedure::LoadHotfixDlls([Builtin.Runtime]LoadHotfixDllProcedure)" newName="$D" oldStackTraceSignature="LoadHotfixDllProcedure:LoadHotfixDlls()" newStackTraceSignature="LoadHotfixDllProcedure:$D()" />
       <method signature="void LoadHotfixDllProcedure::OnLoadHotfixDllCallback([Builtin.Runtime]LoadHotfixDllProcedure, object, [GameFramework]GameFramework.Event.GameEventArgs)" newName="$e" oldStackTraceSignature="LoadHotfixDllProcedure:OnLoadHotfixDllCallback(Object, GameEventArgs)" newStackTraceSignature="LoadHotfixDllProcedure:$e(Object, GameEventArgs)" />
       <method signature="void LoadHotfixDllProcedure::LoadHotfixDll([Builtin.Runtime]LoadHotfixDllProcedure, string, object)" newName="$E" oldStackTraceSignature="LoadHotfixDllProcedure:LoadHotfixDll(String, Object)" newStackTraceSignature="LoadHotfixDllProcedure:$E(String, Object)" />
-      <method signature="void LoadHotfixDllProcedure::LoadMetadataForAOTAssembly([Builtin.Runtime]LoadHotfixDllProcedure, string, [GameFramework]GameFramework.GameFrameworkAction`2&lt;string,int&gt;)" newName="$f" oldStackTraceSignature="LoadHotfixDllProcedure:LoadMetadataForAOTAssembly(String, GameFrameworkAction`2)" newStackTraceSignature="LoadHotfixDllProcedure:$f(String, GameFrameworkAction`2)" />
       <method signature="void LoadHotfixDllProcedure::OnLoadDllFail([Builtin.Runtime]LoadHotfixDllProcedure, string, [GameFramework]GameFramework.Resource.LoadResourceStatus, string, object)" newName="$F" oldStackTraceSignature="LoadHotfixDllProcedure:OnLoadDllFail(String, LoadResourceStatus, String, Object)" newStackTraceSignature="LoadHotfixDllProcedure:$F(String, LoadResourceStatus, String, Object)" />
       <method signature="void LoadHotfixDllProcedure::OnLoadDllSuccess([Builtin.Runtime]LoadHotfixDllProcedure, string, object, float, object)" newName="$g" oldStackTraceSignature="LoadHotfixDllProcedure:OnLoadDllSuccess(String, Object, Single, Object)" newStackTraceSignature="LoadHotfixDllProcedure:$g(String, Object, Single, Object)" />
       <method signature="[HybridCLR.Runtime]HybridCLR.LoadImageErrorCode LoadHotfixDllProcedure::LoadMetadataForAOT([Builtin.Runtime]LoadHotfixDllProcedure, byte[])" newName="$G" oldStackTraceSignature="LoadHotfixDllProcedure:LoadMetadataForAOT(Byte[])" newStackTraceSignature="LoadHotfixDllProcedure:$G(Byte[])" />
       <method signature="void LoadHotfixDllProcedure::&lt;LoadHotfixDlls&gt;b__11_0([Builtin.Runtime]LoadHotfixDllProcedure, string, object, float, object)" newName="$h" oldStackTraceSignature="LoadHotfixDllProcedure:&lt;LoadHotfixDlls&gt;b__11_0(String, Object, Single, Object)" newStackTraceSignature="LoadHotfixDllProcedure:$h(String, Object, Single, Object)" />
-    </type>
-    <type fullName="LoadHotfixDllProcedure/&lt;&gt;c__DisplayClass14_0" newFullName="" status="NotRenamed">
-      <field signature="[GameFramework]GameFramework.GameFrameworkAction`2&lt;string,int&gt; loadCallback" newName="$a" />
-      <field signature="string dllAssetName" newName="$A" />
-      <field signature="[Builtin.Runtime]LoadHotfixDllProcedure &lt;&gt;4__this" newName="$b" />
-      <method signature="void LoadHotfixDllProcedure/&lt;&gt;c__DisplayClass14_0::&lt;LoadMetadataForAOTAssembly&gt;b__0([Builtin.Runtime]LoadHotfixDllProcedure/&lt;&gt;c__DisplayClass14_0, string, object, float, object)" newName="$B" oldStackTraceSignature="&lt;&gt;c__DisplayClass14_0:&lt;LoadMetadataForAOTAssembly&gt;b__0(String, Object, Single, Object)" newStackTraceSignature="&lt;&gt;c__DisplayClass14_0:$B(String, Object, Single, Object)" />
-      <method signature="void LoadHotfixDllProcedure/&lt;&gt;c__DisplayClass14_0::&lt;LoadMetadataForAOTAssembly&gt;b__1([Builtin.Runtime]LoadHotfixDllProcedure/&lt;&gt;c__DisplayClass14_0, string, [GameFramework]GameFramework.Resource.LoadResourceStatus, string, object)" newName="$c" oldStackTraceSignature="&lt;&gt;c__DisplayClass14_0:&lt;LoadMetadataForAOTAssembly&gt;b__1(String, LoadResourceStatus, String, Object)" newStackTraceSignature="&lt;&gt;c__DisplayClass14_0:$c(String, LoadResourceStatus, String, Object)" />
     </type>
     <type fullName="UpdateResourcesProcedure" newFullName="" status="NotRenamed">
       <field signature="bool initComplete" newName="$a" />
@@ -203,9 +190,9 @@
       <field signature="int kOpCodeMask" newName="$b" />
       <field signature="int[] _secretKey" newName="$B" />
       <property signature="int OpCodeCount" newName="$E" />
-      <method signature="int Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine::get_OpCodeCount([Builtin.Runtime]Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine)" newName="&gt;$d" oldStackTraceSignature="Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine:get_OpCodeCount()" newStackTraceSignature="$A.$L:&gt;$d()" />
-      <method signature="int Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine::Encrypt([Builtin.Runtime]Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine, int, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine:Encrypt(Int32, Int32, Int32)" newStackTraceSignature="$A.$L:&gt;$D(Int32, Int32, Int32)" />
-      <method signature="int Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine::Decrypt([Builtin.Runtime]Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine, int, int, int)" newName="&gt;$e" oldStackTraceSignature="Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine:Decrypt(Int32, Int32, Int32)" newStackTraceSignature="$A.$L:&gt;$e(Int32, Int32, Int32)" />
+      <method signature="int Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine::get_OpCodeCount([Builtin.Runtime]Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine)" newName="$D" oldStackTraceSignature="Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine:get_OpCodeCount()" newStackTraceSignature="$A.$L:$D()" />
+      <method signature="int Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine::Encrypt([Builtin.Runtime]Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine, int, int, int)" newName="$e" oldStackTraceSignature="Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine:Encrypt(Int32, Int32, Int32)" newStackTraceSignature="$A.$L:$e(Int32, Int32, Int32)" />
+      <method signature="int Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine::Decrypt([Builtin.Runtime]Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine, int, int, int)" newName="$f" oldStackTraceSignature="Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine:Decrypt(Int32, Int32, Int32)" newStackTraceSignature="$A.$L:$f(Int32, Int32, Int32)" />
       <method signature="int Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine::ExecuteEncrypt([Builtin.Runtime]Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine, int, int, int)" newName="$c" oldStackTraceSignature="Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine:ExecuteEncrypt(Int32, Int32, Int32)" newStackTraceSignature="$A.$L:$c(Int32, Int32, Int32)" />
       <method signature="int Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine::ExecuteDecrypt([Builtin.Runtime]Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine, int, int, int)" newName="$C" oldStackTraceSignature="Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine:ExecuteDecrypt(Int32, Int32, Int32)" newStackTraceSignature="$A.$L:$C(Int32, Int32, Int32)" />
     </type>
@@ -296,6 +283,9 @@
     </type>
   </assembly>
   <assembly name="Obfuz.Runtime">
+    <type fullName="Obfuz.AssetUtility" newFullName="$B.$g" status="Renamed">
+      <method signature="void Obfuz.AssetUtility::VerifySecretKey(int, int)" newName="$a" oldStackTraceSignature="Obfuz.AssetUtility:VerifySecretKey(Int32, Int32)" newStackTraceSignature="$B.$g:$a(Int32, Int32)" />
+    </type>
     <type fullName="Obfuz.ConstUtility" newFullName="$b.$a" status="Renamed">
       <method signature="int Obfuz.ConstUtility::GetInt(byte[], int)" newName="$a" oldStackTraceSignature="Obfuz.ConstUtility:GetInt(Byte[], Int32)" newStackTraceSignature="$b.$a:$a(Byte[], Int32)" />
       <method signature="long Obfuz.ConstUtility::GetLong(byte[], int)" newName="$A" oldStackTraceSignature="Obfuz.ConstUtility:GetLong(Byte[], Int32)" newStackTraceSignature="$b.$a:$A(Byte[], Int32)" />
@@ -349,57 +339,57 @@
     </type>
     <type fullName="Obfuz.EncryptorBase" newFullName="$b.$D" status="Renamed">
       <property signature="int OpCodeCount" newName="$d" />
-      <method signature="int Obfuz.EncryptorBase::get_OpCodeCount([Obfuz.Runtime]Obfuz.EncryptorBase)" newName="&gt;$d" oldStackTraceSignature="Obfuz.EncryptorBase:get_OpCodeCount()" newStackTraceSignature="$b.$D:&gt;$d()" />
+      <method signature="int Obfuz.EncryptorBase::get_OpCodeCount([Obfuz.Runtime]Obfuz.EncryptorBase)" newName="$D" oldStackTraceSignature="Obfuz.EncryptorBase:get_OpCodeCount()" newStackTraceSignature="$b.$D:$D()" />
       <method signature="int[] Obfuz.EncryptorBase::ConvertToIntKey(byte[])" newName="$a" oldStackTraceSignature="Obfuz.EncryptorBase:ConvertToIntKey(Byte[])" newStackTraceSignature="$b.$D:$a(Byte[])" />
-      <method signature="int Obfuz.EncryptorBase::Encrypt([Obfuz.Runtime]Obfuz.EncryptorBase, int, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.EncryptorBase:Encrypt(Int32, Int32, Int32)" newStackTraceSignature="$b.$D:&gt;$D(Int32, Int32, Int32)" />
-      <method signature="int Obfuz.EncryptorBase::Decrypt([Obfuz.Runtime]Obfuz.EncryptorBase, int, int, int)" newName="&gt;$e" oldStackTraceSignature="Obfuz.EncryptorBase:Decrypt(Int32, Int32, Int32)" newStackTraceSignature="$b.$D:&gt;$e(Int32, Int32, Int32)" />
-      <method signature="long Obfuz.EncryptorBase::Encrypt([Obfuz.Runtime]Obfuz.EncryptorBase, long, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.EncryptorBase:Encrypt(Int64, Int32, Int32)" newStackTraceSignature="$b.$D:&gt;$D(Int64, Int32, Int32)" />
-      <method signature="long Obfuz.EncryptorBase::Decrypt([Obfuz.Runtime]Obfuz.EncryptorBase, long, int, int)" newName="&gt;$e" oldStackTraceSignature="Obfuz.EncryptorBase:Decrypt(Int64, Int32, Int32)" newStackTraceSignature="$b.$D:&gt;$e(Int64, Int32, Int32)" />
-      <method signature="float Obfuz.EncryptorBase::Encrypt([Obfuz.Runtime]Obfuz.EncryptorBase, float, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.EncryptorBase:Encrypt(Single, Int32, Int32)" newStackTraceSignature="$b.$D:&gt;$D(Single, Int32, Int32)" />
-      <method signature="float Obfuz.EncryptorBase::Decrypt([Obfuz.Runtime]Obfuz.EncryptorBase, float, int, int)" newName="&gt;$e" oldStackTraceSignature="Obfuz.EncryptorBase:Decrypt(Single, Int32, Int32)" newStackTraceSignature="$b.$D:&gt;$e(Single, Int32, Int32)" />
-      <method signature="double Obfuz.EncryptorBase::Encrypt([Obfuz.Runtime]Obfuz.EncryptorBase, double, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.EncryptorBase:Encrypt(Double, Int32, Int32)" newStackTraceSignature="$b.$D:&gt;$D(Double, Int32, Int32)" />
-      <method signature="double Obfuz.EncryptorBase::Decrypt([Obfuz.Runtime]Obfuz.EncryptorBase, double, int, int)" newName="&gt;$e" oldStackTraceSignature="Obfuz.EncryptorBase:Decrypt(Double, Int32, Int32)" newStackTraceSignature="$b.$D:&gt;$e(Double, Int32, Int32)" />
-      <method signature="byte[] Obfuz.EncryptorBase::Encrypt([Obfuz.Runtime]Obfuz.EncryptorBase, byte[], int, int, int, int)" newName="&gt;$A" oldStackTraceSignature="Obfuz.EncryptorBase:Encrypt(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$D:&gt;$A(Byte[], Int32, Int32, Int32, Int32)" />
-      <method signature="byte[] Obfuz.EncryptorBase::Decrypt([Obfuz.Runtime]Obfuz.EncryptorBase, byte[], int, int, int, int)" newName="&gt;$b" oldStackTraceSignature="Obfuz.EncryptorBase:Decrypt(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$D:&gt;$b(Byte[], Int32, Int32, Int32, Int32)" />
-      <method signature="byte[] Obfuz.EncryptorBase::Encrypt([Obfuz.Runtime]Obfuz.EncryptorBase, string, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.EncryptorBase:Encrypt(String, Int32, Int32)" newStackTraceSignature="$b.$D:&gt;$D(String, Int32, Int32)" />
-      <method signature="string Obfuz.EncryptorBase::DecryptString([Obfuz.Runtime]Obfuz.EncryptorBase, byte[], int, int, int, int)" newName="&gt;$B" oldStackTraceSignature="Obfuz.EncryptorBase:DecryptString(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$D:&gt;$B(Byte[], Int32, Int32, Int32, Int32)" />
-      <method signature="void Obfuz.EncryptorBase::EncryptBlock([Obfuz.Runtime]Obfuz.EncryptorBase, byte[], int, int)" newName="&gt;$c" oldStackTraceSignature="Obfuz.EncryptorBase:EncryptBlock(Byte[], Int32, Int32)" newStackTraceSignature="$b.$D:&gt;$c(Byte[], Int32, Int32)" />
-      <method signature="void Obfuz.EncryptorBase::DecryptBlock([Obfuz.Runtime]Obfuz.EncryptorBase, byte[], int, int)" newName="&gt;$C" oldStackTraceSignature="Obfuz.EncryptorBase:DecryptBlock(Byte[], Int32, Int32)" newStackTraceSignature="$b.$D:&gt;$C(Byte[], Int32, Int32)" />
+      <method signature="int Obfuz.EncryptorBase::Encrypt([Obfuz.Runtime]Obfuz.EncryptorBase, int, int, int)" newName="$e" oldStackTraceSignature="Obfuz.EncryptorBase:Encrypt(Int32, Int32, Int32)" newStackTraceSignature="$b.$D:$e(Int32, Int32, Int32)" />
+      <method signature="int Obfuz.EncryptorBase::Decrypt([Obfuz.Runtime]Obfuz.EncryptorBase, int, int, int)" newName="$f" oldStackTraceSignature="Obfuz.EncryptorBase:Decrypt(Int32, Int32, Int32)" newStackTraceSignature="$b.$D:$f(Int32, Int32, Int32)" />
+      <method signature="long Obfuz.EncryptorBase::Encrypt([Obfuz.Runtime]Obfuz.EncryptorBase, long, int, int)" newName="$e" oldStackTraceSignature="Obfuz.EncryptorBase:Encrypt(Int64, Int32, Int32)" newStackTraceSignature="$b.$D:$e(Int64, Int32, Int32)" />
+      <method signature="long Obfuz.EncryptorBase::Decrypt([Obfuz.Runtime]Obfuz.EncryptorBase, long, int, int)" newName="$f" oldStackTraceSignature="Obfuz.EncryptorBase:Decrypt(Int64, Int32, Int32)" newStackTraceSignature="$b.$D:$f(Int64, Int32, Int32)" />
+      <method signature="float Obfuz.EncryptorBase::Encrypt([Obfuz.Runtime]Obfuz.EncryptorBase, float, int, int)" newName="$e" oldStackTraceSignature="Obfuz.EncryptorBase:Encrypt(Single, Int32, Int32)" newStackTraceSignature="$b.$D:$e(Single, Int32, Int32)" />
+      <method signature="float Obfuz.EncryptorBase::Decrypt([Obfuz.Runtime]Obfuz.EncryptorBase, float, int, int)" newName="$f" oldStackTraceSignature="Obfuz.EncryptorBase:Decrypt(Single, Int32, Int32)" newStackTraceSignature="$b.$D:$f(Single, Int32, Int32)" />
+      <method signature="double Obfuz.EncryptorBase::Encrypt([Obfuz.Runtime]Obfuz.EncryptorBase, double, int, int)" newName="$e" oldStackTraceSignature="Obfuz.EncryptorBase:Encrypt(Double, Int32, Int32)" newStackTraceSignature="$b.$D:$e(Double, Int32, Int32)" />
+      <method signature="double Obfuz.EncryptorBase::Decrypt([Obfuz.Runtime]Obfuz.EncryptorBase, double, int, int)" newName="$f" oldStackTraceSignature="Obfuz.EncryptorBase:Decrypt(Double, Int32, Int32)" newStackTraceSignature="$b.$D:$f(Double, Int32, Int32)" />
+      <method signature="byte[] Obfuz.EncryptorBase::Encrypt([Obfuz.Runtime]Obfuz.EncryptorBase, byte[], int, int, int, int)" newName="$b" oldStackTraceSignature="Obfuz.EncryptorBase:Encrypt(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$D:$b(Byte[], Int32, Int32, Int32, Int32)" />
+      <method signature="byte[] Obfuz.EncryptorBase::Decrypt([Obfuz.Runtime]Obfuz.EncryptorBase, byte[], int, int, int, int)" newName="$B" oldStackTraceSignature="Obfuz.EncryptorBase:Decrypt(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$D:$B(Byte[], Int32, Int32, Int32, Int32)" />
+      <method signature="byte[] Obfuz.EncryptorBase::Encrypt([Obfuz.Runtime]Obfuz.EncryptorBase, string, int, int)" newName="$e" oldStackTraceSignature="Obfuz.EncryptorBase:Encrypt(String, Int32, Int32)" newStackTraceSignature="$b.$D:$e(String, Int32, Int32)" />
+      <method signature="string Obfuz.EncryptorBase::DecryptString([Obfuz.Runtime]Obfuz.EncryptorBase, byte[], int, int, int, int)" newName="$c" oldStackTraceSignature="Obfuz.EncryptorBase:DecryptString(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$D:$c(Byte[], Int32, Int32, Int32, Int32)" />
+      <method signature="void Obfuz.EncryptorBase::EncryptBlock([Obfuz.Runtime]Obfuz.EncryptorBase, byte[], int, int)" newName="$A" oldStackTraceSignature="Obfuz.EncryptorBase:EncryptBlock(Byte[], Int32, Int32)" newStackTraceSignature="$b.$D:$A(Byte[], Int32, Int32)" />
+      <method signature="void Obfuz.EncryptorBase::DecryptBlock([Obfuz.Runtime]Obfuz.EncryptorBase, byte[], int, int)" newName="$C" oldStackTraceSignature="Obfuz.EncryptorBase:DecryptBlock(Byte[], Int32, Int32)" newStackTraceSignature="$b.$D:$C(Byte[], Int32, Int32)" />
     </type>
     <type fullName="Obfuz.IEncryptor" newFullName="$b.$e" status="Renamed">
       <property signature="int OpCodeCount" newName="$a" />
-      <method signature="int Obfuz.IEncryptor::get_OpCodeCount([Obfuz.Runtime]Obfuz.IEncryptor)" newName="&gt;$d" oldStackTraceSignature="Obfuz.IEncryptor:get_OpCodeCount()" newStackTraceSignature="$b.$e:&gt;$d()" />
-      <method signature="void Obfuz.IEncryptor::EncryptBlock([Obfuz.Runtime]Obfuz.IEncryptor, byte[], int, int)" newName="&gt;$c" oldStackTraceSignature="Obfuz.IEncryptor:EncryptBlock(Byte[], Int32, Int32)" newStackTraceSignature="$b.$e:&gt;$c(Byte[], Int32, Int32)" />
-      <method signature="void Obfuz.IEncryptor::DecryptBlock([Obfuz.Runtime]Obfuz.IEncryptor, byte[], int, int)" newName="&gt;$C" oldStackTraceSignature="Obfuz.IEncryptor:DecryptBlock(Byte[], Int32, Int32)" newStackTraceSignature="$b.$e:&gt;$C(Byte[], Int32, Int32)" />
-      <method signature="int Obfuz.IEncryptor::Encrypt([Obfuz.Runtime]Obfuz.IEncryptor, int, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.IEncryptor:Encrypt(Int32, Int32, Int32)" newStackTraceSignature="$b.$e:&gt;$D(Int32, Int32, Int32)" />
-      <method signature="int Obfuz.IEncryptor::Decrypt([Obfuz.Runtime]Obfuz.IEncryptor, int, int, int)" newName="&gt;$e" oldStackTraceSignature="Obfuz.IEncryptor:Decrypt(Int32, Int32, Int32)" newStackTraceSignature="$b.$e:&gt;$e(Int32, Int32, Int32)" />
-      <method signature="long Obfuz.IEncryptor::Encrypt([Obfuz.Runtime]Obfuz.IEncryptor, long, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.IEncryptor:Encrypt(Int64, Int32, Int32)" newStackTraceSignature="$b.$e:&gt;$D(Int64, Int32, Int32)" />
-      <method signature="long Obfuz.IEncryptor::Decrypt([Obfuz.Runtime]Obfuz.IEncryptor, long, int, int)" newName="&gt;$e" oldStackTraceSignature="Obfuz.IEncryptor:Decrypt(Int64, Int32, Int32)" newStackTraceSignature="$b.$e:&gt;$e(Int64, Int32, Int32)" />
-      <method signature="float Obfuz.IEncryptor::Encrypt([Obfuz.Runtime]Obfuz.IEncryptor, float, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.IEncryptor:Encrypt(Single, Int32, Int32)" newStackTraceSignature="$b.$e:&gt;$D(Single, Int32, Int32)" />
-      <method signature="float Obfuz.IEncryptor::Decrypt([Obfuz.Runtime]Obfuz.IEncryptor, float, int, int)" newName="&gt;$e" oldStackTraceSignature="Obfuz.IEncryptor:Decrypt(Single, Int32, Int32)" newStackTraceSignature="$b.$e:&gt;$e(Single, Int32, Int32)" />
-      <method signature="double Obfuz.IEncryptor::Encrypt([Obfuz.Runtime]Obfuz.IEncryptor, double, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.IEncryptor:Encrypt(Double, Int32, Int32)" newStackTraceSignature="$b.$e:&gt;$D(Double, Int32, Int32)" />
-      <method signature="double Obfuz.IEncryptor::Decrypt([Obfuz.Runtime]Obfuz.IEncryptor, double, int, int)" newName="&gt;$e" oldStackTraceSignature="Obfuz.IEncryptor:Decrypt(Double, Int32, Int32)" newStackTraceSignature="$b.$e:&gt;$e(Double, Int32, Int32)" />
-      <method signature="byte[] Obfuz.IEncryptor::Encrypt([Obfuz.Runtime]Obfuz.IEncryptor, byte[], int, int, int, int)" newName="&gt;$A" oldStackTraceSignature="Obfuz.IEncryptor:Encrypt(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$e:&gt;$A(Byte[], Int32, Int32, Int32, Int32)" />
-      <method signature="byte[] Obfuz.IEncryptor::Decrypt([Obfuz.Runtime]Obfuz.IEncryptor, byte[], int, int, int, int)" newName="&gt;$b" oldStackTraceSignature="Obfuz.IEncryptor:Decrypt(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$e:&gt;$b(Byte[], Int32, Int32, Int32, Int32)" />
-      <method signature="byte[] Obfuz.IEncryptor::Encrypt([Obfuz.Runtime]Obfuz.IEncryptor, string, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.IEncryptor:Encrypt(String, Int32, Int32)" newStackTraceSignature="$b.$e:&gt;$D(String, Int32, Int32)" />
-      <method signature="string Obfuz.IEncryptor::DecryptString([Obfuz.Runtime]Obfuz.IEncryptor, byte[], int, int, int, int)" newName="&gt;$B" oldStackTraceSignature="Obfuz.IEncryptor:DecryptString(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$e:&gt;$B(Byte[], Int32, Int32, Int32, Int32)" />
+      <method signature="int Obfuz.IEncryptor::get_OpCodeCount([Obfuz.Runtime]Obfuz.IEncryptor)" newName="$D" oldStackTraceSignature="Obfuz.IEncryptor:get_OpCodeCount()" newStackTraceSignature="$b.$e:$D()" />
+      <method signature="void Obfuz.IEncryptor::EncryptBlock([Obfuz.Runtime]Obfuz.IEncryptor, byte[], int, int)" newName="$A" oldStackTraceSignature="Obfuz.IEncryptor:EncryptBlock(Byte[], Int32, Int32)" newStackTraceSignature="$b.$e:$A(Byte[], Int32, Int32)" />
+      <method signature="void Obfuz.IEncryptor::DecryptBlock([Obfuz.Runtime]Obfuz.IEncryptor, byte[], int, int)" newName="$C" oldStackTraceSignature="Obfuz.IEncryptor:DecryptBlock(Byte[], Int32, Int32)" newStackTraceSignature="$b.$e:$C(Byte[], Int32, Int32)" />
+      <method signature="int Obfuz.IEncryptor::Encrypt([Obfuz.Runtime]Obfuz.IEncryptor, int, int, int)" newName="$e" oldStackTraceSignature="Obfuz.IEncryptor:Encrypt(Int32, Int32, Int32)" newStackTraceSignature="$b.$e:$e(Int32, Int32, Int32)" />
+      <method signature="int Obfuz.IEncryptor::Decrypt([Obfuz.Runtime]Obfuz.IEncryptor, int, int, int)" newName="$f" oldStackTraceSignature="Obfuz.IEncryptor:Decrypt(Int32, Int32, Int32)" newStackTraceSignature="$b.$e:$f(Int32, Int32, Int32)" />
+      <method signature="long Obfuz.IEncryptor::Encrypt([Obfuz.Runtime]Obfuz.IEncryptor, long, int, int)" newName="$e" oldStackTraceSignature="Obfuz.IEncryptor:Encrypt(Int64, Int32, Int32)" newStackTraceSignature="$b.$e:$e(Int64, Int32, Int32)" />
+      <method signature="long Obfuz.IEncryptor::Decrypt([Obfuz.Runtime]Obfuz.IEncryptor, long, int, int)" newName="$f" oldStackTraceSignature="Obfuz.IEncryptor:Decrypt(Int64, Int32, Int32)" newStackTraceSignature="$b.$e:$f(Int64, Int32, Int32)" />
+      <method signature="float Obfuz.IEncryptor::Encrypt([Obfuz.Runtime]Obfuz.IEncryptor, float, int, int)" newName="$e" oldStackTraceSignature="Obfuz.IEncryptor:Encrypt(Single, Int32, Int32)" newStackTraceSignature="$b.$e:$e(Single, Int32, Int32)" />
+      <method signature="float Obfuz.IEncryptor::Decrypt([Obfuz.Runtime]Obfuz.IEncryptor, float, int, int)" newName="$f" oldStackTraceSignature="Obfuz.IEncryptor:Decrypt(Single, Int32, Int32)" newStackTraceSignature="$b.$e:$f(Single, Int32, Int32)" />
+      <method signature="double Obfuz.IEncryptor::Encrypt([Obfuz.Runtime]Obfuz.IEncryptor, double, int, int)" newName="$e" oldStackTraceSignature="Obfuz.IEncryptor:Encrypt(Double, Int32, Int32)" newStackTraceSignature="$b.$e:$e(Double, Int32, Int32)" />
+      <method signature="double Obfuz.IEncryptor::Decrypt([Obfuz.Runtime]Obfuz.IEncryptor, double, int, int)" newName="$f" oldStackTraceSignature="Obfuz.IEncryptor:Decrypt(Double, Int32, Int32)" newStackTraceSignature="$b.$e:$f(Double, Int32, Int32)" />
+      <method signature="byte[] Obfuz.IEncryptor::Encrypt([Obfuz.Runtime]Obfuz.IEncryptor, byte[], int, int, int, int)" newName="$b" oldStackTraceSignature="Obfuz.IEncryptor:Encrypt(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$e:$b(Byte[], Int32, Int32, Int32, Int32)" />
+      <method signature="byte[] Obfuz.IEncryptor::Decrypt([Obfuz.Runtime]Obfuz.IEncryptor, byte[], int, int, int, int)" newName="$B" oldStackTraceSignature="Obfuz.IEncryptor:Decrypt(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$e:$B(Byte[], Int32, Int32, Int32, Int32)" />
+      <method signature="byte[] Obfuz.IEncryptor::Encrypt([Obfuz.Runtime]Obfuz.IEncryptor, string, int, int)" newName="$e" oldStackTraceSignature="Obfuz.IEncryptor:Encrypt(String, Int32, Int32)" newStackTraceSignature="$b.$e:$e(String, Int32, Int32)" />
+      <method signature="string Obfuz.IEncryptor::DecryptString([Obfuz.Runtime]Obfuz.IEncryptor, byte[], int, int, int, int)" newName="$c" oldStackTraceSignature="Obfuz.IEncryptor:DecryptString(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$e:$c(Byte[], Int32, Int32, Int32, Int32)" />
     </type>
     <type fullName="Obfuz.NullEncryptor" newFullName="$b.$E" status="Renamed">
       <field signature="byte[] _key" newName="$a" />
       <property signature="int OpCodeCount" newName="$A" />
-      <method signature="int Obfuz.NullEncryptor::get_OpCodeCount([Obfuz.Runtime]Obfuz.NullEncryptor)" newName="&gt;$d" oldStackTraceSignature="Obfuz.NullEncryptor:get_OpCodeCount()" newStackTraceSignature="$b.$E:&gt;$d()" />
-      <method signature="int Obfuz.NullEncryptor::Encrypt([Obfuz.Runtime]Obfuz.NullEncryptor, int, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.NullEncryptor:Encrypt(Int32, Int32, Int32)" newStackTraceSignature="$b.$E:&gt;$D(Int32, Int32, Int32)" />
-      <method signature="int Obfuz.NullEncryptor::Decrypt([Obfuz.Runtime]Obfuz.NullEncryptor, int, int, int)" newName="&gt;$e" oldStackTraceSignature="Obfuz.NullEncryptor:Decrypt(Int32, Int32, Int32)" newStackTraceSignature="$b.$E:&gt;$e(Int32, Int32, Int32)" />
-      <method signature="long Obfuz.NullEncryptor::Encrypt([Obfuz.Runtime]Obfuz.NullEncryptor, long, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.NullEncryptor:Encrypt(Int64, Int32, Int32)" newStackTraceSignature="$b.$E:&gt;$D(Int64, Int32, Int32)" />
-      <method signature="long Obfuz.NullEncryptor::Decrypt([Obfuz.Runtime]Obfuz.NullEncryptor, long, int, int)" newName="&gt;$e" oldStackTraceSignature="Obfuz.NullEncryptor:Decrypt(Int64, Int32, Int32)" newStackTraceSignature="$b.$E:&gt;$e(Int64, Int32, Int32)" />
-      <method signature="float Obfuz.NullEncryptor::Encrypt([Obfuz.Runtime]Obfuz.NullEncryptor, float, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.NullEncryptor:Encrypt(Single, Int32, Int32)" newStackTraceSignature="$b.$E:&gt;$D(Single, Int32, Int32)" />
-      <method signature="float Obfuz.NullEncryptor::Decrypt([Obfuz.Runtime]Obfuz.NullEncryptor, float, int, int)" newName="&gt;$e" oldStackTraceSignature="Obfuz.NullEncryptor:Decrypt(Single, Int32, Int32)" newStackTraceSignature="$b.$E:&gt;$e(Single, Int32, Int32)" />
-      <method signature="double Obfuz.NullEncryptor::Encrypt([Obfuz.Runtime]Obfuz.NullEncryptor, double, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.NullEncryptor:Encrypt(Double, Int32, Int32)" newStackTraceSignature="$b.$E:&gt;$D(Double, Int32, Int32)" />
-      <method signature="double Obfuz.NullEncryptor::Decrypt([Obfuz.Runtime]Obfuz.NullEncryptor, double, int, int)" newName="&gt;$e" oldStackTraceSignature="Obfuz.NullEncryptor:Decrypt(Double, Int32, Int32)" newStackTraceSignature="$b.$E:&gt;$e(Double, Int32, Int32)" />
-      <method signature="byte[] Obfuz.NullEncryptor::Encrypt([Obfuz.Runtime]Obfuz.NullEncryptor, byte[], int, int, int, int)" newName="&gt;$A" oldStackTraceSignature="Obfuz.NullEncryptor:Encrypt(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$E:&gt;$A(Byte[], Int32, Int32, Int32, Int32)" />
-      <method signature="byte[] Obfuz.NullEncryptor::Decrypt([Obfuz.Runtime]Obfuz.NullEncryptor, byte[], int, int, int, int)" newName="&gt;$b" oldStackTraceSignature="Obfuz.NullEncryptor:Decrypt(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$E:&gt;$b(Byte[], Int32, Int32, Int32, Int32)" />
-      <method signature="byte[] Obfuz.NullEncryptor::Encrypt([Obfuz.Runtime]Obfuz.NullEncryptor, string, int, int)" newName="&gt;$D" oldStackTraceSignature="Obfuz.NullEncryptor:Encrypt(String, Int32, Int32)" newStackTraceSignature="$b.$E:&gt;$D(String, Int32, Int32)" />
-      <method signature="string Obfuz.NullEncryptor::DecryptString([Obfuz.Runtime]Obfuz.NullEncryptor, byte[], int, int, int, int)" newName="&gt;$B" oldStackTraceSignature="Obfuz.NullEncryptor:DecryptString(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$E:&gt;$B(Byte[], Int32, Int32, Int32, Int32)" />
+      <method signature="int Obfuz.NullEncryptor::get_OpCodeCount([Obfuz.Runtime]Obfuz.NullEncryptor)" newName="$D" oldStackTraceSignature="Obfuz.NullEncryptor:get_OpCodeCount()" newStackTraceSignature="$b.$E:$D()" />
+      <method signature="int Obfuz.NullEncryptor::Encrypt([Obfuz.Runtime]Obfuz.NullEncryptor, int, int, int)" newName="$e" oldStackTraceSignature="Obfuz.NullEncryptor:Encrypt(Int32, Int32, Int32)" newStackTraceSignature="$b.$E:$e(Int32, Int32, Int32)" />
+      <method signature="int Obfuz.NullEncryptor::Decrypt([Obfuz.Runtime]Obfuz.NullEncryptor, int, int, int)" newName="$f" oldStackTraceSignature="Obfuz.NullEncryptor:Decrypt(Int32, Int32, Int32)" newStackTraceSignature="$b.$E:$f(Int32, Int32, Int32)" />
+      <method signature="long Obfuz.NullEncryptor::Encrypt([Obfuz.Runtime]Obfuz.NullEncryptor, long, int, int)" newName="$e" oldStackTraceSignature="Obfuz.NullEncryptor:Encrypt(Int64, Int32, Int32)" newStackTraceSignature="$b.$E:$e(Int64, Int32, Int32)" />
+      <method signature="long Obfuz.NullEncryptor::Decrypt([Obfuz.Runtime]Obfuz.NullEncryptor, long, int, int)" newName="$f" oldStackTraceSignature="Obfuz.NullEncryptor:Decrypt(Int64, Int32, Int32)" newStackTraceSignature="$b.$E:$f(Int64, Int32, Int32)" />
+      <method signature="float Obfuz.NullEncryptor::Encrypt([Obfuz.Runtime]Obfuz.NullEncryptor, float, int, int)" newName="$e" oldStackTraceSignature="Obfuz.NullEncryptor:Encrypt(Single, Int32, Int32)" newStackTraceSignature="$b.$E:$e(Single, Int32, Int32)" />
+      <method signature="float Obfuz.NullEncryptor::Decrypt([Obfuz.Runtime]Obfuz.NullEncryptor, float, int, int)" newName="$f" oldStackTraceSignature="Obfuz.NullEncryptor:Decrypt(Single, Int32, Int32)" newStackTraceSignature="$b.$E:$f(Single, Int32, Int32)" />
+      <method signature="double Obfuz.NullEncryptor::Encrypt([Obfuz.Runtime]Obfuz.NullEncryptor, double, int, int)" newName="$e" oldStackTraceSignature="Obfuz.NullEncryptor:Encrypt(Double, Int32, Int32)" newStackTraceSignature="$b.$E:$e(Double, Int32, Int32)" />
+      <method signature="double Obfuz.NullEncryptor::Decrypt([Obfuz.Runtime]Obfuz.NullEncryptor, double, int, int)" newName="$f" oldStackTraceSignature="Obfuz.NullEncryptor:Decrypt(Double, Int32, Int32)" newStackTraceSignature="$b.$E:$f(Double, Int32, Int32)" />
+      <method signature="byte[] Obfuz.NullEncryptor::Encrypt([Obfuz.Runtime]Obfuz.NullEncryptor, byte[], int, int, int, int)" newName="$b" oldStackTraceSignature="Obfuz.NullEncryptor:Encrypt(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$E:$b(Byte[], Int32, Int32, Int32, Int32)" />
+      <method signature="byte[] Obfuz.NullEncryptor::Decrypt([Obfuz.Runtime]Obfuz.NullEncryptor, byte[], int, int, int, int)" newName="$B" oldStackTraceSignature="Obfuz.NullEncryptor:Decrypt(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$E:$B(Byte[], Int32, Int32, Int32, Int32)" />
+      <method signature="byte[] Obfuz.NullEncryptor::Encrypt([Obfuz.Runtime]Obfuz.NullEncryptor, string, int, int)" newName="$e" oldStackTraceSignature="Obfuz.NullEncryptor:Encrypt(String, Int32, Int32)" newStackTraceSignature="$b.$E:$e(String, Int32, Int32)" />
+      <method signature="string Obfuz.NullEncryptor::DecryptString([Obfuz.Runtime]Obfuz.NullEncryptor, byte[], int, int, int, int)" newName="$c" oldStackTraceSignature="Obfuz.NullEncryptor:DecryptString(Byte[], Int32, Int32, Int32, Int32)" newStackTraceSignature="$b.$E:$c(Byte[], Int32, Int32, Int32, Int32)" />
     </type>
     <type fullName="Obfuz.ObfuzScope" newFullName="$b.$f" status="Renamed">
       <field signature="[Obfuz.Runtime]Obfuz.ObfuzScope None" newName="$a" />
@@ -423,20 +413,20 @@
     </type>
     <type fullName="Obfuz.ObfuzIgnoreAttribute" newFullName="" status="NotRenamed">
       <field signature="[Obfuz.Runtime]Obfuz.ObfuzScope &lt;Scope&gt;k__BackingField" newName="$a" />
-      <field signature="bool &lt;InheritByNestedTypes&gt;k__BackingField" newName="$A" />
+      <field signature="bool &lt;ApplyToMembers&gt;k__BackingField" newName="$A" />
       <property signature="[Obfuz.Runtime]Obfuz.ObfuzScope Scope" newName="$d" />
-      <property signature="bool InheritByNestedTypes" newName="$D" />
+      <property signature="bool ApplyToMembers" newName="$D" />
       <method signature="[Obfuz.Runtime]Obfuz.ObfuzScope Obfuz.ObfuzIgnoreAttribute::get_Scope([Obfuz.Runtime]Obfuz.ObfuzIgnoreAttribute)" newName="$b" oldStackTraceSignature="Obfuz.ObfuzIgnoreAttribute:get_Scope()" newStackTraceSignature="Obfuz.ObfuzIgnoreAttribute:$b()" />
       <method signature="void Obfuz.ObfuzIgnoreAttribute::set_Scope([Obfuz.Runtime]Obfuz.ObfuzIgnoreAttribute, [Obfuz.Runtime]Obfuz.ObfuzScope)" newName="$B" oldStackTraceSignature="Obfuz.ObfuzIgnoreAttribute:set_Scope(ObfuzScope)" newStackTraceSignature="Obfuz.ObfuzIgnoreAttribute:$B($f)" />
-      <method signature="bool Obfuz.ObfuzIgnoreAttribute::get_InheritByNestedTypes([Obfuz.Runtime]Obfuz.ObfuzIgnoreAttribute)" newName="$c" oldStackTraceSignature="Obfuz.ObfuzIgnoreAttribute:get_InheritByNestedTypes()" newStackTraceSignature="Obfuz.ObfuzIgnoreAttribute:$c()" />
-      <method signature="void Obfuz.ObfuzIgnoreAttribute::set_InheritByNestedTypes([Obfuz.Runtime]Obfuz.ObfuzIgnoreAttribute, bool)" newName="$C" oldStackTraceSignature="Obfuz.ObfuzIgnoreAttribute:set_InheritByNestedTypes(Boolean)" newStackTraceSignature="Obfuz.ObfuzIgnoreAttribute:$C(Boolean)" />
+      <method signature="bool Obfuz.ObfuzIgnoreAttribute::get_ApplyToMembers([Obfuz.Runtime]Obfuz.ObfuzIgnoreAttribute)" newName="$c" oldStackTraceSignature="Obfuz.ObfuzIgnoreAttribute:get_ApplyToMembers()" newStackTraceSignature="Obfuz.ObfuzIgnoreAttribute:$c()" />
+      <method signature="void Obfuz.ObfuzIgnoreAttribute::set_ApplyToMembers([Obfuz.Runtime]Obfuz.ObfuzIgnoreAttribute, bool)" newName="$C" oldStackTraceSignature="Obfuz.ObfuzIgnoreAttribute:set_ApplyToMembers(Boolean)" newStackTraceSignature="Obfuz.ObfuzIgnoreAttribute:$C(Boolean)" />
     </type>
     <type fullName="&lt;PrivateImplementationDetails&gt;" newFullName="$F" status="Renamed">
-      <field signature="[Obfuz.Runtime]&lt;PrivateImplementationDetails&gt;/__StaticArrayInitTypeSize=319 06C5CC799072FD4902F78D29EDFE6FE472BD7FD862AE4A4E2809A519029E52EF" newName="$a" />
-      <field signature="[Obfuz.Runtime]&lt;PrivateImplementationDetails&gt;/__StaticArrayInitTypeSize=745 555F8F24B885FFF3600E84D9F0071E6F628D3C5C526633FF1269F801643E7A2B" newName="$A" />
+      <field signature="[Obfuz.Runtime]&lt;PrivateImplementationDetails&gt;/__StaticArrayInitTypeSize=342 02E5176FE5961485DA1D9514DA647A17F82D3E8F8F83AB67B6AC55A60312FD65" newName="$a" />
+      <field signature="[Obfuz.Runtime]&lt;PrivateImplementationDetails&gt;/__StaticArrayInitTypeSize=835 E9B74CBBD327B81FD2E93350D1FF4D3A598C7D0B1F35FBA9CAC3484DB2307C0D" newName="$A" />
     </type>
-    <type fullName="&lt;PrivateImplementationDetails&gt;/__StaticArrayInitTypeSize=319" newFullName="$F/$g" status="Renamed" />
-    <type fullName="&lt;PrivateImplementationDetails&gt;/__StaticArrayInitTypeSize=745" newFullName="$F/$G" status="Renamed" />
+    <type fullName="&lt;PrivateImplementationDetails&gt;/__StaticArrayInitTypeSize=342" newFullName="$F/$G" status="Renamed" />
+    <type fullName="&lt;PrivateImplementationDetails&gt;/__StaticArrayInitTypeSize=835" newFullName="$F/$h" status="Renamed" />
   </assembly>
   <assembly name="Hotfix">
     <type fullName="$Obfuz$ConstFieldHolder$0" newFullName="$TA" status="Renamed">
@@ -909,7 +899,7 @@
       <field signature="string P_Target" newName="$a" />
       <field signature="[UnityEngine.CoreModule]UnityEngine.Transform m_Target" newName="$A" />
       <field signature="[UnityEngine.PhysicsModule]UnityEngine.Rigidbody m_Rigidbody" newName="$b" />
-      <method signature="bool AIEnemyEntity::ApplyDamage([Hotfix]AIEnemyEntity, [Hotfix]CombatUnitEntity, int)" newName="&gt;$B" />
+      <method signature="bool AIEnemyEntity::ApplyDamage([Hotfix]AIEnemyEntity, [Hotfix]CombatUnitEntity, int)" newName="$i" />
     </type>
     <type fullName="AppConfigs" newFullName="" status="NotRenamed">
       <field signature="[Hotfix]AppConfigs mInstance" newName="$a" />
@@ -1084,13 +1074,13 @@
       <method signature="void CombatUnitEntity::set_CampFlag([Hotfix]CombatUnitEntity, [Hotfix]CombatUnitEntity/CombatFlag)" newName="$E" />
       <method signature="[Hotfix]CombatUnitTable CombatUnitEntity::get_CombatUnitRow([Hotfix]CombatUnitEntity)" newName="$f" />
       <method signature="void CombatUnitEntity::set_CombatUnitRow([Hotfix]CombatUnitEntity, [Hotfix]CombatUnitTable)" newName="$F" />
-      <method signature="int CombatUnitEntity::get_Hp([Hotfix]CombatUnitEntity)" newName="&gt;$h" />
-      <method signature="void CombatUnitEntity::set_Hp([Hotfix]CombatUnitEntity, int)" newName="&gt;$H" />
-      <method signature="[UnityEngine.CoreModule]UnityEngine.Vector3 CombatUnitEntity::get_HitPoint([Hotfix]CombatUnitEntity)" newName="&gt;$i" />
-      <method signature="bool CombatUnitEntity::Attack([Hotfix]CombatUnitEntity, [Hotfix]CombatUnitEntity)" newName="&gt;$I" />
+      <method signature="int CombatUnitEntity::get_Hp([Hotfix]CombatUnitEntity)" newName="$X" />
+      <method signature="void CombatUnitEntity::set_Hp([Hotfix]CombatUnitEntity, int)" newName="$y" />
+      <method signature="[UnityEngine.CoreModule]UnityEngine.Vector3 CombatUnitEntity::get_HitPoint([Hotfix]CombatUnitEntity)" newName="$I" />
+      <method signature="bool CombatUnitEntity::Attack([Hotfix]CombatUnitEntity, [Hotfix]CombatUnitEntity)" newName="$Y" />
       <method signature="bool CombatUnitEntity::Attack([Hotfix]CombatUnitEntity, [Hotfix]CombatUnitEntity, int)" newName="$g" />
-      <method signature="bool CombatUnitEntity::ApplyDamage([Hotfix]CombatUnitEntity, [Hotfix]CombatUnitEntity, int)" newName="&gt;$B" />
-      <method signature="void CombatUnitEntity::OnBeKilled([Hotfix]CombatUnitEntity)" newName="&gt;$j" />
+      <method signature="bool CombatUnitEntity::ApplyDamage([Hotfix]CombatUnitEntity, [Hotfix]CombatUnitEntity, int)" newName="$i" />
+      <method signature="void CombatUnitEntity::OnBeKilled([Hotfix]CombatUnitEntity)" newName="$z" />
       <method signature="void CombatUnitEntity::SetColor([Hotfix]CombatUnitEntity, [UnityEngine.CoreModule]UnityEngine.Color)" newName="$G" />
     </type>
     <type fullName="CombatUnitEntity/CombatFlag" newFullName="CombatUnitEntity/$I" status="Renamed">
@@ -1132,10 +1122,10 @@
       <property signature="string StorageKey" newName="$D" />
       <method signature="string DataModelStorageBase::get_StorageKey([Hotfix]DataModelStorageBase)" newName="$A" />
       <method signature="void DataModelStorageBase::set_StorageKey([Hotfix]DataModelStorageBase, string)" newName="$b" />
-      <method signature="void DataModelStorageBase::OnCreate([Hotfix]DataModelStorageBase, [Hotfix]RefParams)" newName="&gt;$C" />
-      <method signature="void DataModelStorageBase::OnRelease([Hotfix]DataModelStorageBase)" newName="&gt;$d" />
+      <method signature="void DataModelStorageBase::OnCreate([Hotfix]DataModelStorageBase, [Hotfix]RefParams)" newName="$g" />
+      <method signature="void DataModelStorageBase::OnRelease([Hotfix]DataModelStorageBase)" newName="$h" />
       <method signature="void DataModelStorageBase::Load([Hotfix]DataModelStorageBase)" newName="$B" />
-      <method signature="void DataModelStorageBase::OnInitialDataModel([Hotfix]DataModelStorageBase)" newName="&gt;$E" />
+      <method signature="void DataModelStorageBase::OnInitialDataModel([Hotfix]DataModelStorageBase)" newName="$G" />
       <method signature="void DataModelStorageBase::Save([Hotfix]DataModelStorageBase)" newName="$c" />
     </type>
     <type fullName="DataTableExtension" newFullName="$T" status="Renamed">
@@ -1341,7 +1331,7 @@
       <method signature="[GameFramework]GameFramework.GameFrameworkAction`1&lt;[UnityGameFramework.Runtime]UnityGameFramework.Runtime.EntityLogic&gt; EntityParams::get_OnHideCallback([Hotfix]EntityParams)" newName="$o" />
       <method signature="void EntityParams::set_OnHideCallback([Hotfix]EntityParams, [GameFramework]GameFramework.GameFrameworkAction`1&lt;[UnityGameFramework.Runtime]UnityGameFramework.Runtime.EntityLogic&gt;)" newName="$O" />
       <method signature="[Hotfix]EntityParams EntityParams::Create(System.Nullable`1&lt;[UnityEngine.CoreModule]UnityEngine.Vector3&gt;, System.Nullable`1&lt;[UnityEngine.CoreModule]UnityEngine.Vector3&gt;, System.Nullable`1&lt;[UnityEngine.CoreModule]UnityEngine.Vector3&gt;)" newName="$p" />
-      <method signature="void EntityParams::ResetProperties([Hotfix]EntityParams)" newName="&gt;$f" />
+      <method signature="void EntityParams::ResetProperties([Hotfix]EntityParams)" newName="$v" />
     </type>
     <type fullName="GameFramework.DataModelBase" newFullName="$a.$qA" status="Renamed">
       <field signature="int &lt;Id&gt;k__BackingField" newName="$a" />
@@ -1352,8 +1342,8 @@
       <method signature="void GameFramework.DataModelBase::set_Id([Hotfix]GameFramework.DataModelBase, int)" newName="$B" />
       <method signature="[Hotfix]RefParams GameFramework.DataModelBase::get_Userdata([Hotfix]GameFramework.DataModelBase)" newName="$c" />
       <method signature="void GameFramework.DataModelBase::set_Userdata([Hotfix]GameFramework.DataModelBase, [Hotfix]RefParams)" newName="$C" />
-      <method signature="void GameFramework.DataModelBase::OnCreate([Hotfix]GameFramework.DataModelBase, [Hotfix]RefParams)" newName="&gt;$C" />
-      <method signature="void GameFramework.DataModelBase::OnRelease([Hotfix]GameFramework.DataModelBase)" newName="&gt;$d" />
+      <method signature="void GameFramework.DataModelBase::OnCreate([Hotfix]GameFramework.DataModelBase, [Hotfix]RefParams)" newName="$g" />
+      <method signature="void GameFramework.DataModelBase::OnRelease([Hotfix]GameFramework.DataModelBase)" newName="$h" />
       <method signature="void GameFramework.DataModelBase::Init([Hotfix]GameFramework.DataModelBase, int, [Hotfix]RefParams)" newName="$d" />
       <method signature="void GameFramework.DataModelBase::Shutdown([Hotfix]GameFramework.DataModelBase)" newName="$D" />
     </type>
@@ -1400,7 +1390,7 @@
     <type fullName="GameOverUIForm" newFullName="" status="NotRenamed">
       <field signature="string P_IsWin" newName="$a" />
       <field signature="bool isWin" newName="$A" />
-      <method signature="void GameOverUIForm::OnButtonClick([Hotfix]GameOverUIForm, object, [UnityEngine.UI]UnityEngine.UI.Button)" newName="&gt;$Q" />
+      <method signature="void GameOverUIForm::OnButtonClick([Hotfix]GameOverUIForm, object, [UnityEngine.UI]UnityEngine.UI.Button)" newName="$R" />
     </type>
     <type fullName="GameplayEventArgs" newFullName="$L" status="Renamed">
       <field signature="int EventId" newName="$a" />
@@ -1484,8 +1474,8 @@
     </type>
     <type fullName="ISerializeFieldTool" newFullName="$mA" status="Renamed">
       <property signature="[Hotfix]SerializeFieldData[] SerializeFieldArr" newName="$a" />
-      <method signature="[Hotfix]SerializeFieldData[] ISerializeFieldTool::get_SerializeFieldArr([Hotfix]ISerializeFieldTool)" newName="&gt;$O" />
-      <method signature="void ISerializeFieldTool::set_SerializeFieldArr([Hotfix]ISerializeFieldTool, [Hotfix]SerializeFieldData[])" newName="&gt;$p" />
+      <method signature="[Hotfix]SerializeFieldData[] ISerializeFieldTool::get_SerializeFieldArr([Hotfix]ISerializeFieldTool)" newName="$q" />
+      <method signature="void ISerializeFieldTool::set_SerializeFieldArr([Hotfix]ISerializeFieldTool, [Hotfix]SerializeFieldData[])" newName="$Q" />
     </type>
     <type fullName="JobsPhysics" newFullName="$j" status="Renamed">
       <field signature="[UnityEngine.PhysicsModule]UnityEngine.QueryParameters QueryParametersForPlayer" newName="$a" />
@@ -1498,7 +1488,7 @@
       <field signature="string m_LanguageKey" newName="$a" />
       <field signature="[UnityEngine.UI]UnityEngine.UI.Toggle m_Toggle" newName="$A" />
       <field signature="System.Action m_Action" newName="$b" />
-      <method signature="void LanguageItem::OnInit([Hotfix]LanguageItem)" newName="&gt;$a" />
+      <method signature="void LanguageItem::OnInit([Hotfix]LanguageItem)" newName="$d" />
       <method signature="void LanguageItem::SetData([Hotfix]LanguageItem, [Hotfix]LanguagesTable, [UnityEngine.UI]UnityEngine.UI.ToggleGroup, System.Action)" newName="$B" />
       <method signature="void LanguageItem::OnToggleValueChanged([Hotfix]LanguageItem, bool)" newName="$c" />
     </type>
@@ -1577,7 +1567,7 @@
       <field signature="[UniTask]Cysharp.Threading.Tasks.UniTask`1/Awaiter&lt;[UnityGameFramework.Runtime]UnityGameFramework.Runtime.EntityLogic&gt; &lt;&gt;u__1" newName="$B" />
     </type>
     <type fullName="MenuUIForm" newFullName="" status="NotRenamed">
-      <method signature="void MenuUIForm::OnButtonClick([Hotfix]MenuUIForm, object, string)" newName="&gt;$Q" />
+      <method signature="void MenuUIForm::OnButtonClick([Hotfix]MenuUIForm, object, string)" newName="$R" />
       <method signature="void MenuUIForm::OnUserDataChanged([Hotfix]MenuUIForm, object, [GameFramework]GameFramework.Event.GameEventArgs)" newName="$a" />
       <method signature="void MenuUIForm::RefreshMoneyText([Hotfix]MenuUIForm)" newName="$A" />
       <method signature="void MenuUIForm::SetMoneyText([Hotfix]MenuUIForm, int)" newName="$b" />
@@ -1626,7 +1616,7 @@
       <method signature="void PlayerDataModel::set_Coins([Hotfix]PlayerDataModel, int)" newName="$c" />
       <method signature="int PlayerDataModel::get_LevelId([Hotfix]PlayerDataModel)" newName="$C" />
       <method signature="void PlayerDataModel::set_LevelId([Hotfix]PlayerDataModel, int)" newName="$d" />
-      <method signature="void PlayerDataModel::OnInitialDataModel([Hotfix]PlayerDataModel)" newName="&gt;$E" />
+      <method signature="void PlayerDataModel::OnInitialDataModel([Hotfix]PlayerDataModel)" newName="$G" />
       <method signature="int PlayerDataModel::GetData([Hotfix]PlayerDataModel, [Hotfix]PlayerDataType)" newName="$D" />
       <method signature="void PlayerDataModel::SetData([Hotfix]PlayerDataModel, [Hotfix]PlayerDataType, int, bool)" newName="$e" />
     </type>
@@ -1672,17 +1662,17 @@
       <method signature="bool PlayerEntity::get_Ctrlable([Hotfix]PlayerEntity)" newName="$o" />
       <method signature="void PlayerEntity::set_Ctrlable([Hotfix]PlayerEntity, bool)" newName="$O" />
       <method signature="[UnityEngine.CoreModule]UnityEngine.Vector3[] PlayerEntity::get_HandPoints([Hotfix]PlayerEntity)" newName="$p" />
-      <method signature="int PlayerEntity::get_Hp([Hotfix]PlayerEntity)" newName="&gt;$h" />
-      <method signature="void PlayerEntity::set_Hp([Hotfix]PlayerEntity, int)" newName="&gt;$H" />
+      <method signature="int PlayerEntity::get_Hp([Hotfix]PlayerEntity)" newName="$X" />
+      <method signature="void PlayerEntity::set_Hp([Hotfix]PlayerEntity, int)" newName="$y" />
       <method signature="void PlayerEntity::OnJoystickUp([Hotfix]PlayerEntity)" newName="$P" />
       <method signature="void PlayerEntity::AttackLogicUpdate([Hotfix]PlayerEntity, float)" newName="$q" />
-      <method signature="bool PlayerEntity::Attack([Hotfix]PlayerEntity, [Hotfix]CombatUnitEntity)" newName="&gt;$I" />
+      <method signature="bool PlayerEntity::Attack([Hotfix]PlayerEntity, [Hotfix]CombatUnitEntity)" newName="$Y" />
       <method signature="void PlayerEntity::AddSkillCircleDiameter([Hotfix]PlayerEntity, int)" newName="$Q" />
       <method signature="void PlayerEntity::SetSkillCircleDiameter([Hotfix]PlayerEntity, float)" newName="$r" />
       <method signature="void PlayerEntity::RefreshTargets([Hotfix]PlayerEntity, [UnityEngine.CoreModule]Unity.Collections.NativeArray`1&lt;int&gt;, bool)" newName="$R" />
       <method signature="void PlayerEntity::Move([Hotfix]PlayerEntity, float)" newName="$s" />
       <method signature="void PlayerEntity::SkillAttack([Hotfix]PlayerEntity)" newName="$S" />
-      <method signature="void PlayerEntity::OnBeKilled([Hotfix]PlayerEntity)" newName="&gt;$j" />
+      <method signature="void PlayerEntity::OnBeKilled([Hotfix]PlayerEntity)" newName="$z" />
       <method signature="void PlayerEntity::ShootFx([Hotfix]PlayerEntity, [UnityEngine.CoreModule]UnityEngine.Vector3, [UnityEngine.CoreModule]UnityEngine.Vector3)" newName="$t" />
       <method signature="void PlayerEntity::SetShootParticleDuration([Hotfix]PlayerEntity, [UnityGameFramework.Runtime]UnityGameFramework.Runtime.EntityLogic)" newName="$T" />
     </type>
@@ -1744,7 +1734,7 @@
     <type fullName="RatingDialog" newFullName="" status="NotRenamed">
       <field signature="int MIN_STAR" newName="$a" />
       <field signature="int m_Star" newName="$A" />
-      <method signature="void RatingDialog::OnButtonClick([Hotfix]RatingDialog, object, [UnityEngine.UI]UnityEngine.UI.Button)" newName="&gt;$Q" />
+      <method signature="void RatingDialog::OnButtonClick([Hotfix]RatingDialog, object, [UnityEngine.UI]UnityEngine.UI.Button)" newName="$R" />
       <method signature="void RatingDialog::SetStar([Hotfix]RatingDialog, int)" newName="$b" />
     </type>
     <type fullName="RatingDialog/&lt;&gt;c__DisplayClass2_0" newFullName="" status="NotRenamed">
@@ -1764,7 +1754,7 @@
       <method signature="object RefParams::Get([Hotfix]RefParams, string)" newName="$D" />
       <method signature="!!0 RefParams::Get`1([Hotfix]RefParams, string, !!0)" newName="$e" />
       <method signature="bool RefParams::TryGet`1([Hotfix]RefParams, string, !!0&amp;)" newName="$E" />
-      <method signature="void RefParams::ResetProperties([Hotfix]RefParams)" newName="&gt;$f" />
+      <method signature="void RefParams::ResetProperties([Hotfix]RefParams)" newName="$v" />
     </type>
     <type fullName="RefParams/&lt;&gt;c__DisplayClass9_0`1" newFullName="$c/$C" status="Renamed">
       <field signature="!0 defaultValue" newName="$a" />
@@ -1781,13 +1771,13 @@
       <field signature="float m_LastClickTime" newName="$A" />
       <field signature="float clickInterval" newName="$b" />
       <field signature="float m_ToggleHandleX" newName="$B" />
-      <method signature="void SettingDialog::InitLocalization([Hotfix]SettingDialog)" newName="&gt;$P" />
+      <method signature="void SettingDialog::InitLocalization([Hotfix]SettingDialog)" newName="$r" />
       <method signature="void SettingDialog::OnSoundFxSliderChanged([Hotfix]SettingDialog, float)" newName="$c" />
       <method signature="void SettingDialog::OnMusicSliderChanged([Hotfix]SettingDialog, float)" newName="$C" />
       <method signature="void SettingDialog::InitSettings([Hotfix]SettingDialog)" newName="$d" />
       <method signature="void SettingDialog::OnToggleChanged([Hotfix]SettingDialog, [UnityEngine.UI]UnityEngine.UI.Toggle)" newName="$D" />
       <method signature="void SettingDialog::RefreshLanguage([Hotfix]SettingDialog)" newName="$e" />
-      <method signature="void SettingDialog::OnButtonClick([Hotfix]SettingDialog, object, [UnityEngine.UI]UnityEngine.UI.Button)" newName="&gt;$Q" />
+      <method signature="void SettingDialog::OnButtonClick([Hotfix]SettingDialog, object, [UnityEngine.UI]UnityEngine.UI.Button)" newName="$R" />
       <method signature="void SettingDialog::OnLanguageChanged([Hotfix]SettingDialog)" newName="$E" />
       <method signature="void SettingDialog::ReloadLanguage([Hotfix]SettingDialog)" newName="$f" />
       <method signature="void SettingDialog::OnLanguageReloaded([Hotfix]SettingDialog, object, [GameFramework]GameFramework.Event.GameEventArgs)" newName="$F" />
@@ -1885,7 +1875,7 @@
       <field signature="string P_Text" newName="$A" />
       <field signature="string P_Style" newName="$b" />
       <field signature="float m_Duration" newName="$B" />
-      <method signature="void ToastTips::OnOpenAnimationComplete([Hotfix]ToastTips)" newName="&gt;$r" />
+      <method signature="void ToastTips::OnOpenAnimationComplete([Hotfix]ToastTips)" newName="$v" />
       <method signature="void ToastTips::SetToastStyle([Hotfix]ToastTips, uint)" newName="$c" />
       <method signature="void ToastTips::ScheduleStart([Hotfix]ToastTips)" newName="$C" />
       <method signature="void ToastTips::&lt;ScheduleStart&gt;b__7_0([Hotfix]ToastTips)" newName="$d" />
@@ -2010,8 +2000,8 @@
       <property signature="int Id" newName="$T" />
       <property signature="bool Interactable" newName="$u" />
       <property signature="[UnityEngine.UIModule]UnityEngine.Canvas UICanvas" newName="$U" />
-      <method signature="[Hotfix]SerializeFieldData[] UIFormBase::get_SerializeFieldArr([Hotfix]UIFormBase)" newName="&gt;$O" />
-      <method signature="void UIFormBase::set_SerializeFieldArr([Hotfix]UIFormBase, [Hotfix]SerializeFieldData[])" newName="&gt;$p" />
+      <method signature="[Hotfix]SerializeFieldData[] UIFormBase::get_SerializeFieldArr([Hotfix]UIFormBase)" newName="$q" />
+      <method signature="void UIFormBase::set_SerializeFieldArr([Hotfix]UIFormBase, [Hotfix]SerializeFieldData[])" newName="$Q" />
       <method signature="[Hotfix]UIParams UIFormBase::get_Params([Hotfix]UIFormBase)" newName="$D" />
       <method signature="void UIFormBase::set_Params([Hotfix]UIFormBase, [Hotfix]UIParams)" newName="$e" />
       <method signature="int UIFormBase::get_SortOrder([Hotfix]UIFormBase)" newName="$E" />
@@ -2029,13 +2019,13 @@
       <method signature="void UIFormBase::UnspawnItem`1([Hotfix]UIFormBase, [UnityEngine.CoreModule]UnityEngine.GameObject, !!0)" newName="$K" />
       <method signature="void UIFormBase::UnspawnItem`1([Hotfix]UIFormBase, [UnityEngine.CoreModule]UnityEngine.GameObject, [UnityEngine.CoreModule]UnityEngine.GameObject)" newName="$l" />
       <method signature="void UIFormBase::UnspawnAllItem`1([Hotfix]UIFormBase, [UnityEngine.CoreModule]UnityEngine.GameObject)" newName="$L" />
-      <method signature="void UIFormBase::InitLocalization([Hotfix]UIFormBase)" newName="&gt;$P" />
+      <method signature="void UIFormBase::InitLocalization([Hotfix]UIFormBase)" newName="$r" />
       <method signature="void UIFormBase::Internal_PlayCloseUIAnimation([Hotfix]UIFormBase, [GameFramework]GameFramework.GameFrameworkAction)" newName="$M" />
       <method signature="void UIFormBase::Internal_PlayOpenUIAnimation([Hotfix]UIFormBase, [GameFramework]GameFramework.GameFrameworkAction)" newName="$n" />
-      <method signature="void UIFormBase::OnButtonClick([Hotfix]UIFormBase, object, string)" newName="&gt;$Q" />
-      <method signature="void UIFormBase::OnButtonClick([Hotfix]UIFormBase, object, [UnityEngine.UI]UnityEngine.UI.Button)" newName="&gt;$Q" />
-      <method signature="void UIFormBase::OnOpenAnimationComplete([Hotfix]UIFormBase)" newName="&gt;$r" />
-      <method signature="void UIFormBase::OnCloseAnimationComplete([Hotfix]UIFormBase)" newName="&gt;$R" />
+      <method signature="void UIFormBase::OnButtonClick([Hotfix]UIFormBase, object, string)" newName="$R" />
+      <method signature="void UIFormBase::OnButtonClick([Hotfix]UIFormBase, object, [UnityEngine.UI]UnityEngine.UI.Button)" newName="$R" />
+      <method signature="void UIFormBase::OnOpenAnimationComplete([Hotfix]UIFormBase)" newName="$v" />
+      <method signature="void UIFormBase::OnCloseAnimationComplete([Hotfix]UIFormBase)" newName="$V" />
     </type>
     <type fullName="UIFormBase/&lt;&gt;c__DisplayClass45_0" newFullName="UIFormBase/$lA" status="Renamed">
       <field signature="[GameFramework]GameFramework.GameFrameworkAction onAnimComplete" newName="$a" />
@@ -2052,10 +2042,10 @@
     </type>
     <type fullName="UIItemBase" newFullName="" status="NotRenamed">
       <property signature="[Hotfix]SerializeFieldData[] SerializeFieldArr" newName="$b" />
-      <method signature="[Hotfix]SerializeFieldData[] UIItemBase::get_SerializeFieldArr([Hotfix]UIItemBase)" newName="&gt;$O" />
-      <method signature="void UIItemBase::set_SerializeFieldArr([Hotfix]UIItemBase, [Hotfix]SerializeFieldData[])" newName="&gt;$p" />
-      <method signature="void UIItemBase::OnInit([Hotfix]UIItemBase)" newName="&gt;$a" />
-      <method signature="void UIItemBase::InitLocalization([Hotfix]UIItemBase)" newName="&gt;$A" />
+      <method signature="[Hotfix]SerializeFieldData[] UIItemBase::get_SerializeFieldArr([Hotfix]UIItemBase)" newName="$q" />
+      <method signature="void UIItemBase::set_SerializeFieldArr([Hotfix]UIItemBase, [Hotfix]SerializeFieldData[])" newName="$Q" />
+      <method signature="void UIItemBase::OnInit([Hotfix]UIItemBase)" newName="$d" />
+      <method signature="void UIItemBase::InitLocalization([Hotfix]UIItemBase)" newName="$A" />
     </type>
     <type fullName="UIItemObject" newFullName="$nA" status="Renamed">
       <field signature="[UnityEngine.CoreModule]UnityEngine.GameObject &lt;gameObject&gt;k__BackingField" newName="$a" />
@@ -2067,7 +2057,7 @@
       <method signature="[Hotfix]UIItemBase UIItemObject::get_itemLogic([Hotfix]UIItemObject)" newName="$c" />
       <method signature="void UIItemObject::set_itemLogic([Hotfix]UIItemObject, [Hotfix]UIItemBase)" newName="$C" />
       <method signature="!!0 UIItemObject::Create`1([UnityEngine.CoreModule]UnityEngine.GameObject)" newName="$d" />
-      <method signature="void UIItemObject::OnInit([Hotfix]UIItemObject)" newName="&gt;$D" />
+      <method signature="void UIItemObject::OnInit([Hotfix]UIItemObject)" newName="$f" />
     </type>
     <type fullName="UIParams" newFullName="$NA" status="Renamed">
       <field signature="System.Nullable`1&lt;bool&gt; &lt;AllowEscapeClose&gt;k__BackingField" newName="$a" />
@@ -2095,7 +2085,7 @@
       <method signature="[GameFramework]GameFramework.GameFrameworkAction`2&lt;object,string&gt; UIParams::get_ButtonClickCallback([Hotfix]UIParams)" newName="$i" />
       <method signature="void UIParams::set_ButtonClickCallback([Hotfix]UIParams, [GameFramework]GameFramework.GameFrameworkAction`2&lt;object,string&gt;)" newName="$I" />
       <method signature="[Hotfix]UIParams UIParams::Create(System.Nullable`1&lt;bool&gt;, System.Nullable`1&lt;int&gt;)" newName="$j" />
-      <method signature="void UIParams::ResetProperties([Hotfix]UIParams)" newName="&gt;$f" />
+      <method signature="void UIParams::ResetProperties([Hotfix]UIParams)" newName="$v" />
     </type>
     <type fullName="UITable" newFullName="" status="NotRenamed">
       <field signature="int m_Id" newName="$a" />
@@ -2109,7 +2099,7 @@
       <field signature="string P_EnableBG" newName="$a" />
       <field signature="string P_EnableSettingBtn" newName="$A" />
       <method signature="void UITopbar::OnPlayerDataChanged([Hotfix]UITopbar, object, [GameFramework]GameFramework.Event.GameEventArgs)" newName="$b" />
-      <method signature="void UITopbar::OnButtonClick([Hotfix]UITopbar, object, [UnityEngine.UI]UnityEngine.UI.Button)" newName="&gt;$Q" />
+      <method signature="void UITopbar::OnButtonClick([Hotfix]UITopbar, object, [UnityEngine.UI]UnityEngine.UI.Button)" newName="$R" />
     </type>
     <type fullName="UIViews" newFullName="$oA" status="Renamed">
       <field signature="[Hotfix]UIViews MenuUIForm" newName="$a" />

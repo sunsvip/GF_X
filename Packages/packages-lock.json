@@ -8,18 +8,18 @@
       "hash": "7a0032934b438ad20a4a691f8093ce1865824c42"
     },
     "com.code-philosophy.obfuz": {
-      "version": "https://gitee.com/focus-creative-games/obfuz.git?path=com.code-philosophy.obfuz",
+      "version": "https://gitee.com/GameFrameworks/obfuz.git?path=com.code-philosophy.obfuz",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "b2ba676ec1cadf948f988a7c02c72eeb75356f06"
+      "hash": "3066fbf3c700bc5b084f9d62318400bdafba4f28"
     },
     "com.code-philosophy.obfuz4hybridclr": {
-      "version": "https://gitee.com/focus-creative-games/obfuz.git?path=com.code-philosophy.obfuz4hybridclr",
+      "version": "https://gitee.com/GameFrameworks/obfuz.git?path=com.code-philosophy.obfuz4hybridclr",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "b2ba676ec1cadf948f988a7c02c72eeb75356f06"
+      "hash": "3066fbf3c700bc5b084f9d62318400bdafba4f28"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",

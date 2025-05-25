@@ -694,7 +694,7 @@ PlayerSettings:
     PS5: DOTWEEN
     QNX: DOTWEEN
     Stadia: DOTWEEN
-    Standalone: AMPLIFY_SHADER_EDITOR;ENABLE_LOG;DOTWEEN
+    Standalone: AMPLIFY_SHADER_EDITOR;ENABLE_LOG;DOTWEEN;DISABLE_HYBRIDCLR
     VisionOS: DOTWEEN
     WebGL: AMPLIFY_SHADER_EDITOR;ENABLE_LOG;DOTWEEN;DISABLE_HYBRIDCLR
     Windows Store Apps: ENABLE_LOG;DOTWEEN
@@ -717,7 +717,7 @@ PlayerSettings:
   useDeterministicCompilation: 1
   additionalIl2CppArgs: 
   scriptingRuntimeVersion: 1
-  gcIncremental: 1
+  gcIncremental: 0
   gcWBarrierValidation: 0
   apiCompatibilityLevelPerPlatform:
     Android: 3

@@ -27,7 +27,8 @@ MonoBehaviour:
   secretSettings:
     defaultStaticSecretKey: GFXStaticKey
     defaultDynamicSecretKey: GFXDynamicKey
-    secretKeyOutputPath: Assets/Resources/Obfuz
+    staticSecretKeyOutputPath: Assets/Resources/Obfuz/defaultStaticSecretKey.bytes
+    dynamicSecretKeyOutputPath: Assets/Resources/Obfuz/defaultDynamicSecretKey.bytes
     randomSeed: 0
     assembliesUsingDynamicSecretKeys: []
   encryptionVMSettings:
@@ -48,4 +49,5 @@ MonoBehaviour:
     ruleFiles: []
   callObfusSettings:
     obfuscationLevel: 1
+    maxProxyMethodCountPerDispatchMethod: 100
     ruleFiles: []

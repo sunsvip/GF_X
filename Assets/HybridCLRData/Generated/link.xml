@@ -5,10 +5,10 @@
     <type fullname="$D" preserve="all" />
     <type fullname="$D/$E" preserve="all" />
     <type fullname="$D/$h" preserve="all" />
+    <type fullname="$j" preserve="all" />
+    <type fullname="$j/Setting" preserve="all" />
     <type fullname="AppSettings" preserve="all" />
     <type fullname="BuiltinViewComponent" preserve="all" />
-    <type fullname="ConstBuiltin" preserve="all" />
-    <type fullname="ConstBuiltin/Setting" preserve="all" />
     <type fullname="GFBuiltin" preserve="all" />
   </assembly>
   <assembly fullname="Cinemachine">
@@ -95,6 +95,7 @@
     <type fullname="Newtonsoft.Json.JsonPropertyAttribute" preserve="all" />
   </assembly>
   <assembly fullname="Obfuz.Runtime">
+    <type fullname="$B.$g" preserve="all" />
     <type fullname="$b.$C" preserve="all" />
     <type fullname="$b.$d" preserve="all" />
   </assembly>
