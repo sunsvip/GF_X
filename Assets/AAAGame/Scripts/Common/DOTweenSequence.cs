@@ -1,3 +1,4 @@
+#if DOTWEEN
 using DG.Tweening;
 using System;
 using UnityEngine;
@@ -1350,3 +1351,4 @@ public class DOTweenSequence : MonoBehaviour
         Join
     }
 }
+#endif

@@ -12,14 +12,14 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "3066fbf3c700bc5b084f9d62318400bdafba4f28"
+      "hash": "28ac98352df1c9cccb5ed4c086b091ca9457d128"
     },
     "com.code-philosophy.obfuz4hybridclr": {
       "version": "https://gitee.com/GameFrameworks/obfuz.git?path=com.code-philosophy.obfuz4hybridclr",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "3066fbf3c700bc5b084f9d62318400bdafba4f28"
+      "hash": "28ac98352df1c9cccb5ed4c086b091ca9457d128"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",

@@ -17,8 +17,7 @@ MonoBehaviour:
     assembliesToObfuscate:
     - Hotfix
     - Builtin.Runtime
-    nonObfuscatedButReferencingObfuscatedAssemblies:
-    - Assembly-CSharp-firstpass
+    nonObfuscatedButReferencingObfuscatedAssemblies: []
     additionalAssemblySearchPaths: []
     obfuscateObfuzRuntime: 1
   obfuscationPassSettings:
@@ -41,6 +40,7 @@ MonoBehaviour:
     useConsistentNamespaceObfuscation: 1
     symbolMappingFile: Assets/Plugins/Obfuz/SymbolObfus/symbol-mapping.xml
     ruleFiles: []
+    customRenamePolicyTypes: []
   constEncryptSettings:
     encryptionLevel: 1
     ruleFiles: []

@@ -1048,7 +1048,7 @@ MonoBehaviour:
   m_CustomResourceHelper: {fileID: 0}
   m_LoadResourceAgentHelperTypeName: UnityGameFramework.Runtime.DefaultLoadResourceAgentHelper
   m_CustomLoadResourceAgentHelper: {fileID: 0}
-  m_LoadResourceAgentHelperCount: 3
+  m_LoadResourceAgentHelperCount: 20
 --- !u!114 &775753392
 MonoBehaviour:
   m_ObjectHideFlags: 0

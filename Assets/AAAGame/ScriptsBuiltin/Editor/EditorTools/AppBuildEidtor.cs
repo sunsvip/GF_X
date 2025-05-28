@@ -913,8 +913,8 @@ namespace UGF.EditorTools
             {
                 throw new BuildFailedException($"You have not initialized HybridCLR, please install it via menu 'HybridCLR/Installer'");
             }
-            if (generateAotDll && Obfuz.Settings.ObfuzSettings.Instance.enable)
-                HybridCLRExtensionTool.GenerateLinkXml();
+            //if (generateAotDll && Obfuz.Settings.ObfuzSettings.Instance.enable)
+            //    HybridCLRExtensionTool.GenerateLinkXml(); //新版Obfuz已经自动处理
             BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
             HybridCLRExtensionTool.CompileTargetDll(false);
             Il2CppDefGeneratorCommand.GenerateIl2CppDef();
