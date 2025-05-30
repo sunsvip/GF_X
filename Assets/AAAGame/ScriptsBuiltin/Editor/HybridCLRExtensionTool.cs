@@ -27,37 +27,10 @@ namespace UGF.EditorTools
         {
             CompileTargetDll(false);
         }
-        [MenuItem("HybridCLR/Obfuz GenerateLinkXml[混淆后代码裁剪配置]", false, 5)]
+        [MenuItem("HybridCLR/ObfuzExtension/Obfuz GenerateLinkXml[混淆后代码裁剪配置]", false)]
         public static void GenerateLinkXml()
         {
-            CompileDllCommand.CompileDllActiveBuildTarget();
-            BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
-            var obfuzSettings = ObfuzSettings.Instance;
-
-            var assemblySearchDirs = new List<string>
-        {
-            SettingsUtil.GetHotUpdateDllsOutputDirByTarget(target),
-        };
-            ObfuscatorBuilder builder = ObfuscatorBuilder.FromObfuzSettings(obfuzSettings, target, true);
-            builder.InsertTopPriorityAssemblySearchPaths(assemblySearchDirs);
-
-            Obfuscator obfuz = builder.Build();
-            obfuz.Run();
-
-
-            List<string> hotfixAssemblies = SettingsUtil.HotUpdateAssemblyNamesExcludePreserved;
-
-            var analyzer = new HybridCLR.Editor.Link.Analyzer(new HybridCLR.Editor.Meta.PathAssemblyResolver(builder.CoreSettingsFacade.obfuscatedAssemblyOutputPath));
-            var refTypes = analyzer.CollectRefs(hotfixAssemblies);
-
-            // HyridCLR中 LinkXmlWritter不是public的，在其他程序集无法访问，只能通过反射操作
-            var linkXmlWriter = typeof(SettingsUtil).Assembly.GetType("HybridCLR.Editor.Link.LinkXmlWriter");
-            var writeMethod = linkXmlWriter.GetMethod("Write", BindingFlags.Public | BindingFlags.Instance);
-            var instance = Activator.CreateInstance(linkXmlWriter);
-            string linkXmlOutputPath = $"{Application.dataPath}/Plugins/Obfuz/link.xml";
-            writeMethod.Invoke(instance, new object[] { linkXmlOutputPath, refTypes });
-            Debug.Log($"[GenerateLinkXmlForObfuscatedAssembly] output:{linkXmlOutputPath}");
-            AssetDatabase.Refresh();
+            Obfuz.Unity.LinkXmlProcess.GenerateAdditionalLinkXmlFile(EditorUserBuildSettings.activeBuildTarget);
         }
         public static void CompileTargetDll(bool includeAotDll)
         {
