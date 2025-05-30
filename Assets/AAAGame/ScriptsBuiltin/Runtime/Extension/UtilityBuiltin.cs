@@ -382,7 +382,7 @@ public static class UtilityBuiltin
     }
     public class DES
     {
-        public static string Encrypt(string stringToEncrypt, string sKey = ConstBuiltin.DES_KEY)
+        public static string Encrypt(string stringToEncrypt, string sKey)
         {
             try
             {
@@ -410,7 +410,7 @@ public static class UtilityBuiltin
         }
 
 
-        public static string Decrypt(string stringToDecrypt, string sKey = ConstBuiltin.DES_KEY)
+        public static string Decrypt(string stringToDecrypt, string sKey)
         {
             try
             {

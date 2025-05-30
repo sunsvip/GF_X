@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: AppSettings
   m_EditorClassIdentifier: 
   DebugMode: 1
-  ResourceMode: 2
+  ResourceMode: 1
   DesignResolution: {x: 1080, y: 2340}
+  EncryptAOTDlls:
+  - Builtin.Runtime
+  - UnityGameFramework.Runtime

@@ -2,6 +2,7 @@
 using System.IO;
 using TMPro;
 using UnityEditor;
+using UnityEditor.U2D;
 using UnityEditor.U2D.Sprites;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -65,6 +66,7 @@ public partial class ProjectPanelRightClickExtension
 
         Sprite[] sprites = new Sprite[atlas.spriteCount];
         atlas.GetSprites(sprites);
+        System.Array.Sort<Sprite>(sprites, (a, b) => a.name.CompareTo(b.name));
         TMP_SpriteAsset spriteAsset;
         if (File.Exists(tmpSpriteAssetName))
         {
@@ -86,7 +88,7 @@ public partial class ProjectPanelRightClickExtension
             AssetDatabase.SaveAssetIfDirty(spriteAsset);
             spriteAsset.material = material;
         }
-        var spNameTrim = "(Clone)".ToCharArray();
+        var spNameTrim = "(Clone)".Length;
         for (int i = 0; i < sprites.Length; i++)
         {
             var sp = sprites[i];
@@ -94,13 +96,23 @@ public partial class ProjectPanelRightClickExtension
             var glyph = new TMP_SpriteGlyph((uint)i, new UnityEngine.TextCore.GlyphMetrics(spUVRect.width, spUVRect.height, 0, spUVRect.height, spUVRect.width),
             new UnityEngine.TextCore.GlyphRect(spUVRect), 1, 0);
             spriteAsset.spriteGlyphTable.Add(glyph);
-            var spChar = new TMP_SpriteCharacter(0xFFFE, glyph);
-            spChar.name = sp.name.TrimEnd(spNameTrim);
+            var spChar = new TMP_SpriteCharacter(ToUnicode(i.ToString()), glyph);
+            spChar.name = sp.name[..^spNameTrim];
             spriteAsset.spriteCharacterTable.Add(spChar);
         }
         AssetDatabase.SaveAssetIfDirty(spriteAsset);
     }
-
+    static uint ToUnicode(string chars)
+    {
+        if (char.IsHighSurrogate(chars, 0) && 1 < chars.Length && char.IsLowSurrogate(chars, 1))
+        {
+            return (uint)char.ConvertToUtf32(chars[0], chars[1]);
+        }
+        else
+        {
+            return chars[0];
+        }
+    }
     /// <summary>
     /// 导出Multiple类型的Sprite为碎图
     /// </summary>
@@ -242,18 +254,16 @@ public partial class ProjectPanelRightClickExtension
     static SpriteRect[] GetSpriteRects(SpriteAtlas atlas)
     {
         if (atlas == null || atlas.spriteCount == 0) return null;
-
         Sprite[] sprites = new Sprite[atlas.spriteCount];
         atlas.GetSprites(sprites);
-
         SpriteRect[] spriteRects = new SpriteRect[sprites.Length];
-        var spNameTrim = "(Clone)".ToCharArray();
+        var spNameTrim = "(Clone)".Length;
         for (int i = 0; i < sprites.Length; i++)
         {
             var sp = sprites[i];
             spriteRects[i] = new SpriteRect()
             {
-                name = sp.name.Trim(spNameTrim),
+                name = sp.name[..^spNameTrim],
                 rect = sp.textureRect
             };
         }

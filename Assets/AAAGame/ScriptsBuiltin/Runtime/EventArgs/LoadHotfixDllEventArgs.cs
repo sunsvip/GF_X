@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class LoadHotfixDllEventArgs : GameEventArgs
 {
-    public static readonly int EventId = typeof(LoadHotfixDllEventArgs).GetHashCode();
+    public readonly static int EventId = typeof(LoadHotfixDllEventArgs).GetHashCode();
     public override int Id => EventId;
     public string DllName { get; private set; }
     public System.Reflection.Assembly Assembly { get; private set; }

@@ -1,14 +1,14 @@
 {
   "dependencies": {
     "com.code-philosophy.hybridclr": "https://gitee.com/focus-creative-games/hybridclr_unity.git",
-    "com.code-philosophy.obfuz": "https://gitee.com/focus-creative-games/obfuz.git?path=com.code-philosophy.obfuz",
-    "com.code-philosophy.obfuz4hybridclr": "https://gitee.com/focus-creative-games/obfuz.git?path=com.code-philosophy.obfuz4hybridclr",
+    "com.code-philosophy.obfuz": "https://gitee.com/GameFrameworks/obfuz.git?path=com.code-philosophy.obfuz",
+    "com.code-philosophy.obfuz4hybridclr": "https://gitee.com/GameFrameworks/obfuz.git?path=com.code-philosophy.obfuz4hybridclr",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "1.1.6",
     "com.unity.cinemachine": "2.10.3",
     "com.unity.collab-proxy": "2.7.1",
-    "com.unity.collections": "2.5.1",
-    "com.unity.ide.visualstudio": "2.0.22",
+    "com.unity.collections": "2.5.7",
+    "com.unity.ide.visualstudio": "2.0.23",
     "com.unity.jobs": "0.70.0-preview.7",
     "com.unity.nuget.newtonsoft-json": "3.2.1",
     "com.unity.render-pipelines.universal": "14.0.12",

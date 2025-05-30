@@ -23,4 +23,6 @@ public class AppSettings : ScriptableObject
     public ResourceMode ResourceMode = ResourceMode.Package;
     [Tooltip("屏幕设计分辨率:")]
     public Vector2Int DesignResolution = new Vector2Int(750, 1334);
+    [Tooltip("需要加密的dll列表")]
+    public string[] EncryptAOTDlls;
 }
