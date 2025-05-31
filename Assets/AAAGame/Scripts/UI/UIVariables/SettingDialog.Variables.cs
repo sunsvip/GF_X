@@ -1,6 +1,6 @@
 //---------------------------------
 //此文件由工具自动生成,请勿手动修改
-//更新自:DESKTOP-JBGUQCK
+//更新自:EFUN
 //---------------------------------
 using UnityEngine;
 using TMPro;
@@ -20,4 +20,5 @@ public partial class SettingDialog
 	[SerializeField] protected Button varBtnRating = null;
 	[SerializeField] private Image varIconFlag = null;
 	[SerializeField] private TextMeshProUGUI varLanguageName = null;
+	[SerializeField] private RectTransform varVibrateHandle = null;
 }

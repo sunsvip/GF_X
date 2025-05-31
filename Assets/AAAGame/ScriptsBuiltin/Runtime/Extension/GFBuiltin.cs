@@ -44,7 +44,7 @@ public class GFBuiltin : MonoBehaviour
                 var resTp = resCom.GetType();
                 var m_ResourceMode = resTp.GetField("m_ResourceMode", BindingFlags.Instance | BindingFlags.NonPublic);
                 m_ResourceMode.SetValue(resCom, AppSettings.Instance.ResourceMode);
-                GFBuiltin.LogInfo($"------------Set ResourceMode:{AppSettings.Instance.ResourceMode}------------");
+                GFBuiltin.Log($"------------Set ResourceMode:{AppSettings.Instance.ResourceMode}------------");
             }
         }
     }
@@ -86,7 +86,7 @@ public class GFBuiltin : MonoBehaviour
         var canvasFitMode = Screen.width / (float)Screen.height > designRatio ? ScreenFitMode.Height : ScreenFitMode.Width;
         canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
         canvasScaler.matchWidthOrHeight = (int)canvasFitMode;
-        GFBuiltin.LogInfo($"----------UI适配模式:{canvasFitMode}----------");
+        GFBuiltin.Log($"----------UI适配模式:{canvasFitMode}----------");
     }
 
 
@@ -99,7 +99,7 @@ public class GFBuiltin : MonoBehaviour
         GameEntry.Shutdown(type);
     }
 
-    public static void LogInfo(string format)
+    public static void Log(string format)
     {
         var colorfulFormat = $"<color=#2BD988>{format}</color>";
         Debug.Log(colorfulFormat);

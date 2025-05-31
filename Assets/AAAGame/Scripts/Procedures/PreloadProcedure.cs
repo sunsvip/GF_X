@@ -28,7 +28,7 @@ public class PreloadProcedure : ProcedureBase
         GF.Event.Subscribe(LoadDictionarySuccessEventArgs.EventId, OnLoadDicSuccess);
         GF.Event.Subscribe(LoadDictionaryFailureEventArgs.EventId, OnLoadDicFailure);
         GF.BuiltinView.ShowLoadingProgress();
-        GF.LogInfo("进入HybridCLR热更流程! 预加载游戏数据...");
+        GF.Log("进入HybridCLR热更流程! 预加载游戏数据...");
 
         InitAppSettings();
         PreloadAndInitData();
@@ -60,7 +60,7 @@ public class PreloadProcedure : ProcedureBase
         {
             preloadAllCompleted = true;
             InitGameFrameworkSettings();
-            GF.LogInfo("预加载完成, 进入游戏场景.");
+            GF.Log("预加载完成, 进入游戏场景.");
             procedureOwner.SetData<VarString>(ChangeSceneProcedure.P_SceneName, "Game");
             ChangeState<ChangeSceneProcedure>(procedureOwner);
         }
@@ -187,7 +187,7 @@ public class PreloadProcedure : ProcedureBase
             language = Enum.Parse<GameFramework.Localization.Language>(langRow.LanguageKey);//不支持的语言默认用英文
         }
         GF.Setting.SetLanguage(language, false);
-        GF.LogInfo(Utility.Text.Format("初始化游戏设置. 游戏语言:{0},系统语言:{1}", language, GFBuiltin.Localization.SystemLanguage));
+        GF.Log(Utility.Text.Format("初始化游戏设置. 游戏语言:{0},系统语言:{1}", language, GFBuiltin.Localization.SystemLanguage));
         var appConfig = await AppConfigs.GetInstanceSync();
         GF.Localization.LoadLanguage(langRow.AssetName, appConfig.LoadFromBytes, this);
     }
@@ -197,7 +197,7 @@ public class PreloadProcedure : ProcedureBase
         var gfExtPfb = asset as GameObject;
         if (null != GameObject.Instantiate(gfExtPfb, Vector3.zero, Quaternion.identity, GF.Base.transform))
         {
-            GF.LogInfo("GF框架扩展成功!");
+            GF.Log("GF框架扩展成功!");
             loadedProgress++;
             LoadConfigsAndDataTables();
         }

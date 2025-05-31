@@ -15,7 +15,7 @@ public partial class SettingDialog : UIFormBase
     protected override void OnInit(object userData)
     {
         base.OnInit(userData);
-        m_ToggleHandleX = Mathf.Abs(varToggleVibrate.transform.Find("Handle").localPosition.x);
+        m_ToggleHandleX = Mathf.Abs(varVibrateHandle.localPosition.x);
 
         varToggleVibrate.onValueChanged.AddListener(isOn =>
         {
@@ -70,11 +70,10 @@ public partial class SettingDialog : UIFormBase
 
     private void OnToggleChanged(Toggle tg)
     {
-        var handle = tg.transform.Find("Handle") as RectTransform;
-        var handleText = handle.GetComponentInChildren<TextMeshProUGUI>();
+        var handleText = varVibrateHandle.GetComponentInChildren<TextMeshProUGUI>();
         float targetX = tg.isOn ? m_ToggleHandleX : -m_ToggleHandleX;
-        float duration = (Mathf.Abs(targetX - handle.anchoredPosition.x) / m_ToggleHandleX) * 0.2f;
-        handle.DOAnchorPosX(targetX, duration).onComplete = () =>
+        float duration = (Mathf.Abs(targetX - varVibrateHandle.anchoredPosition.x) / m_ToggleHandleX) * 0.2f;
+        varVibrateHandle.DOAnchorPosX(targetX, duration).onComplete = () =>
         {
             handleText.text = tg.isOn ? GF.Localization.GetString("ON") : GF.Localization.GetString("OFF");
         };

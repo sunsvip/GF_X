@@ -90,7 +90,7 @@ namespace UGF.EditorTools
                 }
                 foreach (var item in changedFiles)
                 {
-                    GFBuiltin.LogInfo($"-----------------自动刷新DataTable:{item}-----------------");
+                    GFBuiltin.Log($"-----------------自动刷新DataTable:{item}-----------------");
                 }
                 tableFileChangedList.Clear();
             }
@@ -100,7 +100,7 @@ namespace UGF.EditorTools
                 GameDataGenerator.RefreshAllConfig(changedFiles);
                 foreach (var item in changedFiles)
                 {
-                    GFBuiltin.LogInfo($"-----------------自动刷新Config:{item}-----------------");
+                    GFBuiltin.Log($"-----------------自动刷新Config:{item}-----------------");
                 }
                 configFileChangedList.Clear();
             }
@@ -110,7 +110,7 @@ namespace UGF.EditorTools
                 GameDataGenerator.RefreshAllLanguage(changedFiles);
                 foreach (var item in changedFiles)
                 {
-                    GFBuiltin.LogInfo($"-----------------自动刷新Language:{item}-----------------");
+                    GFBuiltin.Log($"-----------------自动刷新Language:{item}-----------------");
                 }
                 languageFileChangedList.Clear();
             }
