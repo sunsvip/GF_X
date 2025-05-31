@@ -49,6 +49,6 @@ public class GF : GFBuiltin
         var exit_time = DateTime.UtcNow.ToString();
         GF.Setting.SetString(ConstBuiltin.Setting.QuitAppTime, exit_time);
         GF.Setting.Save();
-        Log.Info("Application Quit:{0}", exit_time);
+        UnityGameFramework.Runtime.Log.Info("Application Quit:{0}", exit_time);
     }
 }

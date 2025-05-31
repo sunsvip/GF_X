@@ -913,8 +913,12 @@ namespace UGF.EditorTools
             {
                 throw new BuildFailedException($"You have not initialized HybridCLR, please install it via menu 'HybridCLR/Installer'");
             }
-            //if (generateAotDll && Obfuz.Settings.ObfuzSettings.Instance.enable)
-            //    HybridCLRExtensionTool.GenerateLinkXml(); //新版Obfuz已经自动处理
+            if (Obfuz.Settings.ObfuzSettings.Instance.enable)
+            {
+                ObfuzMenu.GenerateEncryptionVM();
+                ObfuzMenu.SaveSecretFile();
+            }
+
             BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
             HybridCLRExtensionTool.CompileTargetDll(false);
             Il2CppDefGeneratorCommand.GenerateIl2CppDef();
@@ -923,15 +927,10 @@ namespace UGF.EditorTools
             LinkGeneratorCommand.GenerateLinkXml(target);
             if (generateAotDll)
             {
-                if (Obfuz.Settings.ObfuzSettings.Instance.enable)
-                {
-                    ObfuzMenu.GenerateEncryptionVM();
-                    ObfuzMenu.SaveSecretFile();
-                }
                 // 生成裁剪后的aot dll
                 StripAOTDllCommand.GenerateStripedAOTDlls(target);
-                HybridCLRExtensionTool.CopyAotDllsToProject(target);
             }
+            HybridCLRExtensionTool.CopyAotDllsToProject(target);
             // 桥接函数生成依赖于AOT dll，必须保证已经build过，生成AOT dll
             MethodBridgeGeneratorCommand.GenerateMethodBridgeAndReversePInvokeWrapper(target);
             AOTReferenceGeneratorCommand.GenerateAOTGenericReference(target);

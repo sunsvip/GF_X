@@ -118,7 +118,7 @@ public class LoadHotfixDllProcedure : ProcedureBase
                 dllBytes = Utility.Encryption.GetQuickXorBytes(dllBytes, encryptCode);
             }
             var resultCode = LoadMetadataForAOT(dllBytes);
-            GFBuiltin.LogInfo(Utility.Text.Format("补充元数据:{0}. ret:{1}", dll.name, resultCode));
+            GFBuiltin.Log(Utility.Text.Format("补充元数据:{0}. ret:{1}", dll.name, resultCode));
             if (resultCode == HybridCLR.LoadImageErrorCode.OK)
             {
                 loadedProgress++;
@@ -127,7 +127,7 @@ public class LoadHotfixDllProcedure : ProcedureBase
     }
     private void LoadHotfixDlls()
     {
-        GFBuiltin.LogInfo("开始加载热更新dll");
+        GFBuiltin.Log("开始加载热更新dll");
         var hotfixListFile = UtilityBuiltin.AssetsPath.GetCombinePath("Assets", ConstBuiltin.HOT_FIX_DLL_DIR, "HotfixFileList.txt");
         if (GFBuiltin.Resource.HasAsset(hotfixListFile) == GameFramework.Resource.HasAssetResult.NotExist)
         {

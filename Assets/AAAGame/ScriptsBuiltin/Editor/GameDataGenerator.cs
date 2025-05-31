@@ -446,7 +446,7 @@ namespace UGF.EditorTools
                 EditorUtility.DisplayProgressBar($"导出Language:({i}/{totalExcelCount})", $"{excelFileName} -> {outputFileName}", i / (float)totalExcelCount);
                 if (ExportLanguageExcel(excelFileName, outputFileName, appConfig.LoadFromBytes))
                 {
-                    GF.LogInfo($"Language导出成功:{outputFileName}");
+                    GF.Log($"Language导出成功:{outputFileName}");
                 }
             }
             EditorUtility.ClearProgressBar();
@@ -473,13 +473,13 @@ namespace UGF.EditorTools
                 EditorUtility.DisplayProgressBar($"导出Config:({i}/{totalExcelCount})", $"{excelFileName} -> {outputFileName}", i / (float)totalExcelCount);
                 if (Excel2TxtFile(excelFileName, outputFileName))
                 {
-                    GFBuiltin.LogInfo(Utility.Text.Format("导出Config文件成功: '{0}'.", outputFileName));
+                    GFBuiltin.Log(Utility.Text.Format("导出Config文件成功: '{0}'.", outputFileName));
                 }
                 if (appConfig.LoadFromBytes)
                 {
                     if (ExportConfig2BytesFile(outputFileName))
                     {
-                        GFBuiltin.LogInfo(Utility.Text.Format("导出Config二进制文件成功: '{0}'.", outputFileName));
+                        GFBuiltin.Log(Utility.Text.Format("导出Config二进制文件成功: '{0}'.", outputFileName));
                     }
                 }
             }
@@ -509,7 +509,7 @@ namespace UGF.EditorTools
                 {
                     if (Excel2TxtFile(excelFileName, outputPath))
                     {
-                        GF.LogInfo($"导出DataTable成功:{excelFileName} -> {outputPath}");
+                        GF.Log($"导出DataTable成功:{excelFileName} -> {outputPath}");
                         if (appConfig.LoadFromBytes)
                         {
                             DataTableProcessor dataTableProcessor = DataTableGenerator.CreateDataTableProcessor(outputPath);

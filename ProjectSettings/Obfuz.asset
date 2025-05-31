@@ -39,6 +39,7 @@ MonoBehaviour:
     obfuscatedNamePrefix: $
     useConsistentNamespaceObfuscation: 1
     symbolMappingFile: Assets/Plugins/Obfuz/SymbolObfus/symbol-mapping.xml
+    debugSymbolMappingFile: Assets/Obfuz/SymbolObfus/symbol-mapping-debug.xml
     ruleFiles: []
     customRenamePolicyTypes: []
   constEncryptSettings:
