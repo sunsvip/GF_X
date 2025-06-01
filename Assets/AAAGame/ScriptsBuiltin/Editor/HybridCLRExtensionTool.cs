@@ -327,7 +327,7 @@ namespace UGF.EditorTools
 #endif
         public static string GetStripAssembliesDir(BuildTarget target)
         {
-            string projectDir = SettingsUtil.ProjectDir;
+            string projectDir = Directory.GetParent(Application.dataPath).ToString();
             switch (target)
             {
                 case BuildTarget.StandaloneWindows:
