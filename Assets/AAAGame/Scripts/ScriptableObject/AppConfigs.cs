@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 #endif
 
-[CreateAssetMenu(fileName = "AppConfigs", menuName = "ScriptableObject/Core/AppConfigs【配置App运行时所需数据表、配置表、流程】")]
+[CreateAssetMenu(fileName = "AppConfigs", menuName = "GF/AppConfigs [配置App运行时所需数据表、配置表、流程]")]
 public class AppConfigs : ScriptableObject
 {
     private static AppConfigs mInstance = null;

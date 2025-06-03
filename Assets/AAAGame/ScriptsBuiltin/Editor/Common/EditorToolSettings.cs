@@ -30,8 +30,6 @@ namespace UGF.EditorTools
         public string BaiduTransAppId = "";
         public string BaiduTransSecretKey = "";
         public int BaiduTransMaxLength = 2000;
-
-        public bool UIFieldToolUseSerializeMode = false;
     }
 }
 #endif

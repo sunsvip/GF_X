@@ -1,7 +1,7 @@
 using GameFramework.Resource;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "AppSettings", menuName = "ScriptableObject/AppSettings【App内置配置参数】")]
+[CreateAssetMenu(fileName = "AppSettings", menuName = "GF/AppSettings [App内置配置参数]")]
 [Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.All)]
 public class AppSettings : ScriptableObject
 {

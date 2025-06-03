@@ -64,7 +64,8 @@ public partial class SettingDialog : UIFormBase
         varMusicSlider.value = GF.Setting.GetMediaMute(Const.SoundGroup.Music) ? 0 : GF.Setting.GetMediaVolume(Const.SoundGroup.Music);
         varSoundFxSlider.value = GF.Setting.GetMediaMute(Const.SoundGroup.Sound) ? 0 : GF.Setting.GetMediaVolume(Const.SoundGroup.Sound);
 
-        varToggleVibrate.isOn = !GF.Setting.GetMediaMute(Const.SoundGroup.Vibrate);
+        varToggleVibrate.SetIsOnWithoutNotify(!GF.Setting.GetMediaMute(Const.SoundGroup.Vibrate));
+        OnToggleChanged(varToggleVibrate);
         RefreshLanguage();
     }
 

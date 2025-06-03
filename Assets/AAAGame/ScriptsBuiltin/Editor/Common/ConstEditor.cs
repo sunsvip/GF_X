@@ -36,7 +36,6 @@ namespace UGF.EditorTools
 
 
         public const string SharedAssetBundleName = "SharedAssets";//AssetBundle分包共用资源
-        public static readonly string[] DefaultLayers = { "UI" };
         internal static readonly string KeystorePass = "topgames";
         internal static readonly string KeyAliasPass = "topgames";
         internal static string KeystoreName => UtilityBuiltin.AssetsPath.GetCombinePath(Directory.GetParent(Application.dataPath).FullName, "user.keystore");
@@ -63,8 +62,12 @@ namespace UGF.EditorTools
         public const string GameConfigPath = "Assets/AAAGame/Config";
         public const string LanguagePath = "Assets/AAAGame/Language";
         public const string DataTableCodePath = "Assets/AAAGame/Scripts/DataTable";
+        public const string UIScriptsPath = "Assets/AAAGame/Scripts/UI";
+        public const string UIItemScriptsPath = "Assets/AAAGame/Scripts/UI/Item";
         public const string UIFormTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIFormTemplate.prefab";
         public const string UIDialogTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIDialogTemplate.prefab";
+        public const string UIScriptFileTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIScriptFileTemplate.txt";
+        public const string UIItemScriptFileTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIItemScriptFileTemplate.txt";
     }
 }
 #endif

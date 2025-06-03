@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 [Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName)]
-public class ShopUIForm : UIFormBase
+public partial class ShopUIForm : UIFormBase
 {
     //[SerializeField] RawImage carPreview;
     //[SerializeField] RenderTexture carRenderTex;
