@@ -299,9 +299,9 @@ namespace UGF.EditorTools
                     Debug.LogWarningFormat("创建UI脚本失败! 文件已存在:{0}", uiScriptFile);
                     return;
                 }
-                if (!File.Exists(ConstEditor.UIScriptFileTemplate))
+                if (!File.Exists(ConstEditor.UIItemScriptFileTemplate))
                 {
-                    Debug.LogErrorFormat("创建UI脚本失败! 文件模板不存在:{0}", ConstEditor.UIScriptFileTemplate);
+                    Debug.LogErrorFormat("创建UI脚本失败! 文件模板不存在:{0}", ConstEditor.UIItemScriptFileTemplate);
                     return;
                 }
                 var text = File.ReadAllText(ConstEditor.UIItemScriptFileTemplate, UTF8Encoding.UTF8);
