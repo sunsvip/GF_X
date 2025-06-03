@@ -1,21 +1,22 @@
 {
-  "name": "Builtin.Runtime",
-  "rootNamespace": "",
-  "references": [
-    "Unity.TextMeshPro",
-    "UnityGameFramework.Runtime",
-    "ZString",
-    "GameFramework",
-    "UniTask",
-    "Obfuz.Runtime"
-  ],
-  "includePlatforms": [],
-  "excludePlatforms": [],
-  "allowUnsafeCode": true,
-  "overrideReferences": false,
-  "precompiledReferences": [],
-  "autoReferenced": true,
-  "defineConstraints": [],
-  "versionDefines": [],
-  "noEngineReferences": false
+    "name": "Builtin.Runtime",
+    "rootNamespace": "",
+    "references": [
+        "Unity.TextMeshPro",
+        "UnityGameFramework.Runtime",
+        "ZString",
+        "GameFramework",
+        "UniTask",
+        "Obfuz.Runtime",
+        "HybridCLR.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
