@@ -1446,7 +1446,7 @@ MonoBehaviour:
     - {fileID: 7264025852583067265}
     VarType: TMPro.TextMeshProUGUI
     VarPrefix: 0
-  m_UIAnimationType: 1
+  m_UIAnimationType: 0
   m_OpenAnimation: {fileID: 4876498186068311615}
   m_CloseAnimation: {fileID: 582562271607865392}
   m_OpenAnimationName: ToastTips_Open

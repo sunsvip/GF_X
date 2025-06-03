@@ -20,8 +20,8 @@ namespace UGF.EditorTools
 {
     public class HybridCLRExtensionTool
     {
-        const string DISABLE_HYBRIDCLR = "DISABLE_HYBRIDCLR";
-        const string ENABLE_OBFUZ = "ENABLE_OBFUZ";
+        public const string DISABLE_HYBRIDCLR = "DISABLE_HYBRIDCLR";
+        public const string ENABLE_OBFUZ = "ENABLE_OBFUZ";
         [MenuItem("HybridCLR/CompileDll And Copy[生成热更dll]", false, 4)]
         public static void CompileTargetDll()
         {

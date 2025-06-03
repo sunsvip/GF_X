@@ -566,13 +566,14 @@ public class DOTweenSequence : MonoBehaviour
 {
     [HideInInspector][SerializeField] SequenceAnimation[] m_Sequence;
     [SerializeField] bool m_PlayOnAwake = false;
+    [SerializeField] bool m_ResetOnAwake = false;
     [SerializeField] float m_Delay = 0;
     [SerializeField] Ease m_Ease = Ease.OutQuad;
     [SerializeField] int m_Loops = 1;
     [SerializeField] LoopType m_LoopType = LoopType.Restart;
     [SerializeField] UpdateType m_UpdateType = UpdateType.Normal;
 
-    [SerializeField] bool m_IgnoreTimeScale = false;
+    [SerializeField] bool m_IgnoreTimeScale = true;
     [SerializeField] UnityEvent m_OnPlay = null;
     [SerializeField] UnityEvent m_OnUpdate = null;
     [SerializeField] UnityEvent m_OnComplete = null;
@@ -580,11 +581,14 @@ public class DOTweenSequence : MonoBehaviour
     private Tween m_Tween;
     private void Awake()
     {
-        InitTween();
         if (m_PlayOnAwake) DOPlay();
+        else if (m_ResetOnAwake)
+        {
+            ResetToFromValue();
+        }
     }
 
-    private void InitTween()
+    private void ResetToFromValue()
     {
         foreach (var item in m_Sequence)
         {
@@ -1325,7 +1329,7 @@ public class DOTweenSequence : MonoBehaviour
                 if (Delay > 0) result.SetDelay(Delay);
                 if (CustomEase) result.SetEase(EaseCurve);
                 else result.SetEase(Ease);
-                
+
                 if (OnPlay != null) result.OnPlay(OnPlay.Invoke);
                 if (OnUpdate != null) result.OnUpdate(OnUpdate.Invoke);
                 if (OnComplete != null) result.OnComplete(OnComplete.Invoke);

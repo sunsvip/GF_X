@@ -11,8 +11,9 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-
+#if ENABLE_OBFUZ
 [Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName | Obfuz.ObfuzScope.MethodName)]
+#endif
 /// <summary>
 /// __DATA_TABLE_COMMENT__
 /// </summary>
@@ -30,6 +31,4 @@ public class __DATA_TABLE_CLASS_NAME__ : DataRowBase
 __DATA_TABLE_PROPERTIES__
 
 __DATA_TABLE_PARSER__
-
-//__DATA_TABLE_PROPERTY_ARRAY__
 }

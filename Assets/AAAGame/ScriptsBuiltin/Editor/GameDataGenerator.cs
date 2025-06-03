@@ -208,6 +208,9 @@ namespace UGF.EditorTools
                 {
                     className = className.Substring(0, className.Length - endWithStr.Length);
                 }
+                sBuilder.AppendLine("#if "+ HybridCLRExtensionTool.ENABLE_OBFUZ);
+                sBuilder.AppendLine("\t[Obfuz.ObfuzIgnore]");
+                sBuilder.AppendLine("#endif");
                 sBuilder.AppendLine(Utility.Text.Format("\tpublic enum {0}", className));
                 sBuilder.AppendLine("\t{");
                 for (int i = 0; i < groupList.Count; i++)
@@ -271,7 +274,9 @@ namespace UGF.EditorTools
             var className = Path.GetFileNameWithoutExtension(ConstEditor.UIViewScriptFile);
             StringBuilder sBuilder = new StringBuilder();
             sBuilder.AppendLine("/**此代码由工具自动生成,请勿手动修改!**/");
+            sBuilder.AppendLine("#if " + HybridCLRExtensionTool.ENABLE_OBFUZ);
             sBuilder.AppendLine("[Obfuz.ObfuzIgnore]");
+            sBuilder.AppendLine("#endif");
             sBuilder.AppendLine(Utility.Text.Format("public enum {0} : int", className));
             sBuilder.AppendLine("{");
             int curIndex = 0;
@@ -389,6 +394,8 @@ namespace UGF.EditorTools
                 using (var excelPackage = new ExcelPackage(tmpExcelFile))
                 {
                     result = ExcelSheet2TxtFile(excelPackage.Workbook.Worksheets[0], outTxtFile);
+
+                    //支持每个Sheet页导表
                     //int sheetCount = excelPackage.Workbook.Worksheets.Count;
                     //if (sheetCount == 1)
                     //{

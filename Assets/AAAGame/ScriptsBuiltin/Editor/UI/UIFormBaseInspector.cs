@@ -13,6 +13,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEditor.Events;
 using UnityGameFramework.Runtime;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 namespace UGF.EditorTools
 {
@@ -410,9 +411,10 @@ namespace UGF.EditorTools
             return targets;
         }
         #endregion
-
+        static UIFormBaseInspector _instance;
         private void OnEnable()
         {
+            _instance = this;
             highlightBtStyle = new GUIStyle(EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene).button);
             highlightBtStyle.normal.background = EditorGUIUtility.FindTexture("sv_label_3");
             highlightBtStyle.hover.background = EditorGUIUtility.FindTexture("sv_label_2");
@@ -441,24 +443,21 @@ namespace UGF.EditorTools
             m_UIOpenAnimName = serializedObject.FindProperty("m_OpenAnimationName");
             m_UICloseAnimName = serializedObject.FindProperty("m_CloseAnimationName");
             mReorderableList = new ReorderableList[mFields.arraySize];
-            EditorApplication.update += OnEditorUpdate;
         }
-        private void OnDisable()
+        [InitializeOnLoadMethod]
+        static void RebindPropertiesDelay()
         {
-            EditorApplication.update -= OnEditorUpdate;
-        }
-        private void OnEditorUpdate()
-        {
-            if (EditorApplication.isUpdating || EditorApplication.isCompiling) return;
-            if (EditorPrefs.GetBool(REFRESH_BIND, false))
-            {
-                SerializeFieldProperties(serializedObject, uiForm.SerializeFieldArr);
-            }
-        }
+            if (!EditorPrefs.HasKey(REFRESH_BIND)) return;
 
-        private void OnDestroy()
+            EditorApplication.delayCall += RebindProperties;
+        }
+        static void RebindProperties()
         {
-            EditorToolSettings.Save();
+            EditorApplication.delayCall -= RebindProperties;
+            if (_instance != null && EditorPrefs.HasKey(REFRESH_BIND))
+            {
+                SerializeFieldProperties(_instance.serializedObject, _instance.uiForm.SerializeFieldArr);
+            }
         }
         private static void OpenSelectComponentMenuListener(Rect rect)
         {
@@ -782,9 +781,9 @@ namespace UGF.EditorTools
             EditorPrefs.SetBool(REFRESH_BIND, true);
             AssetDatabase.Refresh();
         }
-        private void SerializeFieldProperties(SerializedObject serializedObject, SerializeFieldData[] fields)
+        private static void SerializeFieldProperties(SerializedObject serializedObject, SerializeFieldData[] fields)
         {
-            EditorPrefs.SetBool(REFRESH_BIND, false);
+            EditorPrefs.DeleteKey(REFRESH_BIND);
             if (serializedObject == null)
             {
                 Debug.LogError("生成UI SerializedField失败, serializedObject为null");
