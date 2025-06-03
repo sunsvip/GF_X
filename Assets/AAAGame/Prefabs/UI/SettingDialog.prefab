@@ -2244,6 +2244,7 @@ MonoBehaviour:
   m_UIAnimationType: 0
   m_OpenAnimation: {fileID: 3290982404624986673}
   m_CloseAnimation: {fileID: 0}
+  m_ReverseOpenAnimAsClose: 1
   m_OpenAnimationName: 
   m_CloseAnimationName: 
   varVersionTxt: {fileID: 8488177668127629767}

@@ -13,7 +13,6 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEditor.Events;
 using UnityGameFramework.Runtime;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 namespace UGF.EditorTools
 {
@@ -37,7 +36,6 @@ namespace UGF.EditorTools
 
         int mCurFoldoutItemIdx = -1;
         static int varPrefixIndex = -1;
-        static bool mShowSelectTypeMenu;
 
         GUIContent prefixContent;
         GUIContent typeContent;
@@ -54,6 +52,7 @@ namespace UGF.EditorTools
         SerializedProperty m_UIAnimationType;
         SerializedProperty m_UIOpenAnim;
         SerializedProperty m_UICloseAnim;
+        SerializedProperty m_ReverseOpenAnimAsClose;
         SerializedProperty m_UIOpenAnimName;
         SerializedProperty m_UICloseAnimName;
         #region #右键菜单
@@ -63,15 +62,17 @@ namespace UGF.EditorTools
         [InitializeOnLoadMethod]
         static void InitEditor()
         {
-            Selection.selectionChanged = () =>
-            {
-                addToFieldToggle = false;
-                removeToFieldToggle = false;
-            };
-
+            Selection.selectionChanged = OnSelectionChanged;
             EditorApplication.hierarchyWindowItemOnGUI -= OnHierarchyItemOnGUI;
             EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyItemOnGUI;
         }
+
+        private static void OnSelectionChanged()
+        {
+            addToFieldToggle = false;
+            removeToFieldToggle = false;
+        }
+
         private static void OnHierarchyItemOnGUI(int instanceID, Rect rect)
         {
             OpenSelectComponentMenuListener(rect);
@@ -127,19 +128,16 @@ namespace UGF.EditorTools
         private static void AddPrivateVariable2UIForm()
         {
             varPrefixIndex = 0;
-            mShowSelectTypeMenu = true;
         }
         [MenuItem("GameObject/UIForm Tools/Add protected", false, priority = 1003)]
         private static void AddProtectedVariable2UIForm()
         {
             varPrefixIndex = 1;
-            mShowSelectTypeMenu = true;
         }
-        [MenuItem("GameObject/UIForm Tools/Add multiple", false, priority = 1004)]
-        private static void AddPublicVariable2UIForm()
+        [MenuItem("GameObject/UIForm Tools/Add split", false, priority = 1004)]
+        private static void AddSplitVariable2UIForm()
         {
             varPrefixIndex = 2;
-            mShowSelectTypeMenu = true;
         }
 
         [MenuItem("GameObject/UIForm Tools/Remove", false, priority = 1005)]
@@ -331,7 +329,7 @@ namespace UGF.EditorTools
                 }
                 parent = parent.parent;
             }
-            return null;
+            return go.GetComponents<MonoBehaviour>().FirstOrDefault(item => item is ISerializeFieldTool) as ISerializeFieldTool;
         }
         private static void AddToFields(int varPrefix, string varType)
         {
@@ -429,17 +427,14 @@ namespace UGF.EditorTools
             dropdownBtAnimContent = new GUIContent("", "select animation name");
             prefixContent = new GUIContent();
             typeContent = new GUIContent();
-            varPrefixIndex = 0;
-            mShowSelectTypeMenu = false;
+            varPrefixIndex = -1;
             uiForm = (target as UIFormBase);
-            if (uiForm.SerializeFieldArr == null)
-            {
-                uiForm.SerializeFieldArr = new SerializeFieldData[0];
-            }
+            uiForm.SerializeFieldArr ??= new SerializeFieldData[0];
             mFields = serializedObject.FindProperty("_fields");
             m_UIAnimationType = serializedObject.FindProperty("m_UIAnimationType");
             m_UIOpenAnim = serializedObject.FindProperty("m_OpenAnimation");
             m_UICloseAnim = serializedObject.FindProperty("m_CloseAnimation");
+            m_ReverseOpenAnimAsClose = serializedObject.FindProperty("m_ReverseOpenAnimAsClose");
             m_UIOpenAnimName = serializedObject.FindProperty("m_OpenAnimationName");
             m_UICloseAnimName = serializedObject.FindProperty("m_CloseAnimationName");
             mReorderableList = new ReorderableList[mFields.arraySize];
@@ -461,9 +456,9 @@ namespace UGF.EditorTools
         }
         private static void OpenSelectComponentMenuListener(Rect rect)
         {
-            if (mShowSelectTypeMenu)
+            if (varPrefixIndex >= 0)
             {
-                int idx = -1;
+                int idx = varPrefixIndex;
                 var strArr = GetPopupContents(GetTargetsFromSelectedNodes(Selection.gameObjects));
                 var contents = new GUIContent[strArr.Length];
                 for (int i = 0; i < strArr.Length; i++)
@@ -471,12 +466,12 @@ namespace UGF.EditorTools
                     contents[i] = new GUIContent(strArr[i]);
                 }
                 rect.width = 200;
-                rect.height = MathF.Max(100, contents.Length * rect.height);
-                EditorUtility.DisplayCustomMenu(rect, contents, idx, (userData, contents, selected) =>
+                rect.height = Mathf.Max(100, contents.Length * rect.height);
+                EditorUtility.DisplayCustomMenu(rect, contents, -1, (userData, contents, selected) =>
                 {
-                    AddToFields(varPrefixIndex, contents[selected]);
+                    AddToFields(idx, contents[selected]);
                 }, null);
-                mShowSelectTypeMenu = false;
+                varPrefixIndex = -1;
             }
         }
 
@@ -610,7 +605,7 @@ namespace UGF.EditorTools
             }
             EditorGUILayout.Space(10);
             EditorGUILayout.PropertyField(m_UIAnimationType);
-            if (m_UIAnimationType.intValue == (int)UIFormAnimationType.DOTween)
+            if (m_UIAnimationType.intValue == (int)UIFormAnimationType.Tween)
             {
                 EditorGUILayout.BeginHorizontal();
                 {
@@ -654,7 +649,7 @@ namespace UGF.EditorTools
                     EditorGUILayout.EndHorizontal();
                 }
             }
-
+            EditorGUILayout.PropertyField(m_ReverseOpenAnimAsClose);
             EditorGUILayout.EndVertical();
             serializedObject.ApplyModifiedProperties();
             base.OnInspectorGUI();
@@ -676,6 +671,11 @@ namespace UGF.EditorTools
                     serializedObject.ApplyModifiedProperties();
                 });
             }
+            dropdownMenu.AddItem(new GUIContent("NULL"), property.stringValue == string.Empty, () =>
+            {
+                property.stringValue = string.Empty;
+                serializedObject.ApplyModifiedProperties();
+            });
             dropdownMenu.ShowAsContext();
         }
         private void ShowDOTweenSequenceDP(SerializedProperty property)
@@ -687,7 +687,7 @@ namespace UGF.EditorTools
             for (var menuIndex = 0; menuIndex < seqArr.Length; menuIndex++)
             {
                 var item = seqArr[menuIndex];
-                dropdownMenu.AddItem(new GUIContent(Utility.Text.Format("DOTweenSequence {0}", menuIndex)), currentSeq == item, () =>
+                dropdownMenu.AddItem(new GUIContent(Utility.Text.Format("Index {0}", menuIndex)), currentSeq == item, () =>
                 {
                     property.objectReferenceValue = item;
                     serializedObject.ApplyModifiedProperties();
@@ -724,7 +724,7 @@ namespace UGF.EditorTools
             List<string> fieldList = new List<string>();
             foreach (var field in fields)
             {
-                if (string.IsNullOrWhiteSpace(field.VarType) || string.IsNullOrWhiteSpace(field.VarName)) continue;
+                if (field.Targets == null || string.IsNullOrWhiteSpace(field.VarType) || string.IsNullOrWhiteSpace(field.VarName)) continue;
                 var varType = GetSampleType(field.VarType);
                 if (varType == null) continue;
 
@@ -792,6 +792,7 @@ namespace UGF.EditorTools
 
             foreach (var item in fields)
             {
+                if (item == null || item.Targets == null) continue;
                 string varName = item.VarName;
                 string varType = item.VarType;
                 bool isGameObject = varType.CompareTo(typeof(GameObject).FullName) == 0;
