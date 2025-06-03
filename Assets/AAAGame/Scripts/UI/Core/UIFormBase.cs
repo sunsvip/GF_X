@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using GameFramework.ObjectPool;
+using UnityEngine.Events;
 
 /// <summary>
 /// UI基类, 所有UI界面需继承此类
@@ -15,14 +16,15 @@ using GameFramework.ObjectPool;
 public class UIFormBase : UIFormLogic, ISerializeFieldTool
 {
     [HideInInspector][SerializeField] SerializeFieldData[] _fields;
-    [HideInInspector][SerializeField] UIFormAnimationType m_UIAnimationType = UIFormAnimationType.DOTween;
+    [HideInInspector][SerializeField] UIFormAnimationType m_UIAnimationType = UIFormAnimationType.Tween;
     /// <summary>
     /// UI打开动画
     /// </summary>
     [HideInInspector][SerializeField] DOTweenSequence m_OpenAnimation = null;
-    /// <summary>    /// UI关闭动画, 若为空,默认使用UI打开动画倒放
+    /// <summary>    /// UI关闭动画
     /// </summary>
     [HideInInspector][SerializeField] DOTweenSequence m_CloseAnimation = null;
+    [HideInInspector][SerializeField] bool m_ReverseOpenAnimAsClose = true;
     [HideInInspector][SerializeField] string m_OpenAnimationName = null;
     [HideInInspector][SerializeField] string m_CloseAnimationName = null;
     private Animation m_UIAnimation;
@@ -76,9 +78,9 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
         Params = userData as UIParams;
         var cvs = GetComponent<Canvas>();
         cvs.overrideSorting = true;
-        cvs.sortingOrder = Params.SortOrder ?? 0;
+        cvs.sortingOrder = Params.SortOrder.Value;
         Interactable = false;
-        isOnEscape = Params.AllowEscapeClose ?? false;
+        isOnEscape = Params.AllowEscapeClose.Value;
         Internal_PlayOpenUIAnimation(OnOpenAnimationComplete);
         Params.OpenCallback?.Invoke(this);
     }
@@ -182,7 +184,7 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
     /// <param name="capacity">对象池容量</param>
     /// <param name="expireTime">对象过期时间(过期后自动销毁)</param>
     /// <returns></returns>
-    protected T SpawnItem<T>(GameObject itemTemple, Transform instanceRoot, float autoReleaseInterval = 10f, int capacity = 50, float expireTime = 50) where T : UIItemObject, new()
+    protected T SpawnItem<T>(GameObject itemTemple, Transform instanceRoot, float autoReleaseInterval = 5f, int capacity = 50, float expireTime = 50) where T : UIItemObject, new()
     {
         var itemTempleId = itemTemple.GetInstanceID().ToString();
         GameFramework.ObjectPool.IObjectPool<T> pool;
@@ -269,11 +271,11 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
         Internal_PlayCloseUIAnimation(OnCloseAnimationComplete);
     }
 
-    private void Internal_PlayCloseUIAnimation(GameFrameworkAction onAnimComplete)
+    private void Internal_PlayCloseUIAnimation(UnityAction onAnimComplete)
     {
         switch (m_UIAnimationType)
         {
-            case UIFormAnimationType.DOTween:
+            case UIFormAnimationType.Tween:
                 {
                     //如果关闭动画未配置, 默认将打开动画倒放作为关闭动画
                     if (m_CloseAnimation != null)
@@ -283,7 +285,7 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
                     }
                     else
                     {
-                        if (m_OpenAnimation != null)
+                        if (m_ReverseOpenAnimAsClose && m_OpenAnimation != null)
                         {
                             var anim = m_OpenAnimation.DORewind();
                             if (onAnimComplete != null) anim.OnComplete(onAnimComplete.Invoke);
@@ -297,28 +299,29 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
                 break;
             case UIFormAnimationType.Animation:
                 {
-                    if (m_UIAnimation != null && !string.IsNullOrWhiteSpace(m_CloseAnimationName) && m_UIAnimation.Play(m_CloseAnimationName))
+                    if (m_UIAnimation != null && !string.IsNullOrWhiteSpace(m_CloseAnimationName) && m_UIAnimation.GetClip(m_CloseAnimationName))
                     {
-                        float duration = m_UIAnimation.GetClip(m_CloseAnimationName).length;
-                        UniTask.Delay(TimeSpan.FromSeconds(duration)).ContinueWith(() =>
-                        {
-                            onAnimComplete?.Invoke();
-                        }).Forget();
+                        m_UIAnimation.PlayForward(m_CloseAnimationName, onAnimComplete.Invoke);
                     }
                     else
                     {
-                        onAnimComplete?.Invoke();
+                        if (m_ReverseOpenAnimAsClose && m_UIAnimation != null && !string.IsNullOrEmpty(m_OpenAnimationName) && m_UIAnimation.GetClip(m_OpenAnimationName))
+                        {
+                            m_UIAnimation.PlayBackward(m_OpenAnimationName, onAnimComplete.Invoke);
+                        }
+                        else
+                            onAnimComplete.Invoke();
                     }
                 }
                 break;
         }
     }
 
-    private void Internal_PlayOpenUIAnimation(GameFrameworkAction onAnimComplete)
+    private void Internal_PlayOpenUIAnimation(UnityAction onAnimComplete)
     {
         switch (m_UIAnimationType)
         {
-            case UIFormAnimationType.DOTween:
+            case UIFormAnimationType.Tween:
                 {
                     if (m_OpenAnimation != null)
                     {
@@ -333,18 +336,11 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
                 break;
             case UIFormAnimationType.Animation:
                 {
-                    if (m_UIAnimation != null && !string.IsNullOrWhiteSpace(m_OpenAnimationName) && m_UIAnimation.Play(m_OpenAnimationName))
+                    if (m_UIAnimation != null && !string.IsNullOrWhiteSpace(m_OpenAnimationName) && m_UIAnimation.GetClip(m_OpenAnimationName))
                     {
-                        float duration = m_UIAnimation.GetClip(m_OpenAnimationName).length;
-                        UniTask.Delay(TimeSpan.FromSeconds(duration)).ContinueWith(() =>
-                        {
-                            onAnimComplete?.Invoke();
-                        }).Forget();
+                        m_UIAnimation.PlayForward(m_OpenAnimationName, onAnimComplete.Invoke);
                     }
-                    else
-                    {
-                        onAnimComplete?.Invoke();
-                    }
+                    else onAnimComplete.Invoke();
                 }
                 break;
         }
@@ -401,7 +397,7 @@ public class SerializeFieldData
     public SerializeFieldData(string varName, GameObject[] targets = null)
     {
         VarName = varName;
-        Targets = targets ?? new GameObject[1];
+        Targets = targets;
     }
 }
 public interface ISerializeFieldTool
@@ -411,6 +407,6 @@ public interface ISerializeFieldTool
 [Serializable]
 public enum UIFormAnimationType
 {
-    DOTween,
+    Tween,
     Animation
 }

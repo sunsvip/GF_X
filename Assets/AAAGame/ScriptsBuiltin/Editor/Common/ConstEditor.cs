@@ -66,6 +66,7 @@ namespace UGF.EditorTools
         public const string UIItemScriptsPath = "Assets/AAAGame/Scripts/UI/Item";
         public const string UIFormTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIFormTemplate.prefab";
         public const string UIDialogTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIDialogTemplate.prefab";
+        public const string UIItemTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIItemTemplate.prefab";
         public const string UIScriptFileTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIScriptFileTemplate.txt";
         public const string UIItemScriptFileTemplate = "Assets/AAAGame/ScriptsBuiltin/Editor/UI/Templates/UIItemScriptFileTemplate.txt";
     }

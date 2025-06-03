@@ -34,7 +34,7 @@ namespace UGF.EditorTools
 
         #region #右键菜单
 
-        const string REFRESH_BIND = "UI_REFRESH_BIND";
+        const string REFRESH_BIND = "UIITEM_REFRESH_BIND";
 
         private static string GetVarPrefix(int idx)
         {
@@ -51,9 +51,10 @@ namespace UGF.EditorTools
             return result;
         }
         #endregion
-
+        static UIItemBaseInspector _instance;
         private void OnEnable()
         {
+            _instance = this;
             highlightBtStyle = new GUIStyle(EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene).button);
             highlightBtStyle.normal.background = EditorGUIUtility.FindTexture("sv_label_3");
             highlightBtStyle.hover.background = EditorGUIUtility.FindTexture("sv_label_2");
@@ -73,24 +74,21 @@ namespace UGF.EditorTools
             }
             mFields = serializedObject.FindProperty("_fields");
             mReorderableList = new ReorderableList[mFields.arraySize];
-            EditorApplication.update += OnEditorUpdate;
         }
-        private void OnDisable()
+        [InitializeOnLoadMethod]
+        static void RebindPropertiesDelay()
         {
-            EditorApplication.update -= OnEditorUpdate;
-        }
-        private void OnEditorUpdate()
-        {
-            if (EditorApplication.isUpdating || EditorApplication.isCompiling) return;
-            if (EditorPrefs.GetBool(REFRESH_BIND, false))
-            {
-                SerializeFieldProperties(serializedObject, uiForm.SerializeFieldArr);
-            }
-        }
+            if (!EditorPrefs.HasKey(REFRESH_BIND)) return;
 
-        private void OnDestroy()
+            EditorApplication.delayCall += RebindProperties;
+        }
+        static void RebindProperties()
         {
-            EditorToolSettings.Save();
+            EditorApplication.delayCall -= RebindProperties;
+            if (_instance != null && EditorPrefs.HasKey(REFRESH_BIND))
+            {
+                SerializeFieldProperties(_instance.serializedObject, _instance.uiForm.SerializeFieldArr);
+            }
         }
 
         public override void OnInspectorGUI()
@@ -255,15 +253,10 @@ namespace UGF.EditorTools
             List<string> fieldList = new List<string>();
             foreach (var field in fields)
             {
-                if (string.IsNullOrWhiteSpace(field.VarType) || string.IsNullOrWhiteSpace(field.VarName))
-                {
-                    continue;
-                }
+                if (field.Targets == null || string.IsNullOrWhiteSpace(field.VarType) || string.IsNullOrWhiteSpace(field.VarName)) continue;
                 var varType = GetSampleType(field.VarType);
-                if (varType == null)
-                {
-                    continue;
-                }
+                if (varType == null) continue;
+
                 if (!string.IsNullOrEmpty(varType.Namespace) && !nameSpaceList.Contains(varType.Namespace))
                 {
                     nameSpaceList.Add(varType.Namespace);
@@ -317,9 +310,9 @@ namespace UGF.EditorTools
             EditorPrefs.SetBool(REFRESH_BIND, true);
             AssetDatabase.Refresh();
         }
-        private void SerializeFieldProperties(SerializedObject serializedObject, SerializeFieldData[] fields)
+        private static void SerializeFieldProperties(SerializedObject serializedObject, SerializeFieldData[] fields)
         {
-            EditorPrefs.SetBool(REFRESH_BIND, false);
+            EditorPrefs.DeleteKey(REFRESH_BIND);
             if (serializedObject == null)
             {
                 Debug.LogError("生成UI SerializedField失败, serializedObject为null");
@@ -328,6 +321,7 @@ namespace UGF.EditorTools
 
             foreach (var item in fields)
             {
+                if (item == null || item.Targets == null) continue;
                 string varName = item.VarName;
                 string varType = item.VarType;
                 bool isGameObject = varType.CompareTo(typeof(GameObject).FullName) == 0;
@@ -370,6 +364,7 @@ namespace UGF.EditorTools
             if (uiForm.SerializeFieldArr == null)
             {
                 uiForm.SerializeFieldArr = new SerializeFieldData[0];
+                mFields = serializedObject.FindProperty("_fields");
             }
 
 

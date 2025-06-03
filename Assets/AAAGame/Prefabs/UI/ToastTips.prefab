@@ -1446,9 +1446,10 @@ MonoBehaviour:
     - {fileID: 7264025852583067265}
     VarType: TMPro.TextMeshProUGUI
     VarPrefix: 0
-  m_UIAnimationType: 0
+  m_UIAnimationType: 1
   m_OpenAnimation: {fileID: 4876498186068311615}
   m_CloseAnimation: {fileID: 582562271607865392}
+  m_ReverseOpenAnimAsClose: 0
   m_OpenAnimationName: ToastTips_Open
   m_CloseAnimationName: ToastTips_Close
   varToastMessageArr:
@@ -1568,6 +1569,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   m_PlayOnAwake: 0
+  m_ResetOnAwake: 0
   m_Delay: 0
   m_Ease: 7
   m_Loops: 1
@@ -1693,6 +1695,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   m_PlayOnAwake: 0
+  m_ResetOnAwake: 0
   m_Delay: 0
   m_Ease: 7
   m_Loops: 1
