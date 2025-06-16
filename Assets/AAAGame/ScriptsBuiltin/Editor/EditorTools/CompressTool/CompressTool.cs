@@ -242,6 +242,7 @@ namespace UGF.EditorTools
                 atlas.SetPlatformSettings(platformSettings);
                 EditorUtility.SetDirty(atlas);
 #endif
+                SpriteAtlasAsset.Save(atlas, atlasName);
                 result = AssetDatabase.LoadAssetAtPath<SpriteAtlas>(atlasName);
             }
             else
