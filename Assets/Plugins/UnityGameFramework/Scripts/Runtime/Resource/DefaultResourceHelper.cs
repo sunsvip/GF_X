@@ -114,35 +114,78 @@ namespace UnityGameFramework.Runtime
             byte[] bytes = null;
             string errorMessage = null;
             DateTime startTime = DateTime.UtcNow;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            if (fileUri.StartsWith(Application.persistentDataPath))
+            {
+                try
+                {
+                    bytes = System.IO.File.ReadAllBytes(fileUri);
+                }
+                catch (Exception exc)
+                {
+                    isError = true;
+                    errorMessage = exc.Message;
+                }
+            }
+            else
+            {
+#if UNITY_5_4_OR_NEWER
+                UnityWebRequest unityWebRequest = UnityWebRequest.Get(fileUri);
+#if UNITY_2017_2_OR_NEWER
+                yield return unityWebRequest.SendWebRequest();
+#else
+                        yield return unityWebRequest.Send();
+#endif
 
+#if UNITY_2020_2_OR_NEWER
+                isError = unityWebRequest.result != UnityWebRequest.Result.Success;
+#elif UNITY_2017_1_OR_NEWER
+                        isError = unityWebRequest.isNetworkError || unityWebRequest.isHttpError;
+#else
+                        isError = unityWebRequest.isError;
+#endif
+                bytes = unityWebRequest.downloadHandler.data;
+                errorMessage = isError ? unityWebRequest.error : null;
+                unityWebRequest.Dispose();
+#else
+                        WWW www = new WWW(fileUri);
+                        yield return www;
+
+                        isError = !string.IsNullOrEmpty(www.error);
+                        bytes = www.bytes;
+                        errorMessage = www.error;
+                        www.Dispose();
+#endif
+            }
+#else
 #if UNITY_5_4_OR_NEWER
             UnityWebRequest unityWebRequest = UnityWebRequest.Get(fileUri);
 #if UNITY_2017_2_OR_NEWER
             yield return unityWebRequest.SendWebRequest();
 #else
-            yield return unityWebRequest.Send();
+                        yield return unityWebRequest.Send();
 #endif
 
 #if UNITY_2020_2_OR_NEWER
             isError = unityWebRequest.result != UnityWebRequest.Result.Success;
 #elif UNITY_2017_1_OR_NEWER
-            isError = unityWebRequest.isNetworkError || unityWebRequest.isHttpError;
+                        isError = unityWebRequest.isNetworkError || unityWebRequest.isHttpError;
 #else
-            isError = unityWebRequest.isError;
+                        isError = unityWebRequest.isError;
 #endif
             bytes = unityWebRequest.downloadHandler.data;
             errorMessage = isError ? unityWebRequest.error : null;
             unityWebRequest.Dispose();
 #else
-            WWW www = new WWW(fileUri);
-            yield return www;
+                        WWW www = new WWW(fileUri);
+                        yield return www;
 
-            isError = !string.IsNullOrEmpty(www.error);
-            bytes = www.bytes;
-            errorMessage = www.error;
-            www.Dispose();
+                        isError = !string.IsNullOrEmpty(www.error);
+                        bytes = www.bytes;
+                        errorMessage = www.error;
+                        www.Dispose();
 #endif
-
+#endif
             if (!isError)
             {
                 float elapseSeconds = (float)(DateTime.UtcNow - startTime).TotalSeconds;

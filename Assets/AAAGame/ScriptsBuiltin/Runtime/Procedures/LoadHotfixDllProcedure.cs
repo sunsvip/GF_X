@@ -127,11 +127,11 @@ public class LoadHotfixDllProcedure : ProcedureBase
     }
     private void LoadHotfixDlls()
     {
-        GFBuiltin.Log("开始加载热更新dll");
+        GFBuiltin.Log("Start load hotfix dlls...");
         var hotfixListFile = UtilityBuiltin.AssetsPath.GetCombinePath("Assets", ConstBuiltin.HOT_FIX_DLL_DIR, "HotfixFileList.txt");
         if (GFBuiltin.Resource.HasAsset(hotfixListFile) == GameFramework.Resource.HasAssetResult.NotExist)
         {
-            Log.Fatal("热更新dll列表文件不存在:{0}", hotfixListFile);
+            Log.Fatal("HotfixFileList Not Exist :{0}", hotfixListFile);
             return;
         }
         GFBuiltin.Resource.LoadAsset(hotfixListFile, new GameFramework.Resource.LoadAssetCallbacks((string assetName, object asset, float duration, object userData) =>

@@ -96,7 +96,7 @@ public class UpdateResourcesProcedure : ProcedureBase
 #if UNITY_64
             return "Windows64";
 #else
-            return "Windows";
+        return "Windows";
 #endif
 #elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
             return "MacOS";
@@ -112,7 +112,7 @@ public class UpdateResourcesProcedure : ProcedureBase
         if (GFBuiltin.Resource.ResourceMode == GameFramework.Resource.ResourceMode.Updatable || GFBuiltin.Resource.ResourceMode == GameFramework.Resource.ResourceMode.UpdatableWhilePlaying)
         {
             Log.Info("当前为热更新模式, Web请求最新版本号...");
-            string verFileUrl = UtilityBuiltin.AssetsPath.GetCombinePath(ConstBuiltin.CheckVersionUrl, GetPlatformPath(), ConstBuiltin.VersionFile);
+            string verFileUrl = UtilityBuiltin.AssetsPath.GetCombinePath(AppSettings.Instance.CheckVersionUrl, GetPlatformPath(), ConstBuiltin.VersionFile);
             Log.Info("请求版本信息地址:{0}", verFileUrl);
             GFBuiltin.WebRequest.AddWebRequest(verFileUrl, this);
             GFBuiltin.BuiltinView.ShowLoadingProgress(0);
@@ -227,7 +227,7 @@ public class UpdateResourcesProcedure : ProcedureBase
         }
         else
         {
-            Log.Info<int,long,string>("需要更新资源个数:{0},资源大小:{1},下载地址:{2}", updateCount, updateTotalZipLength, GFBuiltin.Resource.UpdatePrefixUri);
+            Log.Info<int, long, string>("需要更新资源个数:{0},资源大小:{1},下载地址:{2}", updateCount, updateTotalZipLength, GFBuiltin.Resource.UpdatePrefixUri);
             GFBuiltin.Resource.UpdateResources(OnUpdateResourceComplete);
         }
     }
@@ -264,7 +264,7 @@ public class UpdateResourcesProcedure : ProcedureBase
         ResourceUpdateFailureEventArgs ne = (ResourceUpdateFailureEventArgs)e;
         if (ne.RetryCount >= ne.TotalRetryCount)
         {
-            Log.Error<string,string,string,int>("Download '{0}' failure from '{1}' with error message '{2}', retry count '{3}'.", ne.Name, ne.DownloadUri, ne.ErrorMessage, ne.RetryCount);
+            Log.Error<string, string, string, int>("Download '{0}' failure from '{1}' with error message '{2}', retry count '{3}'.", ne.Name, ne.DownloadUri, ne.ErrorMessage, ne.RetryCount);
             return;
         }
         else
