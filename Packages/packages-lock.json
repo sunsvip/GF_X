@@ -5,14 +5,14 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "fca130bbfaa58fab93b09a57ec83704c2aab4d4f"
+      "hash": "59a3c3974a6e435e0ed57fb9af61fbbc6d17a8b7"
     },
     "com.code-philosophy.obfuz": {
-      "version": "https://gitee.com/focus-creative-games/obfuz.git",
+      "version": "https://gitee.com/focus-creative-games/obfuz.git#1.x",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "e023f0aa7db8bb9d11efa8022fb0e8894364584e"
+      "hash": "26b4828094f0604f5799c4b5b56214b58ff8f25e"
     },
     "com.code-philosophy.obfuz4hybridclr": {
       "version": "https://gitee.com/focus-creative-games/obfuz4hybridclr.git",

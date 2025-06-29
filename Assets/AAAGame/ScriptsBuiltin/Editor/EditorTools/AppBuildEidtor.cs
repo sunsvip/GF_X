@@ -41,6 +41,7 @@ namespace UGF.EditorTools
         private GUIContent buildAppBtContent;
         private GUIContent saveBtContent;
         private GUIContent playerSettingBtContent;
+        private GUIContent appSettingBtContent;
         private GUIContent hybridclrSettingBtContent;
         private Vector2 scrollPosition;
         private GUIStyle dropDownBtStyle;
@@ -67,6 +68,7 @@ namespace UGF.EditorTools
             buildAppBtContent = EditorGUIUtility.TrTextContentWithIcon("Build App", "打新包,首次打热更包请使用Full Build", "UnityLogo");
 
             playerSettingBtContent = EditorGUIUtility.TrTextContentWithIcon("Player Settings", "打开Player Settings界面", "Settings");
+            appSettingBtContent = EditorGUIUtility.TrTextContentWithIcon("App Settings", "打开App Settings界面", "Settings");
             hybridclrSettingBtContent = EditorGUIUtility.TrTextContentWithIcon("Hotfix Settings", "打开HybridCLR Settings界面", "Settings");
             saveBtContent = EditorGUIUtility.TrTextContentWithIcon("Save", "保存设置", "SaveAs@2x");
 
@@ -600,6 +602,10 @@ namespace UGF.EditorTools
 #endif
                 EditorUserBuildSettings.development = EditorGUILayout.ToggleLeft("Development Build", EditorUserBuildSettings.development);
                 AppSettings.Instance.DebugMode = EditorGUILayout.ToggleLeft("Debug Mode", AppSettings.Instance.DebugMode);
+                if (GUILayout.Button(appSettingBtContent))
+                {
+                    Selection.activeObject = AppSettings.Instance;
+                }
                 if (GUILayout.Button(playerSettingBtContent))
                 {
                     SettingsService.OpenProjectSettings("Project/Player");

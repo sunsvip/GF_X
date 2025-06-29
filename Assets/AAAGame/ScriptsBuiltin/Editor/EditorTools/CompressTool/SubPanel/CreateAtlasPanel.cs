@@ -302,7 +302,7 @@ namespace UGF.EditorTools
         }
         private void CreateAtlas()
         {
-            var getSizeFunc = Utility.Assembly.GetType("UnityEditor.TextureUtil").GetMethod("GetGPUWidth", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            //var getSizeFunc = Utility.Assembly.GetType("UnityEditor.TextureUtil").GetMethod("GetGPUWidth", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
 
             //创建图集
             var texFolders = GetSelectedFolders();

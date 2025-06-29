@@ -235,13 +235,14 @@ namespace UGF.EditorTools
                 atlasImpt.packingSettings = packSettings;
                 atlasImpt.textureSettings = texSettings;
                 atlasImpt.SetPlatformSettings(platformSettings);
+                atlasImpt.SaveAndReimport();
 #else
                 atlas.SetPackingSettings(packSettings);
                 atlas.SetTextureSettings(texSettings);
                 atlas.SetPlatformSettings(platformSettings);
+                EditorUtility.SetDirty(atlas);
 #endif
                 SpriteAtlasAsset.Save(atlas, atlasName);
-
                 result = AssetDatabase.LoadAssetAtPath<SpriteAtlas>(atlasName);
             }
             else
@@ -256,8 +257,8 @@ namespace UGF.EditorTools
                 atlas.SetPackingSettings(packSettings);
                 atlas.SetTextureSettings(texSettings);
                 atlas.SetPlatformSettings(platformSettings);
+                EditorUtility.SetDirty(atlas);
                 result = atlas;
-                AssetDatabase.SaveAssets();
             }
 
             if (createAtlasVariant)
@@ -310,7 +311,7 @@ namespace UGF.EditorTools
             {
                 AssetDatabase.CreateAsset(new SpriteAtlas(), atlasAssetName);
             }
-            AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
         }
         /// <summary>
         /// 根据图集对象生成图集变体
@@ -320,7 +321,7 @@ namespace UGF.EditorTools
         /// <returns></returns>
         public static SpriteAtlas CreateAtlasVariant(SpriteAtlas atlasMaster, AtlasVariantSettings settings)
         {
-            if (atlasMaster == null || atlasMaster.isVariant) return atlasMaster;
+            if (atlasMaster == null || atlasMaster.isVariant) return null;
             var atlasFileName = AssetDatabase.GetAssetPath(atlasMaster);
             if (string.IsNullOrEmpty(atlasFileName))
             {
@@ -328,54 +329,28 @@ namespace UGF.EditorTools
                 return null;
             }
 
-            var atlasVariantName = UtilityBuiltin.AssetsPath.GetCombinePath(Path.GetDirectoryName(atlasFileName), $"{Path.GetFileNameWithoutExtension(atlasFileName)}_Variant{Path.GetExtension(atlasFileName)}");
+            var atlasVariantName = UtilityBuiltin.AssetsPath.GetCombinePath(Path.GetDirectoryName(atlasFileName), $"{Path.GetFileNameWithoutExtension(atlasFileName)}_Variant{GetAtlasExtensionV1V2()}");
+            CreateEmptySpriteAtlas(atlasVariantName);
 
             SpriteAtlas varAtlas;
             if (EditorSettings.spritePackerMode == SpritePackerMode.SpriteAtlasV2)
             {
-                var atlas = SpriteAtlasAsset.Load(atlasFileName);
-#if UNITY_2022_1_OR_NEWER
-                var atlasImpt = AssetImporter.GetAtPath(atlasFileName) as SpriteAtlasImporter;
-                atlasImpt.includeInBuild = settings.includeInBuild ?? true;
-                var packSettings = atlasImpt.packingSettings;
-                var texSettings = atlasImpt.textureSettings;
-                var platformSettings = atlasImpt.GetPlatformSettings(EditorUserBuildSettings.activeBuildTarget.ToString());
-#else
-                atlas.SetIncludeInBuild(false);
-                var packSettings = atlas.GetPackingSettings();
-                var texSettings = atlas.GetTextureSettings();
-                var platformSettings = atlas.GetPlatformSettings(EditorUserBuildSettings.activeBuildTarget.ToString());
-
-#endif
-                ModifySpriteAtlasSettings(settings, ref packSettings, ref texSettings, ref platformSettings);
-#if UNITY_2022_1_OR_NEWER
-                atlasImpt.packingSettings = packSettings;
-                atlasImpt.textureSettings = texSettings;
-                atlasImpt.SetPlatformSettings(platformSettings);
-                atlasImpt.SaveAndReimport();
-#else
-                atlas.SetPackingSettings(packSettings);
-                atlas.SetTextureSettings(texSettings);
-                atlas.SetPlatformSettings(platformSettings);
-#endif
-                SpriteAtlasAsset.Save(atlas, atlasFileName);
-
-                CreateEmptySpriteAtlas(atlasVariantName);
                 var tmpVarAtlas = SpriteAtlasAsset.Load(atlasVariantName);
 #if UNITY_2022_1_OR_NEWER
                 var tmpVarAtlasImpt = AssetImporter.GetAtPath(atlasVariantName) as SpriteAtlasImporter;
                 tmpVarAtlasImpt.includeInBuild = settings.includeInBuild ?? true;
-                packSettings = tmpVarAtlasImpt.packingSettings;
-                texSettings = tmpVarAtlasImpt.textureSettings;
-                platformSettings = tmpVarAtlasImpt.GetPlatformSettings(EditorUserBuildSettings.activeBuildTarget.ToString());
+                var packSettings = tmpVarAtlasImpt.packingSettings;
+                var texSettings = tmpVarAtlasImpt.textureSettings;
+                var platformSettings = tmpVarAtlasImpt.GetPlatformSettings(EditorUserBuildSettings.activeBuildTarget.ToString());
 #else
                 tmpVarAtlas.SetIncludeInBuild(true);
-                packSettings = tmpVarAtlas.GetPackingSettings();
-                texSettings = tmpVarAtlas.GetTextureSettings();
-                platformSettings = tmpVarAtlas.GetPlatformSettings(EditorUserBuildSettings.activeBuildTarget.ToString());
+                var packSettings = tmpVarAtlas.GetPackingSettings();
+                var texSettings = tmpVarAtlas.GetTextureSettings();
+                var platformSettings = tmpVarAtlas.GetPlatformSettings(EditorUserBuildSettings.activeBuildTarget.ToString());
 
 #endif
                 tmpVarAtlas.SetIsVariant(true);
+                tmpVarAtlas.SetMasterAtlas(atlasMaster);
 
                 ModifySpriteAtlasSettings(settings, ref packSettings, ref texSettings, ref platformSettings);
 #if UNITY_2022_1_OR_NEWER
@@ -390,38 +365,24 @@ namespace UGF.EditorTools
                 tmpVarAtlas.SetVariantScale(settings.variantScale);
                 tmpVarAtlas.SetPlatformSettings(platformSettings);
 #endif
-                tmpVarAtlas.SetMasterAtlas(atlasMaster);
                 SpriteAtlasAsset.Save(tmpVarAtlas, atlasVariantName);
-
                 varAtlas = AssetDatabase.LoadAssetAtPath<SpriteAtlas>(atlasVariantName);
             }
             else
             {
-                var atlas = AssetDatabase.LoadAssetAtPath<SpriteAtlas>(atlasFileName);
-                atlas.SetIncludeInBuild(false);
-                var packSettings = atlas.GetPackingSettings();
-                var texSettings = atlas.GetTextureSettings();
-                var platformSettings = atlas.GetPlatformSettings(EditorUserBuildSettings.activeBuildTarget.ToString());
-                ModifySpriteAtlasSettings(settings, ref packSettings, ref texSettings, ref platformSettings);
-                atlas.SetPackingSettings(packSettings);
-                atlas.SetTextureSettings(texSettings);
-                atlas.SetPlatformSettings(platformSettings);
-
-                CreateEmptySpriteAtlas(atlasVariantName);
                 var tmpVarAtlas = AssetDatabase.LoadAssetAtPath<SpriteAtlas>(atlasVariantName);
                 tmpVarAtlas.SetIncludeInBuild(true);
                 tmpVarAtlas.SetIsVariant(true);
-                packSettings = tmpVarAtlas.GetPackingSettings();
-                texSettings = tmpVarAtlas.GetTextureSettings();
-                platformSettings = tmpVarAtlas.GetPlatformSettings(EditorUserBuildSettings.activeBuildTarget.ToString());
+                var packSettings = tmpVarAtlas.GetPackingSettings();
+                var texSettings = tmpVarAtlas.GetTextureSettings();
+                var platformSettings = tmpVarAtlas.GetPlatformSettings(EditorUserBuildSettings.activeBuildTarget.ToString());
                 ModifySpriteAtlasSettings(settings, ref packSettings, ref texSettings, ref platformSettings);
                 tmpVarAtlas.SetPackingSettings(packSettings);
                 tmpVarAtlas.SetTextureSettings(texSettings);
                 tmpVarAtlas.SetPlatformSettings(platformSettings);
                 tmpVarAtlas.SetMasterAtlas(atlasMaster);
                 tmpVarAtlas.SetVariantScale(settings.variantScale);
-                AssetDatabase.SaveAssets();
-
+                EditorUtility.SetDirty(tmpVarAtlas);
                 varAtlas = tmpVarAtlas;
             }
 

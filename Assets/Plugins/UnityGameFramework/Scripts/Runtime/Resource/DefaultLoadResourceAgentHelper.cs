@@ -4,7 +4,6 @@
 // Homepage: https://gameframework.cn/
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
-
 using GameFramework;
 using GameFramework.FileSystem;
 using GameFramework.Resource;
@@ -186,8 +185,40 @@ namespace UnityGameFramework.Runtime
                 Log.Fatal("Load resource agent helper handler is invalid.");
                 return;
             }
-
             m_BytesFullPath = fullPath;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            if (fullPath.StartsWith(Application.persistentDataPath))
+            {
+                bool isError = false;
+                byte[] bytes = null;
+                string errorMessage = null;
+                try
+                {
+                    bytes = System.IO.File.ReadAllBytes(fullPath);
+                }
+                catch (Exception exc)
+                {
+                    isError = true;
+                    errorMessage = exc.Message;
+                }
+                if (string.IsNullOrEmpty(errorMessage))
+                {
+                    LoadResourceAgentHelperReadBytesCompleteEventArgs loadResourceAgentHelperReadBytesCompleteEventArgs = LoadResourceAgentHelperReadBytesCompleteEventArgs.Create(bytes);
+                    m_LoadResourceAgentHelperReadBytesCompleteEventHandler(this, loadResourceAgentHelperReadBytesCompleteEventArgs);
+                    ReferencePool.Release(loadResourceAgentHelperReadBytesCompleteEventArgs);
+                    m_BytesFullPath = null;
+                    m_LastProgress = 0f;
+                }
+                else
+                {
+                    LoadResourceAgentHelperErrorEventArgs loadResourceAgentHelperErrorEventArgs = LoadResourceAgentHelperErrorEventArgs.Create(LoadResourceStatus.NotExist, Utility.Text.Format("Can not load asset bundle '{0}' with error message '{1}'.", m_BytesFullPath, isError ? errorMessage : null));
+                    m_LoadResourceAgentHelperErrorEventHandler(this, loadResourceAgentHelperErrorEventArgs);
+                    ReferencePool.Release(loadResourceAgentHelperErrorEventArgs);
+                }
+                return;
+            }
+#endif
+
 #if UNITY_5_4_OR_NEWER
             m_UnityWebRequest = UnityWebRequest.Get(Utility.Path.GetRemotePath(fullPath));
 #if UNITY_2017_2_OR_NEWER
