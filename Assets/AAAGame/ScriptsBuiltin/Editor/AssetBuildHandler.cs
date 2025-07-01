@@ -117,24 +117,25 @@ namespace UGF.EditorTools
         [MenuItem("Game Framework/Resource Tools/Resolve Duplicate Assets【解决AB资源重复依赖冗余】", false, 100)]
         static void RefreshSharedAssets()
         {
-            AutoResolveAbDuplicateAssets();
+            AutoResolveAbDuplicateAssets(true);
         }
-        public static bool AutoResolveAbDuplicateAssets()
+        public static bool AutoResolveAbDuplicateAssets(bool forceExecute = false)
         {
             if (AppBuildSettings.Instance.UseResourceRule)
             {
                 ResourceRuleEditorUtility.RefreshResourceCollection();
             }
-
-            ResourceEditorController resEditor = new ResourceEditorController();
-            if (resEditor.Load())
+            if (forceExecute || ConstEditor.ResolveDuplicateAssets)
             {
-                var duplicateAssetNames = FindDuplicateAssetNames(resEditor);
-                if (duplicateAssetNames == null) return false;
-                bool resolved = ResolveDuplicateAssets(resEditor, duplicateAssetNames);
-                return resolved;
+                ResourceEditorController resEditor = new ResourceEditorController();
+                if (resEditor.Load())
+                {
+                    var duplicateAssetNames = FindDuplicateAssetNames(resEditor);
+                    if (duplicateAssetNames == null) return false;
+                    bool resolved = ResolveDuplicateAssets(resEditor, duplicateAssetNames);
+                    return resolved;
+                }
             }
-
             return false;
         }
         private static bool ResolveDuplicateAssets(ResourceEditorController resEditor, HashSet<string> duplicateAssetNames)
@@ -191,13 +192,13 @@ namespace UGF.EditorTools
                 var resource = resources[i];
                 if (resource.FullName == ConstEditor.SharedAssetBundleName) continue;
                 var assets = resource.GetAssets();
-                foreach(var asset in assets)
+                foreach (var asset in assets)
                 {
                     var files = AssetDatabase.GetDependencies(asset.Name, true);
-                    foreach(var file in files)
+                    foreach (var file in files)
                     {
                         if (!file.StartsWith(srcAssetRoot)) continue;
-                        if(assetReferenceDic.TryGetValue(file, out int resIdx) && (i != resIdx))
+                        if (assetReferenceDic.TryGetValue(file, out int resIdx) && (i != resIdx))
                         {
                             result.Add(file);
                             continue;
