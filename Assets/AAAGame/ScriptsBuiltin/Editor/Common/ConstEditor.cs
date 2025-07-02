@@ -10,6 +10,10 @@ namespace UGF.EditorTools
     public class ConstEditor
     {
         public const bool AutoScriptUTF8 = true;//新建脚本时自动修改脚本编码方式为utf-8以支持中文
+        /// <summary>
+        /// 打包资源前是否自动解决AB包重复依赖
+        /// </summary>
+        public const bool ResolveDuplicateAssets = true;
         public const string UIViewScriptFile = "Assets/AAAGame/Scripts/UI/Core/UIViews.cs";
         public const string UISerializeFieldDir = "Assets/AAAGame/Scripts/UI/UIVariables";//生成UI变量代码目录
         public const string UIItemSerializeFiledDir = "Assets/AAAGame/Scripts/UI/UIItemVariables";

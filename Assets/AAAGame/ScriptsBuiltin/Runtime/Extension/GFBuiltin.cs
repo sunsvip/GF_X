@@ -83,10 +83,9 @@ public class GFBuiltin : MonoBehaviour
         CanvasScaler canvasScaler = RootCanvas.GetComponent<CanvasScaler>();
         canvasScaler.referenceResolution = AppSettings.Instance.DesignResolution;
         var designRatio = canvasScaler.referenceResolution.x / (float)canvasScaler.referenceResolution.y;
-        var canvasFitMode = Screen.width / (float)Screen.height > designRatio ? ScreenFitMode.Height : ScreenFitMode.Width;
         canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-        canvasScaler.matchWidthOrHeight = (int)canvasFitMode;
-        GFBuiltin.Log($"----------UI适配模式:{canvasFitMode}----------");
+        canvasScaler.matchWidthOrHeight = Screen.width / (float)Screen.height > designRatio ? 1 : 0;
+        GFBuiltin.Log($"----------UI适配Match:{canvasScaler.matchWidthOrHeight}----------");
     }
 
 
