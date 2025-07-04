@@ -11,6 +11,8 @@ public class MenuProcedure : ProcedureBase
     LevelEntity lvEntity;
 
     IFsm<IProcedureManager> procedure;
+    private GameFramework.Network.INetworkChannel m_MainNetChannel;
+
     protected override void OnInit(IFsm<IProcedureManager> procedureOwner)
     {
         base.OnInit(procedureOwner);
@@ -20,10 +22,20 @@ public class MenuProcedure : ProcedureBase
         base.OnEnter(procedureOwner);
         procedure = procedureOwner;
         ShowLevel();//加载关卡
-        //var res = await GF.WebRequest.AddWebRequestAsync("https://blog.csdn.net/final5788");
-        //Log.Info(Utility.Converter.GetString(res.Bytes));
+                    //var res = await GF.WebRequest.AddWebRequestAsync("https://blog.csdn.net/final5788");
+                    //Log.Info(Utility.Converter.GetString(res.Bytes));
+
+        //连接服务器
+        //var netHelper = new StarForce.NetworkChannelHelper();
+        //m_MainNetChannel = GF.Network.CreateNetworkChannel("Main", GameFramework.Network.ServiceType.TcpWithSyncReceive, netHelper);
+        //m_MainNetChannel.Connect(System.Net.IPAddress.Parse("127.0.0.1"), 10000);
     }
 
+    private void OnNetworkConnected(object sender, GameEventArgs e)
+    {
+        var args = e as NetworkConnectedEventArgs;
+        Log.Info($">>>>>>>>>>>>>>>OnNetworkConnected:{args.NetworkChannel.Name}");
+    }
     protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)
     {
         base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
