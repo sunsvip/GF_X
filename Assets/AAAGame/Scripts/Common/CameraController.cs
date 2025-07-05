@@ -41,12 +41,13 @@ public class CameraController : MonoBehaviour
     private void InitURP()
     {
         //var curRenderMode = UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline.GetType().Name;
-        var urpCam = mainCam.GetUniversalAdditionalCameraData();
-        if (GFBuiltin.UICamera.GetUniversalAdditionalCameraData().renderType != CameraRenderType.Overlay)
+        var urpCamData = mainCam.GetComponent<UniversalAdditionalCameraData>();
+        var uiCamData = GFBuiltin.UICamera.GetComponent<UniversalAdditionalCameraData>();
+        if (uiCamData.renderType != CameraRenderType.Overlay)
         {
-            GFBuiltin.UICamera.GetUniversalAdditionalCameraData().renderType = CameraRenderType.Overlay;
+            uiCamData.renderType = CameraRenderType.Overlay;
         }
-        urpCam.cameraStack.Add(GFBuiltin.UICamera);
+        urpCamData.cameraStack.Add(GFBuiltin.UICamera);
 
     }
     public void SetViewZoom(float height)
