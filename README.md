@@ -4,9 +4,21 @@
 [GameFramework](https://github.com/EllanJiang/GameFramework) + [HybridCLR](https://github.com/focus-creative-games/hybridclr)，通过静态扩展方式，极度简化或扩展框架接口，并编写了大量自动化工具，主打一个工业化生产工作流，追求极致性能和开发效率，使GF对新手友好，开箱即用。
 作为极其懒惰、从不加班的设计开发工程师，我的宗旨是拒绝一切高重复度工作内耗，框架层零投入，用户只需专注业务逻辑。
 
-框架详细功能说明文档：[【Unity自动化游戏框架】通用自动化游戏框架 爽到起飞的工作流 巨幅提升效率 质量 产能 功能展示](https://blog.csdn.net/final5788/article/details/138164034)
+### 框架功能介绍：[【Unity自动化游戏框架】通用自动化游戏框架 爽到起飞的工作流 巨幅提升效率 质量 产能 功能展示](https://blog.csdn.net/final5788/article/details/138164034)
 
-视频教程(免费持续更新)：[【GF_X通用自动化游戏框架系列视频教程】](https://www.bilibili.com/video/BV1AT2rYVE3V/?share_source=copy_web&vd_source=47daa1bb9519dea051e24cd30d7be9be)
+### 视频教程(用爱发电,免费持续更新)
+0. [GF_X半小时极速入门](https://www.bilibili.com/video/BV1AT2rYVE3V/?share_source=copy_web&vd_source=47daa1bb9519dea051e24cd30d7be9be)
+1. [自动化工具集用法 降本增效](bilibili.com/video/BV1AiyeYpEQF?vd_source=4d9d1930ecd35c4ed49ec0cdae412285)
+2. [DataTable数据表用法 类型扩展 智能自动导表](bilibili.com/video/BV1enS2YSEVB?vd_source=4d9d1930ecd35c4ed49ec0cdae412285)
+3. [Entity用法 实体创建 自动对象池管理](bilibili.com/video/BV11BS2YMEUN/?vd_source=4d9d1930ecd35c4ed49ec0cdae412285)
+4. [UI系统用法 代码生成工具 二级界面](bilibili.com/video/BV1VsSUYREz7?vd_source=4d9d1930ecd35c4ed49ec0cdae412285)
+5. [UI Item用法 对象池复用 代码生成](bilibili.com/video/BV1gAmkYZEg4?vd_source=4d9d1930ecd35c4ed49ec0cdae412285)
+6. [打包工具 一键打包 打热更 自动化工作流](bilibili.com/video/BV18AmkYZEBt?vd_source=4d9d1930ecd35c4ed49ec0cdae412285)
+7. [jenkins远程打包 打热更 远程打包部署](bilibili.com/video/BV1DAmkYZEus?vd_source=4d9d1930ecd35c4ed49ec0cdae412285)
+8. [代码加固混淆 Obfuz加密 代码安全 AOT加密](bilibili.com/video/BV1RQjgzLEii?vd_source=4d9d1930ecd35c4ed49ec0cdae412285)
+9. [WebGL打包 热更](bilibili.com/video/BV1UP3czfEr3?vd_source=4d9d1930ecd35c4ed49ec0cdae412285)
+10. [WebGL转微信小游戏和热更](bilibili.com/video/BV1p13BzxEHf?vd_source=4d9d1930ecd35c4ed49ec0cdae412285)
+(持续更新中...)
 
 ### GF_X功能说明：
 1. 简化和扩展GameFramework接口，适配WebGL(支持热更)小游戏，新手友好，开箱即用。并支持GF所有异步加载的方法通过UniTask"可等待"加载。
