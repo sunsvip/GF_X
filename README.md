@@ -1,6 +1,6 @@
 # GF_X
 点击链接加入群聊【GF_X自动化游戏框架】：[QQ交流群:1035236947](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=sA2mRXcNn1vQb5dz8pe1wndL9jr8gOKA&authKey=hk7wZDWjniHi2kJexJxSMZsgmXgf%2B3JDRQWCaYih9mF7V%2ByZ%2F%2BzMG4fThy2vF2Ze&noverify=0&group_code=1035236947)
-#### 介绍
+### 介绍
 [GameFramework](https://github.com/EllanJiang/GameFramework) + [HybridCLR](https://github.com/focus-creative-games/hybridclr)，通过静态扩展方式，极度简化或扩展框架接口，并编写了大量自动化工具，主打一个工业化生产工作流，追求极致性能和开发效率，使GF对新手友好，开箱即用。
 作为极其懒惰、从不加班的设计开发工程师，我的宗旨是拒绝一切高重复度工作内耗，框架层零投入，用户只需专注业务逻辑。
 
@@ -39,17 +39,17 @@
 4. 支持A/B Test; 使用GF.Setting.SetABTestGroup("GroupName")对用户分配测试组，不同测试组会读取对应组的配置表/数据表。
 5. 扩展模块以应对极致的性能要求，如实现万人同屏。
 6. 其它N多扩展功能自行探索。
-#### 安装教程
+### 安装教程
 1.  首次使用需安装HybridCLR环境，点击Unity顶部菜单栏 【HybridCLR->Installer】安装HybridCLR环境;
 2.  Unity工具栏 【Build App/Hotfix】按钮打开一键打包界面; 首次打热更App需点击【Build App】按钮右侧的下拉菜单，点击【Full Build】构建；
 3.  Build App出包，Build Resource打热更;
 
-#### 使用说明
+### 使用说明
 1.  开发目录为Assets/AAAGame, Script为热更新脚本目录，ScriptBuiltin为内置程序集；
 2.  Assets/AAAGame/Scene/Launch场景为游戏的启动场景
 
 
-#### 工作流
+### 工作流
 前言:
 首先要理清游戏核心元素，游戏中可见的元素一共就两种，UI界面和GameObject物体(模型、Sprite、粒子等)
 
