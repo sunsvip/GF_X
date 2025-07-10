@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace StarForce
+namespace GameFramework.Network
 {
     public abstract class CSPacketBase : PacketBase
     {
