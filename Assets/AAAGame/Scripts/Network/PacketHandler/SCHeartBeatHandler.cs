@@ -8,7 +8,7 @@
 using GameFramework.Network;
 using UnityGameFramework.Runtime;
 
-namespace StarForce
+namespace GameFramework.Network
 {
     public class SCHeartBeatHandler : PacketHandlerBase
     {

@@ -20,6 +20,7 @@ namespace UGF.EditorTools
 
         public string ResourceBuildDir = "AB";
         public string AppBuildDir = "BuildApp";
+        public bool EnableObfuz = false;
     }
 
 }

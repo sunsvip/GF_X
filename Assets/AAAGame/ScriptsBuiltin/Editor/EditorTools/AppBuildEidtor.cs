@@ -1,22 +1,23 @@
-using GameFramework;
 using System;
+using System.Collections;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using UnityEditor;
-using UnityEngine;
+using System.Text;
+using System.Xml;
+using Cysharp.Threading.Tasks;
+using GameFramework;
 using GameFramework.Resource;
 using HybridCLR.Editor.Commands;
-using System.Text;
-using System.Linq;
-using static UnityEditor.BuildPlayerWindow;
-using System.Collections;
-using UnityEditor.Build.Reporting;
-using UnityGameFramework.Editor.ResourceTools;
-using Cysharp.Threading.Tasks;
-using UnityEditor.Build;
-using System.Xml;
-using UGF.EditorTools.ResourceTools;
+using Obfuz.Settings;
 using Obfuz.Unity;
+using UGF.EditorTools.ResourceTools;
+using UnityEditor;
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
+using UnityEngine;
+using UnityGameFramework.Editor.ResourceTools;
+using static UnityEditor.BuildPlayerWindow;
 
 namespace UGF.EditorTools
 {
@@ -305,7 +306,7 @@ namespace UGF.EditorTools
                     {
                         EditorGUILayout.LabelField("Enable Obfuz", GUILayout.Width(160f));
                         EditorGUI.BeginChangeCheck();
-                        Obfuz.Settings.ObfuzSettings.Instance.enable = EditorGUILayout.Toggle(Obfuz.Settings.ObfuzSettings.Instance.enable);
+                        AppBuildSettings.Instance.EnableObfuz = EditorGUILayout.Toggle(AppBuildSettings.Instance.EnableObfuz);
                         if (EditorGUI.EndChangeCheck())
                         {
                             RefreshObfuzEnable();
@@ -477,8 +478,11 @@ namespace UGF.EditorTools
         }
         private void RefreshObfuzEnable()
         {
+            //Obfuz.Settings.ObfuzSettings.Instance.buildPipelineSettings.enable = AppBuildSettings.Instance.EnableObfuz;
+            Obfuz.Settings.ObfuzSettings.Instance.enable = AppBuildSettings.Instance.EnableObfuz;
+            //if (Obfuz.Settings.ObfuzSettings.Instance.buildPipelineSettings.enable)
             if (Obfuz.Settings.ObfuzSettings.Instance.enable)
-            {
+                {
 #if !ENABLE_OBFUZ
                 HybridCLRExtensionTool.EnableObfuz();
 #endif
@@ -917,9 +921,9 @@ namespace UGF.EditorTools
             var installer = new HybridCLR.Editor.Installer.InstallerController();
             if (!installer.HasInstalledHybridCLR())
             {
-                throw new BuildFailedException($"You have not initialized HybridCLR, please install it via menu 'HybridCLR/Installer'");
+                throw new BuildFailedException("You have not initialized HybridCLR, please install it via menu 'HybridCLR/Installer'");
             }
-            if (Obfuz.Settings.ObfuzSettings.Instance.enable)
+            if (AppBuildSettings.Instance.EnableObfuz)
             {
                 ObfuzMenu.GenerateEncryptionVM();
                 ObfuzMenu.SaveSecretFile();
@@ -1045,7 +1049,7 @@ namespace UGF.EditorTools
         {
             EditorUtility.SetDirty(AppSettings.Instance);
             AppBuildSettings.Save();
-            EditorUtility.SetDirty(Obfuz.Settings.ObfuzSettings.Instance);
+            Obfuz.Settings.ObfuzSettings.Save();
             if (m_Controller.Save())
             {
                 Debug.Log("Save configuration success.");

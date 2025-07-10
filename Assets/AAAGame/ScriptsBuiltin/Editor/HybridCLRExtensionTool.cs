@@ -34,15 +34,16 @@ namespace UGF.EditorTools
         {
             CopyAotDllsToProject(EditorUserBuildSettings.activeBuildTarget);
         }
-        [MenuItem("HybridCLR/ObfuzExtension/Obfuz GenerateLinkXml[混淆后代码裁剪配置]", false)]
-        public static void GenerateLinkXml()
-        {
-            Obfuz.Unity.LinkXmlProcess.GenerateAdditionalLinkXmlFile(EditorUserBuildSettings.activeBuildTarget);
-        }
+        //[MenuItem("HybridCLR/ObfuzExtension/Obfuz GenerateLinkXml[混淆后代码裁剪配置]", false)]
+        //public static void GenerateLinkXml()
+        //{
+        //    Obfuz.Unity.LinkXmlProcess.GenerateAdditionalLinkXmlFile(EditorUserBuildSettings.activeBuildTarget);
+        //}
         public static void CompileTargetDll(bool copyAotDlls)
         {
             var activeTarget = EditorUserBuildSettings.activeBuildTarget;
             HybridCLR.Editor.Commands.CompileDllCommand.CompileDllActiveBuildTarget();
+            //if (Obfuz.Settings.ObfuzSettings.Instance.buildPipelineSettings.enable)
             if (Obfuz.Settings.ObfuzSettings.Instance.enable)
             {
                 ObfuscateUtil.ObfuscateHotUpdateAssemblies(activeTarget, GetObfuzDllsDir(activeTarget));
@@ -85,6 +86,7 @@ namespace UGF.EditorTools
             var obfuzDllList = Obfuz.Settings.ObfuzSettings.Instance.assemblySettings.GetObfuscationRelativeAssemblyNames();
             foreach (var dll in HybridCLR.Editor.SettingsUtil.HotUpdateAssemblyNamesIncludePreserved)
             {
+                //bool isObfuzDll = Obfuz.Settings.ObfuzSettings.Instance.buildPipelineSettings.enable && obfuzDllList.Contains(dll);
                 bool isObfuzDll = Obfuz.Settings.ObfuzSettings.Instance.enable && obfuzDllList.Contains(dll);
                 string dllPath = UtilityBuiltin.AssetsPath.GetCombinePath(isObfuzDll ? obfuzDllSrcDir : hotfixDllSrcDir, dll + ".dll");
                 if (File.Exists(dllPath))

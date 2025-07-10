@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c414eef017e565c4db1442ec64ec52fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enable: 0
+  enable: 1
   assemblySettings:
     assembliesToObfuscate:
     - Hotfix
@@ -24,8 +24,8 @@ MonoBehaviour:
     enabledPasses: -1
     ruleFiles: []
   secretSettings:
-    defaultStaticSecretKey: GFXStaticKey
-    defaultDynamicSecretKey: GFXDynamicKey
+    defaultStaticSecretKey: Code Philosophy-Static
+    defaultDynamicSecretKey: Code Philosophy-Dynamic
     staticSecretKeyOutputPath: Assets/Resources/Obfuz/defaultStaticSecretKey.bytes
     dynamicSecretKeyOutputPath: Assets/Resources/Obfuz/defaultDynamicSecretKey.bytes
     randomSeed: 0
@@ -39,9 +39,7 @@ MonoBehaviour:
     obfuscatedNamePrefix: $
     useConsistentNamespaceObfuscation: 1
     symbolMappingFile: Assets/Plugins/Obfuz/SymbolObfus/symbol-mapping.xml
-    debugSymbolMappingFile: Assets/Obfuz/SymbolObfus/symbol-mapping-debug.xml
     ruleFiles: []
-    customRenamePolicyTypes: []
   constEncryptSettings:
     encryptionLevel: 1
     ruleFiles: []
