@@ -150,7 +150,7 @@ namespace UGF.EditorTools
                     return false;
                 }
             }
-            Debug.LogFormat("重复依赖资源个数:{0}", duplicateAssetNames.Count);
+            bool hasChanged = false;
             if (duplicateAssetNames.Count > 0)
             {
                 Debug.Log($"-------------添加下列冗余资源到{ConstEditor.SharedAssetBundleName}------------");
@@ -165,18 +165,28 @@ namespace UGF.EditorTools
                     else
                     {
                         resEditor.UnassignAsset(AssetDatabase.AssetPathToGUID(aseetName));
+                        hasChanged = true;
                     }
                 }
+                hasChanged = duplicateAssetNames.Count > 0;
                 foreach (var assetName in duplicateAssetNames)
                 {
-                    Debug.Log($"解决冗余资源:{assetName}");
                     if (!resEditor.AssignAsset(AssetDatabase.AssetPathToGUID(assetName), ConstEditor.SharedAssetBundleName, null))
                     {
                         Debug.LogWarning($"添加资源:{assetName}到{ConstEditor.SharedAssetBundleName}失败!");
                     }
                 }
-                Debug.Log($"-------------处理冗余资源结束------------");
+                if (hasChanged)
+                {
+                    Debug.Log($"-------------处理冗余资源结束,新增处理{duplicateAssetNames.Count}个重复引用资源------------");
+                }
+                else
+                {
+                    Debug.Log("-------------处理冗余资源结束,无重复引用资源------------");
+                }
+                
             }
+
             resEditor.RemoveUnknownAssets();
             resEditor.RemoveUnusedResources();
             return resEditor.Save();
