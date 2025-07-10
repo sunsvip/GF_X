@@ -1,18 +1,17 @@
 {
   "dependencies": {
     "com.code-philosophy.hybridclr": {
-      "version": "https://gitee.com/focus-creative-games/hybridclr_unity.git#v8.2.0",
+      "version": "https://gitee.com/focus-creative-games/hybridclr_unity.git#v8.3.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "59a3c3974a6e435e0ed57fb9af61fbbc6d17a8b7"
+      "hash": "ee7af5c5926c12402b3ccd121408646f1cf3128f"
     },
     "com.code-philosophy.obfuz": {
-      "version": "https://gitee.com/focus-creative-games/obfuz.git#1.x",
+      "version": "file:com.code-philosophy.obfuz",
       "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "26b4828094f0604f5799c4b5b56214b58ff8f25e"
+      "source": "embedded",
+      "dependencies": {}
     },
     "com.code-philosophy.obfuz4hybridclr": {
       "version": "https://gitee.com/focus-creative-games/obfuz4hybridclr.git",
