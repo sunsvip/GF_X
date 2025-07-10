@@ -305,7 +305,7 @@ namespace UGF.EditorTools
                     {
                         EditorGUILayout.LabelField("Enable Obfuz", GUILayout.Width(160f));
                         EditorGUI.BeginChangeCheck();
-                        Obfuz.Settings.ObfuzSettings.Instance.enable = EditorGUILayout.Toggle(Obfuz.Settings.ObfuzSettings.Instance.enable);
+                        Obfuz.Settings.ObfuzSettings.Instance.buildPipelineSettings.enable = EditorGUILayout.Toggle(Obfuz.Settings.ObfuzSettings.Instance.buildPipelineSettings.enable);
                         if (EditorGUI.EndChangeCheck())
                         {
                             RefreshObfuzEnable();
@@ -477,7 +477,7 @@ namespace UGF.EditorTools
         }
         private void RefreshObfuzEnable()
         {
-            if (Obfuz.Settings.ObfuzSettings.Instance.enable)
+            if (Obfuz.Settings.ObfuzSettings.Instance.buildPipelineSettings.enable)
             {
 #if !ENABLE_OBFUZ
                 HybridCLRExtensionTool.EnableObfuz();
@@ -917,9 +917,9 @@ namespace UGF.EditorTools
             var installer = new HybridCLR.Editor.Installer.InstallerController();
             if (!installer.HasInstalledHybridCLR())
             {
-                throw new BuildFailedException($"You have not initialized HybridCLR, please install it via menu 'HybridCLR/Installer'");
+                throw new BuildFailedException("You have not initialized HybridCLR, please install it via menu 'HybridCLR/Installer'");
             }
-            if (Obfuz.Settings.ObfuzSettings.Instance.enable)
+            if (Obfuz.Settings.ObfuzSettings.Instance.buildPipelineSettings.enable)
             {
                 ObfuzMenu.GenerateEncryptionVM();
                 ObfuzMenu.SaveSecretFile();

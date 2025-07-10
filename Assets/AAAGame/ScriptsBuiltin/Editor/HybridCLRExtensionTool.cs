@@ -43,7 +43,7 @@ namespace UGF.EditorTools
         {
             var activeTarget = EditorUserBuildSettings.activeBuildTarget;
             HybridCLR.Editor.Commands.CompileDllCommand.CompileDllActiveBuildTarget();
-            if (Obfuz.Settings.ObfuzSettings.Instance.enable)
+            if (Obfuz.Settings.ObfuzSettings.Instance.buildPipelineSettings.enable)
             {
                 ObfuscateUtil.ObfuscateHotUpdateAssemblies(activeTarget, GetObfuzDllsDir(activeTarget));
             }
@@ -85,7 +85,7 @@ namespace UGF.EditorTools
             var obfuzDllList = Obfuz.Settings.ObfuzSettings.Instance.assemblySettings.GetObfuscationRelativeAssemblyNames();
             foreach (var dll in HybridCLR.Editor.SettingsUtil.HotUpdateAssemblyNamesIncludePreserved)
             {
-                bool isObfuzDll = Obfuz.Settings.ObfuzSettings.Instance.enable && obfuzDllList.Contains(dll);
+                bool isObfuzDll = Obfuz.Settings.ObfuzSettings.Instance.buildPipelineSettings.enable && obfuzDllList.Contains(dll);
                 string dllPath = UtilityBuiltin.AssetsPath.GetCombinePath(isObfuzDll ? obfuzDllSrcDir : hotfixDllSrcDir, dll + ".dll");
                 if (File.Exists(dllPath))
                 {
