@@ -23,11 +23,11 @@ public class LoadHotfixDllProcedure : ProcedureBase
 #if ENABLE_OBFUZ
     /// <summary>
     /// 初始化Obfuz
-    /// </summary>
+    /// </summary>、
+    [Obfuz.ObfuzIgnore]
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
     private static void SetUpStaticSecretKey()
     {
-        Debug.Log("Setup Obfuz StaticSecret...");
         Obfuz.EncryptionService<Obfuz.DefaultStaticEncryptionScope>.Encryptor = new Obfuz.EncryptionVM.GeneratedEncryptionVirtualMachine(Resources.Load<TextAsset>("Obfuz/defaultStaticSecretKey").bytes);
     }
 #endif

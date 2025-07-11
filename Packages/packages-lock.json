@@ -8,10 +8,11 @@
       "hash": "ee7af5c5926c12402b3ccd121408646f1cf3128f"
     },
     "com.code-philosophy.obfuz": {
-      "version": "file:com.code-philosophy.obfuz",
+      "version": "https://gitee.com/focus-creative-games/obfuz.git",
       "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
+      "source": "git",
+      "dependencies": {},
+      "hash": "083ddd303506c2c348d78f031dad33bc771cb27e"
     },
     "com.code-philosophy.obfuz4hybridclr": {
       "version": "https://gitee.com/focus-creative-games/obfuz4hybridclr.git",
@@ -25,15 +26,6 @@
       "depth": 0,
       "source": "builtin",
       "dependencies": {}
-    },
-    "com.unity.ai.navigation": {
-      "version": "1.1.6",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.modules.ai": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
     },
     "com.unity.burst": {
       "version": "1.8.21",
