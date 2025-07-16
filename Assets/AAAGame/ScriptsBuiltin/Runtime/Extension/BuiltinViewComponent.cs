@@ -56,7 +56,6 @@ public class BuiltinViewComponent : GameFrameworkComponent
 
         tipsPositiveBtn.gameObject.SetActive(yes_cb != null);
         tipsPositiveBtn.GetComponentInChildren<TextMeshProUGUI>().text = yes_btn_title;
-        var dialog_bg = tipsDialog.transform.Find("DialogBG");
         tipsTitleText.text = title.ToUpper();
         tipsContentText.text = content;
         tipsNegativeBtn.onClick.RemoveAllListeners();

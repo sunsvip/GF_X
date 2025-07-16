@@ -1,19 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GameFramework;
-using GameFramework.Procedure;
-using GameFramework.Fsm;
 using GameFramework.Event;
-using UnityGameFramework.Runtime;
-using System;
+using GameFramework.Fsm;
+using GameFramework.Procedure;
 using GameFramework.Resource;
-using ResourceUpdateStartEventArgs = UnityGameFramework.Runtime.ResourceUpdateStartEventArgs;
-using ResourceUpdateChangedEventArgs = UnityGameFramework.Runtime.ResourceUpdateChangedEventArgs;
-using ResourceUpdateSuccessEventArgs = UnityGameFramework.Runtime.ResourceUpdateSuccessEventArgs;
-using ResourceUpdateFailureEventArgs = UnityGameFramework.Runtime.ResourceUpdateFailureEventArgs;
 using UnityEngine;
+using UnityGameFramework.Runtime;
+using ResourceUpdateChangedEventArgs = UnityGameFramework.Runtime.ResourceUpdateChangedEventArgs;
+using ResourceUpdateFailureEventArgs = UnityGameFramework.Runtime.ResourceUpdateFailureEventArgs;
+using ResourceUpdateStartEventArgs = UnityGameFramework.Runtime.ResourceUpdateStartEventArgs;
+using ResourceUpdateSuccessEventArgs = UnityGameFramework.Runtime.ResourceUpdateSuccessEventArgs;
+using ResourceVerifyFailureEventArgs = UnityGameFramework.Runtime.ResourceVerifyFailureEventArgs;
 using ResourceVerifyStartEventArgs = UnityGameFramework.Runtime.ResourceVerifyStartEventArgs;
 using ResourceVerifySuccessEventArgs = UnityGameFramework.Runtime.ResourceVerifySuccessEventArgs;
-using ResourceVerifyFailureEventArgs = UnityGameFramework.Runtime.ResourceVerifyFailureEventArgs;
 
 [Serializable]
 [Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.All)]
@@ -51,6 +51,7 @@ public class UpdateResourcesProcedure : ProcedureBase
 
 
         GFBuiltin.Event.Subscribe(WebRequestSuccessEventArgs.EventId, OnWebRequestSuccess);
+        GFBuiltin.Event.Subscribe(WebRequestFailureEventArgs.EventId, OnWebRequestFailure);
         GFBuiltin.Event.Subscribe(UnityGameFramework.Runtime.ResourceUpdateStartEventArgs.EventId, OnResourceUpdateStart);
         GFBuiltin.Event.Subscribe(UnityGameFramework.Runtime.ResourceUpdateChangedEventArgs.EventId, OnResourceUpdateChanged);
         GFBuiltin.Event.Subscribe(UnityGameFramework.Runtime.ResourceUpdateSuccessEventArgs.EventId, OnResourceUpdateSuccess);
@@ -60,13 +61,13 @@ public class UpdateResourcesProcedure : ProcedureBase
         GFBuiltin.Event.Subscribe(UnityGameFramework.Runtime.ResourceVerifySuccessEventArgs.EventId, OnResourceVerifySuccess);
         GFBuiltin.Event.Subscribe(UnityGameFramework.Runtime.ResourceVerifyFailureEventArgs.EventId, OnResourceVerifyFailure);
         CheckVersion();
-
     }
 
 
     protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
     {
         GFBuiltin.Event.Unsubscribe(WebRequestSuccessEventArgs.EventId, OnWebRequestSuccess);
+        GFBuiltin.Event.Unsubscribe(WebRequestFailureEventArgs.EventId, OnWebRequestFailure);
         GFBuiltin.Event.Unsubscribe(UnityGameFramework.Runtime.ResourceUpdateStartEventArgs.EventId, OnResourceUpdateStart);
         GFBuiltin.Event.Unsubscribe(UnityGameFramework.Runtime.ResourceUpdateChangedEventArgs.EventId, OnResourceUpdateChanged);
         GFBuiltin.Event.Unsubscribe(UnityGameFramework.Runtime.ResourceUpdateSuccessEventArgs.EventId, OnResourceUpdateSuccess);
@@ -94,7 +95,7 @@ public class UpdateResourcesProcedure : ProcedureBase
             return "IOS";
 #elif UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
 #if UNITY_64
-            return "Windows64";
+        return "Windows64";
 #else
         return "Windows";
 #endif
@@ -134,6 +135,27 @@ public class UpdateResourcesProcedure : ProcedureBase
         var vinfo = Utility.Json.ToObject<VersionInfo>(webText);
         CheckVersionList(vinfo);
     }
+
+    private void OnWebRequestFailure(object sender, GameEventArgs e)
+    {
+        var arg = e as WebRequestFailureEventArgs;
+        if (arg.UserData != this)
+        {
+            return;
+        }
+        GFBuiltin.LogError($"请求资源版本失败! uri:{arg.WebRequestUri}, error:{arg.ErrorMessage}");
+        if (ConstBuiltin.NoNetworkAllow)
+        {
+            GFBuiltin.BuiltinView.ShowDialog("Oops!", "Server unreachable or network unstable.", "Retry", "Enter", CheckVersion, () =>
+            {
+                GFBuiltin.Resource.VerifyResources(OnVerifyResourcesComplete);
+            });
+        }
+        else
+        {
+            GFBuiltin.BuiltinView.ShowDialog("Oops!", "Server unreachable or network unstable.", "Retry", "Quit", CheckVersion, QuitApp);
+        }
+    }
     private void CheckVersionList(VersionInfo vinfo)
     {
         if (vinfo == null)
@@ -151,12 +173,12 @@ public class UpdateResourcesProcedure : ProcedureBase
                 () =>
                 {
                     Application.OpenURL(vinfo.AppUpdateUrl);
-                    GFBuiltin.Shutdown(ShutdownType.Quit);
+                    QuitApp();
                 },
                 () =>
                 {
                     if (vinfo.ForceUpdateApp)//强制更新时点不更新则退出游戏
-                        GFBuiltin.Shutdown(ShutdownType.Quit);
+                        QuitApp();
                     else
                         CheckVersionAndUpdate(vinfo);
                 });
@@ -164,6 +186,10 @@ public class UpdateResourcesProcedure : ProcedureBase
         }
 
         CheckVersionAndUpdate(vinfo);
+    }
+    private void QuitApp()
+    {
+        GFBuiltin.Shutdown(ShutdownType.Quit);
     }
     private void CheckVersionAndUpdate(VersionInfo vinfo)
     {
@@ -178,7 +204,7 @@ public class UpdateResourcesProcedure : ProcedureBase
         else
         {
             GFBuiltin.Log("资源不适用当前客户端版本, 已跳过更新");
-            checkResult = GFBuiltin.Resource.CheckVersionList(GFBuiltin.Resource.InternalResourceVersion);
+            checkResult = CheckVersionListResult.Updated;
         }
         if (checkResult == GameFramework.Resource.CheckVersionListResult.NeedUpdate)
         {
@@ -189,7 +215,6 @@ public class UpdateResourcesProcedure : ProcedureBase
         else
         {
             GFBuiltin.Resource.VerifyResources(OnVerifyResourcesComplete);
-            //GFBuiltin.Resource.CheckResources(OnCheckResurcesComplete);
         }
     }
     /// <summary>
