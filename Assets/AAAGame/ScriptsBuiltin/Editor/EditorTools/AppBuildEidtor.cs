@@ -751,7 +751,7 @@ namespace UGF.EditorTools
         private void BuildHotfix()
         {
             m_Controller.OutputPackedSelected = (AppSettings.Instance.ResourceMode != ResourceMode.Package) && HasPackedResource();
-            AssetBuildHandler.AutoResolveAbDuplicateAssets();
+            AssetBuildHandler.AutoResolveAbDuplicateAssets(false, m_Controller.OutputPackedSelected);
 #if !DISABLE_HYBRIDCLR
             HybridCLRExtensionTool.CompileTargetDll();
 #endif
@@ -771,7 +771,7 @@ namespace UGF.EditorTools
             }
 #endif
             m_Controller.OutputPackedSelected = (AppSettings.Instance.ResourceMode != ResourceMode.Package) && HasPackedResource();
-            if (m_Controller.OutputPackageSelected)
+            if (m_Controller.OutputPackageSelected) //单机模式
             {
                 AssetBuildHandler.AutoResolveAbDuplicateAssets();
                 if (m_Controller.BuildResources())
@@ -790,12 +790,12 @@ namespace UGF.EditorTools
             {
                 AssetBuildHandler.RemoveStreamingAssetsBundles();
                 bool buildAppReady = !m_Controller.OutputPackedSelected;
-                if (m_Controller.OutputPackedSelected)
+                if (m_Controller.OutputPackedSelected) //热更资源进包
                 {
 #if !DISABLE_HYBRIDCLR
                     HybridCLRExtensionTool.CompileTargetDll(false);
 #endif
-                    AssetBuildHandler.AutoResolveAbDuplicateAssets();
+                    AssetBuildHandler.AutoResolveAbDuplicateAssets(false, true);
                     buildAppReady = m_Controller.BuildResources();
                 }
                 if (buildAppReady)
