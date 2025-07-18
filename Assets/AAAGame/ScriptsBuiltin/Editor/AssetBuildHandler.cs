@@ -119,7 +119,7 @@ namespace UGF.EditorTools
         {
             AutoResolveAbDuplicateAssets(true);
         }
-        public static bool AutoResolveAbDuplicateAssets(bool forceExecute = false)
+        public static bool AutoResolveAbDuplicateAssets(bool forceExecute = false, bool packed = false)
         {
             if (AppBuildSettings.Instance.UseResourceRule)
             {
@@ -132,17 +132,17 @@ namespace UGF.EditorTools
                 {
                     var duplicateAssetNames = FindDuplicateAssetNames(resEditor);
                     if (duplicateAssetNames == null) return false;
-                    bool resolved = ResolveDuplicateAssets(resEditor, duplicateAssetNames);
+                    bool resolved = ResolveDuplicateAssets(resEditor, duplicateAssetNames, packed);
                     return resolved;
                 }
             }
             return false;
         }
-        private static bool ResolveDuplicateAssets(ResourceEditorController resEditor, HashSet<string> duplicateAssetNames)
+        private static bool ResolveDuplicateAssets(ResourceEditorController resEditor, HashSet<string> duplicateAssetNames, bool packed)
         {
             if (!resEditor.HasResource(ConstEditor.SharedAssetBundleName, null))
             {
-                bool addSuccess = resEditor.AddResource(ConstEditor.SharedAssetBundleName, null, null, LoadType.LoadFromMemoryAndQuickDecrypt, false);
+                bool addSuccess = resEditor.AddResource(ConstEditor.SharedAssetBundleName, null, null, LoadType.LoadFromMemoryAndQuickDecrypt, packed);
 
                 if (!addSuccess)
                 {
@@ -153,7 +153,6 @@ namespace UGF.EditorTools
             bool hasChanged = false;
             if (duplicateAssetNames.Count > 0)
             {
-                Debug.Log($"-------------添加下列冗余资源到{ConstEditor.SharedAssetBundleName}------------");
                 var items = resEditor.GetResource(ConstEditor.SharedAssetBundleName, null).GetAssets();
                 foreach (var item in items)
                 {
@@ -169,6 +168,7 @@ namespace UGF.EditorTools
                     }
                 }
                 hasChanged = duplicateAssetNames.Count > 0;
+
                 foreach (var assetName in duplicateAssetNames)
                 {
                     if (!resEditor.AssignAsset(AssetDatabase.AssetPathToGUID(assetName), ConstEditor.SharedAssetBundleName, null))
@@ -176,15 +176,16 @@ namespace UGF.EditorTools
                         Debug.LogWarning($"添加资源:{assetName}到{ConstEditor.SharedAssetBundleName}失败!");
                     }
                 }
-                if (hasChanged)
+                var sharedRes = resEditor.GetResource(ConstEditor.SharedAssetBundleName, null);
+                if (sharedRes.Packed != packed)
                 {
-                    Debug.Log($"-------------处理冗余资源结束,新增处理{duplicateAssetNames.Count}个重复引用资源------------");
+                    sharedRes.Packed = packed;
+                    hasChanged = true;
                 }
-                else
+                if (!hasChanged)
                 {
                     Debug.Log("-------------处理冗余资源结束,无重复引用资源------------");
                 }
-                
             }
 
             resEditor.RemoveUnknownAssets();
