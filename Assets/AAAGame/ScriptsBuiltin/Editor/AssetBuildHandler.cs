@@ -119,12 +119,24 @@ namespace UGF.EditorTools
         {
             AutoResolveAbDuplicateAssets(true);
         }
-        public static bool AutoResolveAbDuplicateAssets(bool forceExecute = false, bool packed = false)
+        /// <summary>
+        /// 打包资源前 应该先让Resource Rule工具刷新AB资源
+        /// </summary>
+        public static void RefreshResourceRule()
         {
             if (AppBuildSettings.Instance.UseResourceRule)
             {
                 ResourceRuleEditorUtility.RefreshResourceCollection();
             }
+        }
+        /// <summary>
+        /// 计算AB包重复依赖的资源，并将重复依赖资源单独放进SharedAssets包
+        /// </summary>
+        /// <param name="forceExecute"></param>
+        /// <param name="packed"></param>
+        /// <returns></returns>
+        public static bool AutoResolveAbDuplicateAssets(bool forceExecute = false, bool packed = false)
+        {
             if (forceExecute || ConstEditor.ResolveDuplicateAssets)
             {
                 ResourceEditorController resEditor = new ResourceEditorController();

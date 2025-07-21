@@ -748,6 +748,7 @@ namespace UGF.EditorTools
         /// </summary>
         private void BuildHotfix()
         {
+            AssetBuildHandler.RefreshResourceRule();
             m_Controller.OutputPackedSelected = (AppSettings.Instance.ResourceMode != ResourceMode.Package) && HasPackedResource();
             AssetBuildHandler.AutoResolveAbDuplicateAssets(false, m_Controller.OutputPackedSelected);
 #if !DISABLE_HYBRIDCLR
@@ -768,6 +769,7 @@ namespace UGF.EditorTools
                 return false;
             }
 #endif
+            AssetBuildHandler.RefreshResourceRule();
             m_Controller.OutputPackedSelected = (AppSettings.Instance.ResourceMode != ResourceMode.Package) && HasPackedResource();
             if (m_Controller.OutputPackageSelected) //单机模式
             {
@@ -953,7 +955,7 @@ namespace UGF.EditorTools
                 StripAOTDllCommand.GenerateStripedAOTDlls(target);
                 AOTReferenceGeneratorCommand.GenerateAOTGenericReference(target);
             }
-                // 桥接函数生成依赖于AOT dll，必须保证已经build过，生成AOT dll
+            // 桥接函数生成依赖于AOT dll，必须保证已经build过，生成AOT dll
             MethodBridgeGeneratorCommand.GenerateMethodBridgeAndReversePInvokeWrapper(target);
             HybridCLRExtensionTool.CopyAotDllsToProject(target);
 #endif
