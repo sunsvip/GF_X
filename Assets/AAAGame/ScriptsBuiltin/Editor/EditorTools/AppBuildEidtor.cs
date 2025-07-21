@@ -161,6 +161,7 @@ namespace UGF.EditorTools
         }
         private void OnGUI()
         {
+            EditorGUI.BeginDisabledGroup(EditorApplication.isCompiling);
             EditorGUILayout.BeginVertical(GUILayout.Width(position.width), GUILayout.Height(position.height));
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
             {
@@ -434,6 +435,7 @@ namespace UGF.EditorTools
                 GUILayout.Space(2f);
             }
             EditorGUILayout.EndVertical();
+            EditorGUI.EndDisabledGroup();
         }
 
         private void DrawBuildAppButton()
