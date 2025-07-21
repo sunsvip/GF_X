@@ -500,15 +500,11 @@ namespace UGF.EditorTools
             {
                 if (AppSettings.Instance.ResourceMode == ResourceMode.Package)
                 {
-#if !DISABLE_HYBRIDCLR
                     HybridCLRExtensionTool.DisableHybridCLR();
-#endif
                 }
                 else
                 {
-#if DISABLE_HYBRIDCLR
                     HybridCLRExtensionTool.EnableHybridCLR();
-#endif
                 }
             }
         }
