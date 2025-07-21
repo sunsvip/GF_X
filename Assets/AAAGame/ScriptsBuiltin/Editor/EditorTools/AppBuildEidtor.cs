@@ -161,6 +161,7 @@ namespace UGF.EditorTools
         }
         private void OnGUI()
         {
+            EditorGUI.BeginDisabledGroup(EditorApplication.isCompiling);
             EditorGUILayout.BeginVertical(GUILayout.Width(position.width), GUILayout.Height(position.height));
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
             {
@@ -434,6 +435,7 @@ namespace UGF.EditorTools
                 GUILayout.Space(2f);
             }
             EditorGUILayout.EndVertical();
+            EditorGUI.EndDisabledGroup();
         }
 
         private void DrawBuildAppButton()
@@ -500,15 +502,11 @@ namespace UGF.EditorTools
             {
                 if (AppSettings.Instance.ResourceMode == ResourceMode.Package)
                 {
-#if !DISABLE_HYBRIDCLR
                     HybridCLRExtensionTool.DisableHybridCLR();
-#endif
                 }
                 else
                 {
-#if DISABLE_HYBRIDCLR
                     HybridCLRExtensionTool.EnableHybridCLR();
-#endif
                 }
             }
         }
@@ -750,6 +748,7 @@ namespace UGF.EditorTools
         /// </summary>
         private void BuildHotfix()
         {
+            AssetBuildHandler.RefreshResourceRule();
             m_Controller.OutputPackedSelected = (AppSettings.Instance.ResourceMode != ResourceMode.Package) && HasPackedResource();
             AssetBuildHandler.AutoResolveAbDuplicateAssets(false, m_Controller.OutputPackedSelected);
 #if !DISABLE_HYBRIDCLR
@@ -770,6 +769,7 @@ namespace UGF.EditorTools
                 return false;
             }
 #endif
+            AssetBuildHandler.RefreshResourceRule();
             m_Controller.OutputPackedSelected = (AppSettings.Instance.ResourceMode != ResourceMode.Package) && HasPackedResource();
             if (m_Controller.OutputPackageSelected) //单机模式
             {
@@ -955,7 +955,7 @@ namespace UGF.EditorTools
                 StripAOTDllCommand.GenerateStripedAOTDlls(target);
                 AOTReferenceGeneratorCommand.GenerateAOTGenericReference(target);
             }
-                // 桥接函数生成依赖于AOT dll，必须保证已经build过，生成AOT dll
+            // 桥接函数生成依赖于AOT dll，必须保证已经build过，生成AOT dll
             MethodBridgeGeneratorCommand.GenerateMethodBridgeAndReversePInvokeWrapper(target);
             HybridCLRExtensionTool.CopyAotDllsToProject(target);
 #endif
