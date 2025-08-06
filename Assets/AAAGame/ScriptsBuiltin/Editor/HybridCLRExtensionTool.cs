@@ -235,11 +235,17 @@ namespace UGF.EditorTools
         private static void RefreshPlayerSettings()
         {
 #if DISABLE_HYBRIDCLR
-            PlayerSettings.gcIncremental = true;
+            //PlayerSettings.gcIncremental = true;
 #else
-            PlayerSettings.gcIncremental = false;
+            //PlayerSettings.gcIncremental = false; //HybridCLR 4.0起支持增量gc
+#if UNITY_6000_0_OR_NEWER
+            PlayerSettings.SetScriptingBackend(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), ScriptingImplementation.IL2CPP);
+#else
             PlayerSettings.SetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup, ScriptingImplementation.IL2CPP);
-#if UNITY_2021_1_OR_NEWER
+#endif
+#if UNITY_6000_0_OR_NEWER
+            PlayerSettings.SetApiCompatibilityLevel(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), ApiCompatibilityLevel.NET_Unity_4_8);
+#elif UNITY_2021_1_OR_NEWER                      
             PlayerSettings.SetApiCompatibilityLevel(EditorUserBuildSettings.selectedBuildTargetGroup, ApiCompatibilityLevel.NET_Unity_4_8);
 #else
         PlayerSettings.SetApiCompatibilityLevel(EditorUserBuildSettings.selectedBuildTargetGroup, ApiCompatibilityLevel.NET_4_6);
