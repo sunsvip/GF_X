@@ -1,25 +1,25 @@
 {
   "dependencies": {
     "com.code-philosophy.hybridclr": {
-      "version": "https://gitee.com/focus-creative-games/hybridclr_unity.git#v8.3.0",
+      "version": "https://gitee.com/focus-creative-games/hybridclr_unity.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "ee7af5c5926c12402b3ccd121408646f1cf3128f"
+      "hash": "73654e76d28386dbc7766f803e2cb7a243e331e6"
     },
     "com.code-philosophy.obfuz": {
       "version": "https://gitee.com/focus-creative-games/obfuz.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "083ddd303506c2c348d78f031dad33bc771cb27e"
+      "hash": "739fcb24c509421ed7a4c43868bbd6825dddc4f7"
     },
     "com.code-philosophy.obfuz4hybridclr": {
       "version": "https://gitee.com/focus-creative-games/obfuz4hybridclr.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "97be9b0709ba455eeb00d013546ac37fc421077f"
+      "hash": "59804e17a0d1562ca0f847db986ed93b25825b6d"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
