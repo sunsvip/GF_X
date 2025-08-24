@@ -100,8 +100,8 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
         if (!isShutdown)
         {
             Params.CloseCallback?.Invoke(this);
-            ReferencePool.Release(Params);
             CloseAllSubUIForms();
+            ReferencePool.Release(Params);
         }
         UnspawnAllItemObjects();
         base.OnClose(isShutdown, userData);
@@ -160,6 +160,7 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
         foreach (var item in m_ItemPools)
         {
             item.ReleaseAllUnused();
+            
             item.UnspawnAll();
         }
     }
@@ -186,11 +187,14 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
     /// <returns></returns>
     protected T SpawnItem<T>(GameObject itemTemple, Transform instanceRoot, float autoReleaseInterval = 5f, int capacity = 50, float expireTime = 50) where T : UIItemObject, new()
     {
-        var itemTempleId = itemTemple.GetInstanceID().ToString();
+        var itemTempleId = GetItemPoolId(itemTemple);
         GameFramework.ObjectPool.IObjectPool<T> pool;
         if (GF.ObjectPool.HasObjectPool<T>(itemTempleId))
         {
             pool = GF.ObjectPool.GetObjectPool<T>(itemTempleId);
+            pool.AutoReleaseInterval = autoReleaseInterval;
+            pool.Capacity = capacity;
+            pool.ExpireTime = expireTime;
         }
         else
         {
@@ -207,6 +211,10 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
             pool.Register(spawn, true);
         }
         return spawn;
+    }
+    string GetItemPoolId(GameObject itemTemple)
+    {
+        return Utility.Text.Format("{0}.{1}", gameObject.GetInstanceID(), itemTemple.GetInstanceID());
     }
     /// <summary>
     /// 从对象池回收Item
@@ -226,7 +234,7 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
     /// <param name="itemInstance">要回收的Item实例</param>
     protected void UnspawnItem<T>(GameObject itemTemple, GameObject itemInstance) where T : UIItemObject, new()
     {
-        var itemTempleId = itemTemple.GetInstanceID().ToString();
+        var itemTempleId = GetItemPoolId(itemTemple);
         if (!GF.ObjectPool.HasObjectPool<T>(itemTempleId)) return;
 
         var pool = GF.ObjectPool.GetObjectPool<T>(itemTempleId);
@@ -239,7 +247,7 @@ public class UIFormBase : UIFormLogic, ISerializeFieldTool
     /// <param name="itemTemple"></param>
     protected void UnspawnAllItem<T>(GameObject itemTemple) where T : UIItemObject, new()
     {
-        var itemTempleId = itemTemple.GetInstanceID().ToString();
+        var itemTempleId = GetItemPoolId(itemTemple);
         if (!GF.ObjectPool.HasObjectPool<T>(itemTempleId)) return;
 
         var pool = GF.ObjectPool.GetObjectPool<T>(itemTempleId);
