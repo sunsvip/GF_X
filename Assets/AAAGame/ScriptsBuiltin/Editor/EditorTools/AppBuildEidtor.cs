@@ -751,9 +751,9 @@ namespace UGF.EditorTools
             AssetBuildHandler.RefreshResourceRule();
             m_Controller.OutputPackedSelected = (AppSettings.Instance.ResourceMode != ResourceMode.Package) && HasPackedResource();
             AssetBuildHandler.AutoResolveAbDuplicateAssets(false, m_Controller.OutputPackedSelected);
-#if !DISABLE_HYBRIDCLR
-            HybridCLRExtensionTool.CompileTargetDll();
-#endif
+//#if !DISABLE_HYBRIDCLR
+//            HybridCLRExtensionTool.CompileTargetDll();
+//#endif
             m_OrderBuildResources = true;
         }
         /// <summary>

@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using GameFramework;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,7 +22,10 @@ namespace UGF.EditorTools
 
         public void OnPreprocessPlatform(Platform platform, string workingPath, bool outputPackageSelected, string outputPackagePath, bool outputFullSelected, string outputFullPath, bool outputPackedSelected, string outputPackedPath)
         {
-
+#if !DISABLE_HYBRIDCLR
+            var buildTarget = GetBuildTarget(platform);
+            HybridCLRExtensionTool.CompileTargetDll(false, buildTarget);
+#endif
         }
 
         public void OnBuildAssetBundlesComplete(Platform platform, string workingPath, bool outputPackageSelected, string outputPackagePath, bool outputFullSelected, string outputFullPath, bool outputPackedSelected, string outputPackedPath, AssetBundleManifest assetBundleManifest)
@@ -112,7 +116,41 @@ namespace UGF.EditorTools
             };
             File.WriteAllText(outputVersionFile, UtilityBuiltin.Json.ToJson(outputVersionInfo));
         }
+        public static BuildTarget GetBuildTarget(Platform platform)
+        {
+            switch (platform)
+            {
+                case Platform.Windows:
+                    return BuildTarget.StandaloneWindows;
 
+                case Platform.Windows64:
+                    return BuildTarget.StandaloneWindows64;
+
+                case Platform.MacOS:
+#if UNITY_2017_3_OR_NEWER
+                    return BuildTarget.StandaloneOSX;
+#else
+                    return BuildTarget.StandaloneOSXUniversal;
+#endif
+                case Platform.Linux:
+                    return BuildTarget.StandaloneLinux64;
+
+                case Platform.IOS:
+                    return BuildTarget.iOS;
+
+                case Platform.Android:
+                    return BuildTarget.Android;
+
+                case Platform.WindowsStore:
+                    return BuildTarget.WSAPlayer;
+
+                case Platform.WebGL:
+                    return BuildTarget.WebGL;
+
+                default:
+                    throw new GameFrameworkException("Platform is invalid."); //GF默认支持以上平台，其它平台可自行添加扩展枚举类型
+            }
+        }
 
         [MenuItem("Game Framework/Resource Tools/Resolve Duplicate Assets【解决AB资源重复依赖冗余】", false, 100)]
         static void RefreshSharedAssets()

@@ -42,6 +42,10 @@ namespace UGF.EditorTools
         public static void CompileTargetDll(bool copyAotDlls)
         {
             var activeTarget = EditorUserBuildSettings.activeBuildTarget;
+            CompileTargetDll(copyAotDlls, activeTarget);
+        }
+        public static void CompileTargetDll(bool copyAotDlls, BuildTarget activeTarget)
+        {
             //Obfuz4HybridCLR.PrebuildCommandExt.CompileAndObfuscateDll();
             HybridCLR.Editor.Commands.CompileDllCommand.CompileDll(activeTarget);
             if (AppBuildSettings.Instance.EnableObfuz)
