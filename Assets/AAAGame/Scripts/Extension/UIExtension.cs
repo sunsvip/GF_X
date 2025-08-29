@@ -53,6 +53,7 @@ public static class UIExtension
     {
         return UtilityEx.IsPointerOverUIObject(mousePosition);
     }
+
     /// <summary>
     /// 世界坐标转换到UI屏幕坐标
     /// </summary>
@@ -81,7 +82,7 @@ public static class UIExtension
             return;
         }
 
-        GF.Resource.LoadAsset(atlasName, new GameFramework.Resource.LoadAssetCallbacks((string assetName, object asset, float duration, object userData) =>
+        GF.Resource.LoadAsset(atlasName, typeof(SpriteAtlas), new GameFramework.Resource.LoadAssetCallbacks((string assetName, object asset, float duration, object userData) =>
         {
             var spAtlas = asset as SpriteAtlas;
             onSpriteAtlasLoaded.Invoke(spAtlas);
@@ -100,13 +101,9 @@ public static class UIExtension
             Log.Warning("UIExtension.SetSprite()失败, 资源不存在:{0}", spriteName);
             return;
         }
-        GF.Resource.LoadAsset(spriteName, new GameFramework.Resource.LoadAssetCallbacks((string assetName, object asset, float duration, object userData) =>
+        GF.Resource.LoadAsset(spriteName, typeof(Sprite), new GameFramework.Resource.LoadAssetCallbacks((string assetName, object asset, float duration, object userData) =>
         {
             Sprite resultSp = asset as Sprite;
-            if (resultSp == null && asset != null && asset is Texture2D tex2d)
-            {
-                resultSp = Sprite.Create(tex2d, new Rect(0, 0, tex2d.width, tex2d.height), Vector2.one * 0.5f);
-            }
             onSpriteLoaded.Invoke(resultSp);
         }));
     }
@@ -123,7 +120,7 @@ public static class UIExtension
             Log.Warning("UIExtension.LoadTexture()失败, 资源不存在:{0}", spriteName);
             return;
         }
-        GF.Resource.LoadAsset(spriteName, new GameFramework.Resource.LoadAssetCallbacks((string assetName, object asset, float duration, object userData) =>
+        GF.Resource.LoadAsset(spriteName, typeof(Texture2D), new GameFramework.Resource.LoadAssetCallbacks((string assetName, object asset, float duration, object userData) =>
         {
             Texture2D resultSp = asset as Texture2D;
             onSpriteLoaded.Invoke(resultSp);
