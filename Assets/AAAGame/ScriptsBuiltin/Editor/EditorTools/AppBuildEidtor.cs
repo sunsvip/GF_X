@@ -212,7 +212,7 @@ namespace UGF.EditorTools
                 {
                     EditorGUILayout.BeginVertical();
                     {
-                        EditorGUILayout.LabelField("Platforms", EditorStyles.boldLabel);
+                        EditorGUILayout.LabelField("Resource Platforms", EditorStyles.boldLabel);
                         EditorGUILayout.BeginHorizontal("box");
                         {
                             EditorGUILayout.BeginVertical();
