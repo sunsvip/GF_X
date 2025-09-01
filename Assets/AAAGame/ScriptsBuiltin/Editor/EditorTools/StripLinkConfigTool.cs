@@ -20,10 +20,10 @@ namespace UGF.EditorTools
         public static string[] GetProjectAssemblyDlls()
         {
             List<string> dlls = new List<string>();
-#if DISABLE_HYBRIDCLR
-            var dllDir = HybridCLRExtensionTool.GetStripAssembliesDir(EditorUserBuildSettings.activeBuildTarget);
-#else
+#if ENABLE_HYBRIDCLR
             var dllDir = HybridCLR.Editor.SettingsUtil.GetAssembliesPostIl2CppStripDir(EditorUserBuildSettings.activeBuildTarget);
+#else
+            var dllDir = HybridCLRExtensionTool.GetStripAssembliesDir(EditorUserBuildSettings.activeBuildTarget);
 #endif
             if (!Directory.Exists(dllDir))
             {

@@ -34,7 +34,7 @@ public class LoadHotfixDllProcedure : ProcedureBase
     protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
     {
         base.OnEnter(procedureOwner);
-#if !DISABLE_HYBRIDCLR
+#if ENABLE_HYBRIDCLR
         GFBuiltin.Event.Subscribe(LoadHotfixDllEventArgs.EventId, OnLoadHotfixDllCallback);
 #endif
         PreloadAndInitData();
@@ -43,7 +43,7 @@ public class LoadHotfixDllProcedure : ProcedureBase
 
     protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
     {
-#if !DISABLE_HYBRIDCLR
+#if ENABLE_HYBRIDCLR
         GFBuiltin.Event.Unsubscribe(LoadHotfixDllEventArgs.EventId, OnLoadHotfixDllCallback);
 #endif
         base.OnLeave(procedureOwner, isShutdown);
@@ -67,7 +67,7 @@ public class LoadHotfixDllProcedure : ProcedureBase
                 Log.Fatal("游戏启动失败, 未找到HotfixEntry.StartHotfixLogic入口函数");
                 return;
             }
-#if !DISABLE_HYBRIDCLR
+#if ENABLE_HYBRIDCLR
             entryFunc.Invoke(null, new object[] { true });
 #else
             entryFunc.Invoke(null, new object[] { false });
@@ -86,8 +86,8 @@ public class LoadHotfixDllProcedure : ProcedureBase
         loadedProgress = 0;
         hotfixListIsLoaded = true;
 
-        //#if !UNITY_EDITOR && !DISABLE_HYBRIDCLR
-#if !DISABLE_HYBRIDCLR
+        //#if !UNITY_EDITOR && ENABLE_HYBRIDCLR
+#if ENABLE_HYBRIDCLR
         if (!GFBuiltin.Base.EditorResourceMode)
         {
             hotfixListIsLoaded = false;
@@ -96,7 +96,7 @@ public class LoadHotfixDllProcedure : ProcedureBase
         }
 #endif
     }
-#if !DISABLE_HYBRIDCLR
+#if ENABLE_HYBRIDCLR
     /// <summary>
     /// 补充元数据
     /// </summary>

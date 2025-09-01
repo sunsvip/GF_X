@@ -394,7 +394,6 @@ namespace UGF.EditorTools
         {
             procedures ??= new ItemData[0];
             ArrayUtility.Clear(ref procedures);
-            //#if !DISABLE_HYBRIDCLR
             var hotfixDlls = Utility.Assembly.GetAssemblies().Where(dll => HybridCLR.Editor.SettingsUtil.HotUpdateAssemblyNamesIncludePreserved.Contains(dll.GetName().Name)).ToArray();
 
             foreach (var item in hotfixDlls)
@@ -406,7 +405,6 @@ namespace UGF.EditorTools
                     ArrayUtility.Add(ref procedures, new ItemData(cfg.Procedures.Contains(proceName), proceName));
                 }
             }
-            //#endif
         }
     }
 
