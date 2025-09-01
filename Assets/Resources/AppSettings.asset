@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AppSettings
   m_EditorClassIdentifier: 
   DebugMode: 1
-  ResourceMode: 2
+  ResourceMode: 1
   CheckVersionUrl: http://localhost/1_0_0_1/
   DesignResolution: {x: 1080, y: 2340}
   EncryptAOTDlls:

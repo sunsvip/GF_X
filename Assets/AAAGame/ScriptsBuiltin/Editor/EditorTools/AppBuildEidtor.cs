@@ -751,9 +751,6 @@ namespace UGF.EditorTools
             AssetBuildHandler.RefreshResourceRule();
             m_Controller.OutputPackedSelected = (AppSettings.Instance.ResourceMode != ResourceMode.Package) && HasPackedResource();
             AssetBuildHandler.AutoResolveAbDuplicateAssets(false, m_Controller.OutputPackedSelected);
-//#if !DISABLE_HYBRIDCLR
-//            HybridCLRExtensionTool.CompileTargetDll();
-//#endif
             m_OrderBuildResources = true;
         }
         /// <summary>
@@ -792,7 +789,7 @@ namespace UGF.EditorTools
                 bool buildAppReady = !m_Controller.OutputPackedSelected;
                 if (m_Controller.OutputPackedSelected) //热更资源进包
                 {
-#if !DISABLE_HYBRIDCLR
+#if ENABLE_HYBRIDCLR
                     HybridCLRExtensionTool.CompileTargetDll(false);
 #endif
                     AssetBuildHandler.AutoResolveAbDuplicateAssets(false, true);
@@ -832,7 +829,7 @@ namespace UGF.EditorTools
 
         private void PrepareBuildApp(bool generateAotDll = false)
         {
-#if !DISABLE_HYBRIDCLR
+#if ENABLE_HYBRIDCLR
             GenerateHotfixCodeStripConfig(false);
             HybridCLRGenerateAll(generateAotDll);
 #else

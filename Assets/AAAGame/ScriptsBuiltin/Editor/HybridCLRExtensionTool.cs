@@ -22,7 +22,7 @@ namespace UGF.EditorTools
 {
     public class HybridCLRExtensionTool
     {
-        public const string DISABLE_HYBRIDCLR = "DISABLE_HYBRIDCLR";
+        public const string ENABLE_HYBRIDCLR = "ENABLE_HYBRIDCLR";
         public const string ENABLE_OBFUZ = "ENABLE_OBFUZ";
         [MenuItem("HybridCLR/CompileDll And Copy[生成热更dll]", false, 4)]
         public static void CompileTargetDll()
@@ -148,30 +148,6 @@ namespace UGF.EditorTools
             return failList.ToArray();
         }
 
-        public static void EnableHybridCLR()
-        {
-#if UNITY_2021_1_OR_NEWER
-            var bTarget = GetCurrentNamedBuildTarget();
-            PlayerSettings.GetScriptingDefineSymbols(bTarget, out string[] defines);
-#else
-        var bTarget = GetCurrentBuildTarget();
-        PlayerSettings.GetScriptingDefineSymbolsForGroup(bTarget, out string[] defines);
-#endif
-            if (ArrayUtility.Contains(defines, DISABLE_HYBRIDCLR))
-            {
-                ArrayUtility.Remove<string>(ref defines, DISABLE_HYBRIDCLR);
-#if UNITY_2021_1_OR_NEWER
-                PlayerSettings.SetScriptingDefineSymbols(bTarget, defines);
-#else
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(bTarget, defines);
-#endif
-            }
-            RefreshPlayerSettings();
-            RefreshAssemblyDefinition(false);
-            HybridCLR.Editor.Settings.HybridCLRSettings.Instance.enable = true;
-            HybridCLR.Editor.Settings.HybridCLRSettings.Save();
-            //EditorUtility.DisplayDialog("HybridCLR", "切换到热更模式,已启用HybridCLR热更! 记得在ResourceEditor中添加热更dll资源.", "知道了");
-        }
         public static void DisableHybridCLR()
         {
 #if UNITY_2021_1_OR_NEWER
@@ -181,9 +157,9 @@ namespace UGF.EditorTools
         var bTarget = GetCurrentBuildTarget();
         PlayerSettings.GetScriptingDefineSymbolsForGroup(bTarget, out string[] defines);
 #endif
-            if (!ArrayUtility.Contains(defines, DISABLE_HYBRIDCLR))
+            if (ArrayUtility.Contains(defines, ENABLE_HYBRIDCLR))
             {
-                ArrayUtility.Add<string>(ref defines, DISABLE_HYBRIDCLR);
+                ArrayUtility.Remove<string>(ref defines, ENABLE_HYBRIDCLR);
 #if UNITY_2021_1_OR_NEWER
                 PlayerSettings.SetScriptingDefineSymbols(bTarget, defines);
 #else
@@ -194,7 +170,29 @@ namespace UGF.EditorTools
             RefreshAssemblyDefinition(true);
             HybridCLR.Editor.Settings.HybridCLRSettings.Instance.enable = false;
             HybridCLR.Editor.Settings.HybridCLRSettings.Save();
-            //EditorUtility.DisplayDialog("HybridCLR", "切换到单机模式,已禁用HybridCLR热更! 记得在ResourceEditor中移除热更dll资源.", "知道了");
+        }
+        public static void EnableHybridCLR()
+        {
+#if UNITY_2021_1_OR_NEWER
+            var bTarget = GetCurrentNamedBuildTarget();
+            PlayerSettings.GetScriptingDefineSymbols(bTarget, out string[] defines);
+#else
+        var bTarget = GetCurrentBuildTarget();
+        PlayerSettings.GetScriptingDefineSymbolsForGroup(bTarget, out string[] defines);
+#endif
+            if (!ArrayUtility.Contains(defines, ENABLE_HYBRIDCLR))
+            {
+                ArrayUtility.Add<string>(ref defines, ENABLE_HYBRIDCLR);
+#if UNITY_2021_1_OR_NEWER
+                PlayerSettings.SetScriptingDefineSymbols(bTarget, defines);
+#else
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(bTarget, defines);
+#endif
+            }
+            RefreshPlayerSettings();
+            RefreshAssemblyDefinition(false);
+            HybridCLR.Editor.Settings.HybridCLRSettings.Instance.enable = true;
+            HybridCLR.Editor.Settings.HybridCLRSettings.Save();
         }
         public static void DisableObfuz()
         {
@@ -238,10 +236,7 @@ namespace UGF.EditorTools
         }
         private static void RefreshPlayerSettings()
         {
-#if DISABLE_HYBRIDCLR
-            //PlayerSettings.gcIncremental = true;
-#else
-            //PlayerSettings.gcIncremental = false; //HybridCLR 4.0起支持增量gc
+#if ENABLE_HYBRIDCLR
 #if UNITY_6000_0_OR_NEWER
             PlayerSettings.SetScriptingBackend(NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup), ScriptingImplementation.IL2CPP);
 #else

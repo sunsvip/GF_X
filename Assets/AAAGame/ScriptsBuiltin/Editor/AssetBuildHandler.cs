@@ -22,7 +22,7 @@ namespace UGF.EditorTools
 
         public void OnPreprocessPlatform(Platform platform, string workingPath, bool outputPackageSelected, string outputPackagePath, bool outputFullSelected, string outputFullPath, bool outputPackedSelected, string outputPackedPath)
         {
-#if !DISABLE_HYBRIDCLR
+#if ENABLE_HYBRIDCLR
             var buildTarget = GetBuildTarget(platform);
             HybridCLRExtensionTool.CompileTargetDll(false, buildTarget);
 #endif
