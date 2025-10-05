@@ -63,9 +63,8 @@ public partial class ProjectPanelRightClickExtension
         {
             return;
         }
-
-        Sprite[] sprites = new Sprite[atlas.spriteCount];
-        atlas.GetSprites(sprites);
+        var getSpritesFunc = typeof(SpriteAtlasExtensions).GetMethod("GetPackedSprites", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        Sprite[] sprites = getSpritesFunc.Invoke(null, new object[] { atlas }) as Sprite[];
         System.Array.Sort<Sprite>(sprites, (a, b) => a.name.CompareTo(b.name));
         TMP_SpriteAsset spriteAsset;
         if (File.Exists(tmpSpriteAssetName))
@@ -254,8 +253,8 @@ public partial class ProjectPanelRightClickExtension
     static SpriteRect[] GetSpriteRects(SpriteAtlas atlas)
     {
         if (atlas == null || atlas.spriteCount == 0) return null;
-        Sprite[] sprites = new Sprite[atlas.spriteCount];
-        atlas.GetSprites(sprites);
+        var getSpritesFunc = typeof(SpriteAtlasExtensions).GetMethod("GetPackedSprites", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        Sprite[] sprites = getSpritesFunc.Invoke(null, new object[] { atlas }) as Sprite[];
         SpriteRect[] spriteRects = new SpriteRect[sprites.Length];
         var spNameTrim = "(Clone)".Length;
         for (int i = 0; i < sprites.Length; i++)
