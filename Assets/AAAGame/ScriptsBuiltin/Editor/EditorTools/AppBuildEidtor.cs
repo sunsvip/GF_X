@@ -480,6 +480,7 @@ namespace UGF.EditorTools
         }
         private void RefreshObfuzEnable()
         {
+            if (Obfuz.Settings.ObfuzSettings.Instance == null || Obfuz.Settings.ObfuzSettings.Instance.buildPipelineSettings == null) return;
             Obfuz.Settings.ObfuzSettings.Instance.buildPipelineSettings.enable = AppBuildSettings.Instance.EnableObfuz;
             if (AppBuildSettings.Instance.EnableObfuz)
             {

@@ -33,6 +33,127 @@ public partial class ProjectPanelRightClickExtension
             }
         }
     }
+    [MenuItem("Assets/GF Tools/2D/SpriteAtlas -> SpriteGirdSheet", priority = 102)]
+    static void SpriteAtlas2SpriteGirdSheetMenu()
+    {
+        var objs = Selection.objects;
+        if (objs.Length == 0) return;
+        foreach (var item in objs)
+        {
+            if (item is SpriteAtlas spAtlas)
+            {
+                if (spAtlas.spriteCount == 0) continue;
+                var sprites = new Sprite[spAtlas.spriteCount];
+                spAtlas.GetSprites(sprites);
+                System.Array.Sort<Sprite>(sprites, (a, b) => a.name.CompareTo(b.name));
+                string srcFileName = AssetDatabase.GetAssetPath(spAtlas);
+                string srcFileDir = Path.GetDirectoryName(srcFileName);
+                string srcFileNameWithoutExtension = Path.GetFileNameWithoutExtension(srcFileName);
+                string textureFileName = UtilityBuiltin.AssetsPath.GetCombinePath(srcFileDir, srcFileNameWithoutExtension + "_girdsheet.png");
+                Sprites2SpriteAtlas(sprites, textureFileName);
+            }
+        }
+    }
+    public static void Sprites2SpriteAtlas(Sprite[] sprites, string outpathFileName, int row = 1)
+    {
+        if (sprites == null || sprites.Length == 0 || row < 1) return;
+        // 计算最大单元格尺寸
+        int cellWidth = 0;
+        int cellHeight = 0;
+        foreach (Sprite sprite in sprites)
+        {
+            int width = (int)sprite.rect.width;
+            int height = (int)sprite.rect.height;
+            if (width > cellWidth) cellWidth = width;
+            if (height > cellHeight) cellHeight = height;
+        }
+
+        // 计算行列布局
+        int cols = Mathf.CeilToInt(sprites.Length / (float)row);
+        int atlasWidth = cols * cellWidth;
+        int atlasHeight = row * cellHeight;
+
+        // 创建目标纹理
+        Texture2D atlasTex = new Texture2D(atlasWidth, atlasHeight, TextureFormat.ARGB32, false);
+        ClearTexture(atlasTex);
+
+        List<Texture2D> tempTextures = new List<Texture2D>(); // 存储临时纹理
+
+        // 遍历所有精灵进行排列
+        for (int i = 0; i < sprites.Length; i++)
+        {
+            Sprite sprite = sprites[i];
+            Texture2D srcTex = sprite.texture;
+            Rect srcRect = sprite.textureRect;
+            // 处理不可读纹理
+            if (!srcTex.isReadable)
+            {
+                // 创建临时可读副本
+                RenderTexture rt = RenderTexture.GetTemporary(
+                    srcTex.width,
+                    srcTex.height,
+                    0, RenderTextureFormat.ARGB32
+                );
+                Graphics.Blit(srcTex, rt);
+
+                Texture2D tempTex = new Texture2D(
+                    (int)srcTex.width,
+                    (int)srcTex.height,
+                    TextureFormat.ARGB32,
+                    false
+                );
+
+                RenderTexture.active = rt;
+                tempTex.ReadPixels(new Rect(0, 0, srcTex.width, srcTex.height), 0, 0);
+                tempTex.Apply();
+                RenderTexture.active = null;
+                RenderTexture.ReleaseTemporary(rt);
+
+                srcTex = tempTex;
+                tempTextures.Add(tempTex); // 记录以便后续清理
+            }
+
+            // 获取源像素数据
+            Color[] pixels = srcTex.GetPixels(
+                (int)srcRect.x,
+                (int)srcRect.y,
+                (int)srcRect.width,
+                (int)srcRect.height
+            );
+
+            // 计算目标位置（居中显示）
+            int rowIndex = i / cols;
+            int colIndex = i % cols;
+            int destX = colIndex * cellWidth + (cellWidth - (int)srcRect.width) / 2;
+            int destY = (row - 1 - rowIndex) * cellHeight + (cellHeight - (int)srcRect.height) / 2;
+
+            // 写入像素数据
+            atlasTex.SetPixels(destX, destY, (int)srcRect.width, (int)srcRect.height, pixels);
+        }
+
+        atlasTex.Apply();
+
+        // 保存文件
+        byte[] pngData = atlasTex.EncodeToPNG();
+        File.WriteAllBytes(outpathFileName, pngData);
+
+        // 清理资源
+        foreach (Texture2D tempTex in tempTextures)
+        {
+            Object.DestroyImmediate(tempTex);
+        }
+        Object.DestroyImmediate(atlasTex);
+        AssetDatabase.Refresh();
+    }
+    private static void ClearTexture(Texture2D tex)
+    {
+        Color[] clearColors = new Color[tex.width * tex.height];
+        for (int i = 0; i < clearColors.Length; i++)
+        {
+            clearColors[i] = Color.clear;
+        }
+        tex.SetPixels(clearColors);
+    }
     public static void SpriteAtlas2SpriteSheet(SpriteAtlas atlas)
     {
         string srcFileName = AssetDatabase.GetAssetPath(atlas);
