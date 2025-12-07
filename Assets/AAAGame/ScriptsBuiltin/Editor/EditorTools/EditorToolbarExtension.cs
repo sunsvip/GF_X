@@ -1,14 +1,16 @@
-using UnityEngine;
-using UnityEditor;
+using GameFramework;
 using System;
 using System.Collections.Generic;
-using GameFramework;
 using System.Linq;
 using System.Reflection;
-using UnityEditor.SceneManagement;
-using UnityEngine.SceneManagement;
 using Unity.CodeEditor;
-
+using UnityEditor;
+using UnityEditor.SceneManagement;
+#if UNITY_6000_3_OR_NEWER
+using UnityEditor.Toolbars;
+#endif
+using UnityEngine;
+using UnityEngine.SceneManagement;
 namespace UGF.EditorTools
 {
     public class EditorToolbarExtension
@@ -37,14 +39,54 @@ namespace UGF.EditorTools
             openCsProjectBtContent = EditorGUIUtility.TrTextContentWithIcon("Open C# Project", "打开C#工程", "dll Script Icon");
             EditorSceneManager.sceneOpened += OnSceneOpened;
             ScanEditorToolClass();
-
+#if !UNITY_6000_3_OR_NEWER
             UnityEditorToolbar.RightToolbarGUI.Add(OnRightToolbarGUI);
             UnityEditorToolbar.LeftToolbarGUI.Add(OnLeftToolbarGUI);
+#endif
         }
-
+#if UNITY_6000_3_OR_NEWER
+        [MainToolbarElement("GF_X/Scene", defaultDockIndex = 1, defaultDockPosition = MainToolbarDockPosition.Middle)]
+        public static MainToolbarElement SceneSelectionButton()
+        {
+            var content = new MainToolbarContent(switchSceneBtContent.text, switchSceneBtContent.image as Texture2D, switchSceneBtContent.tooltip);
+            return new MainToolbarDropdown(content, (rect) => { DrawSwithSceneDropdownMenus(); });
+        }
+        [MainToolbarElement("GF_X/App Builder", defaultDockIndex = 2, defaultDockPosition = MainToolbarDockPosition.Middle)]
+        public static MainToolbarElement AppBuilderButton()
+        {
+            var content = new MainToolbarContent(buildBtContent.text, buildBtContent.image as Texture2D, buildBtContent.tooltip);
+            return new MainToolbarButton(content, () => { AppBuilderEidtor.Open(); });
+        }
+        [MainToolbarElement("GF_X/App Configs", defaultDockIndex = 3, defaultDockPosition = MainToolbarDockPosition.Middle)]
+        public static MainToolbarElement AppConfigsButton()
+        {
+            var content = new MainToolbarContent(appConfigBtContent.text, appConfigBtContent.image as Texture2D, appConfigBtContent.tooltip);
+            return new MainToolbarButton(content, () =>
+            {
+                var config = AppConfigs.GetInstanceEditor();
+                Selection.activeObject = config;
+                //EditorUtility.OpenPropertyEditor(config);
+            });
+        }
+        [MainToolbarElement("GF_X/Tools", defaultDockIndex = 4, defaultDockPosition = MainToolbarDockPosition.Middle)]
+        public static MainToolbarElement ToolsButton()
+        {
+            var content = new MainToolbarContent(toolsDropBtContent.text, toolsDropBtContent.image as Texture2D, toolsDropBtContent.tooltip);
+            return new MainToolbarDropdown(content, (rect) => { DrawEditorToolDropdownMenus(); });
+        }
+        [MainToolbarElement("GF_X/App Configs", defaultDockIndex = 5, defaultDockPosition = MainToolbarDockPosition.Middle)]
+        public static MainToolbarElement OpenScriptsButton()
+        {
+            var content = new MainToolbarContent(openCsProjectBtContent.text, openCsProjectBtContent.image as Texture2D, openCsProjectBtContent.tooltip);
+            return new MainToolbarButton(content, () => { OpenCSharpProject(); });
+        }
+#endif
         private static void OnSceneOpened(Scene scene, OpenSceneMode mode)
         {
             switchSceneBtContent.text = scene.name;
+#if UNITY_6000_3_OR_NEWER
+            MainToolbar.Refresh("GF_X/Scene");
+#endif
         }
         /// <summary>
         /// 获取所有EditorTool扩展工具类,用于显示到Toolbar的Tools菜单栏
