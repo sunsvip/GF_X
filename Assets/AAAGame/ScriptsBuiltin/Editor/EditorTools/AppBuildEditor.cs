@@ -25,7 +25,7 @@ namespace UGF.EditorTools
     /// <summary>
     /// 资源生成器。
     /// </summary>
-    public class AppBuildEidtor : EditorWindow
+    public class AppBuildEditor : EditorWindow
     {
         const string BUILD_TASK_TAG = "BUILD_TASK_TAG";
         private readonly string[] keystoreExtNames = { ".keystore", ".jks", ".ks" };
@@ -50,7 +50,7 @@ namespace UGF.EditorTools
 
         public static void Open()
         {
-            AppBuildEidtor window = GetWindow<AppBuildEidtor>("App Builder", true);
+            AppBuildEditor window = GetWindow<AppBuildEditor>("App Builder", true);
 #if UNITY_2019_3_OR_NEWER
             window.minSize = new Vector2(800f, 800f);
 #else
