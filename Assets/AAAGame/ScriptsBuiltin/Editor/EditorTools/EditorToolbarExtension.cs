@@ -55,7 +55,7 @@ namespace UGF.EditorTools
         public static MainToolbarElement AppBuilderButton()
         {
             var content = new MainToolbarContent(buildBtContent.text, buildBtContent.image as Texture2D, buildBtContent.tooltip);
-            return new MainToolbarButton(content, () => { AppBuilderEidtor.Open(); });
+            return new MainToolbarButton(content, () => { AppBuildEditor.Open(); });
         }
         [MainToolbarElement("GF_X/App Configs", defaultDockIndex = 3, defaultDockPosition = MainToolbarDockPosition.Middle)]
         public static MainToolbarElement AppConfigsButton()
@@ -115,7 +115,7 @@ namespace UGF.EditorTools
             EditorGUILayout.Space(10);
             if (GUILayout.Button(buildBtContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(125)))
             {
-                AppBuildEidtor.Open();
+                AppBuildEditor.Open();
             }
         }
 
@@ -128,7 +128,7 @@ namespace UGF.EditorTools
             //EditorGUILayout.Space(10);
             //if (GUILayout.Button(buildBtContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(125)))
             //{
-            //    AppBuildEidtor.Open();
+            //    AppBuildEditor.Open();
             //}
             //EditorGUILayout.Space(10);
             if (GUILayout.Button(appConfigBtContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(100)))
