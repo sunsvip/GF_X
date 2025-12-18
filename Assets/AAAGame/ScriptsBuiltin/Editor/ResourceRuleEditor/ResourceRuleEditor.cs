@@ -9,6 +9,7 @@ using UnityEditorInternal;
 using UnityGameFramework.Editor.ResourceTools;
 using GFResource = UnityGameFramework.Editor.ResourceTools.Resource;
 using UnityEngine.Windows;
+using System.Text.RegularExpressions;
 
 namespace UGF.EditorTools.ResourceTools
 {
@@ -34,17 +35,21 @@ namespace UGF.EditorTools.ResourceTools
         public static void Open()
         {
             ResourceRuleEditor window = GetWindow<ResourceRuleEditor>(true, "Resource Rule Editor", true);
-            window.minSize = new Vector2(1555f, 420f);
+            window.minSize = new Vector2(1260f, 420f);
         }
 
         [OnOpenAsset]
         public static bool OnOpenAsset(int instanceID, int line)
         {
+#if UNITY_6000_3_OR_NEWER
+            var config = EditorUtility.EntityIdToObject(instanceID) as ResourceRuleEditorData;
+#else
             var config = EditorUtility.InstanceIDToObject(instanceID) as ResourceRuleEditorData;
+#endif
             if (config != null)
             {
                 ResourceRuleEditor window = GetWindow<ResourceRuleEditor>(true, "Resource Rule Editor", true);
-                window.minSize = new Vector2(1555f, 420f);
+                window.minSize = new Vector2(1260f, 420f);
                 window.m_CurrentConfigPath = AssetDatabase.GetAssetPath(config);
                 window.Load();
                 return true;
@@ -194,7 +199,7 @@ namespace UGF.EditorTools.ResourceTools
             rule.valid = EditorGUI.Toggle(r, rule.valid);
 
             r.xMin = r.xMax + GAP;
-            r.xMax = r.xMax + 425;
+            r.xMax = r.xMax + 225;
             float assetBundleNameLength = r.width;
             rule.name = EditorGUI.TextField(r, rule.name);
 
@@ -242,8 +247,12 @@ namespace UGF.EditorTools.ResourceTools
             rule.filterType = (ResourceFilterType)EditorGUI.EnumPopup(r, rule.filterType);
 
             r.xMin = r.xMax + GAP;
-            r.xMax = rect.xMax;
+            r.xMax = r.xMin + 100;
             rule.searchPatterns = EditorGUI.TextField(r, rule.searchPatterns);
+
+            r.xMin = r.xMax + GAP;
+            r.xMax = rect.xMax;
+            rule.excludeSearchPattern = EditorGUI.TextField(r, rule.excludeSearchPattern);
         }
 
         private string SelectFolder()
@@ -308,7 +317,7 @@ namespace UGF.EditorTools.ResourceTools
             EditorGUI.TextField(r, "Active");
 
             r.xMin = r.xMax + GAP;
-            r.xMax = r.xMax + 415;
+            r.xMax = r.xMax + 215;
             float assetBundleNameLength = r.width;
             EditorGUI.TextField(r, "Name");
 
@@ -341,8 +350,11 @@ namespace UGF.EditorTools.ResourceTools
             EditorGUI.TextField(r, "Filter Type");
 
             r.xMin = r.xMax + GAP;
-            r.xMax = r.xMin + 250;
+            r.xMax = r.xMin + 100;
             EditorGUI.TextField(r, "Patterns");
+            r.xMin = r.xMax + GAP;
+            r.xMax = r.xMin + 100;
+            EditorGUI.TextField(r, "ExcludeRegexPatterns");
             GUI.enabled = true;
         }
 
@@ -423,13 +435,15 @@ namespace UGF.EditorTools.ResourceTools
                 newName, newVariant);
         }
 
-        private bool AssignAsset(string assetGuid, string resourceName, string resourceVariant)
+        private bool AssignAsset(string assetGuid, string resourceName, string resourceVariant, string excludeRegexPattern)
         {
-            if (m_ResourceCollection.AssignAsset(assetGuid, resourceName, resourceVariant))
+            if (string.IsNullOrEmpty(excludeRegexPattern) || !Regex.IsMatch(Path.GetFileName(AssetDatabase.GUIDToAssetPath(assetGuid)), excludeRegexPattern))
             {
-                return true;
+                if (m_ResourceCollection.AssignAsset(assetGuid, resourceName, resourceVariant))
+                {
+                    return true;
+                }
             }
-
             return false;
         }
 
@@ -635,7 +649,7 @@ namespace UGF.EditorTools.ResourceTools
                                 if (!m_SourceAssetExceptTypeFilterGUIDArray.Contains(assetGUID) && !m_SourceAssetExceptLabelFilterGUIDArray.Contains(assetGUID))
                                 {
                                     AssignAsset(assetGUID, resourceName,
-                                        resourceRule.variant);
+                                        resourceRule.variant, resourceRule.excludeSearchPattern);
                                 }
                             }
                         }
@@ -646,7 +660,7 @@ namespace UGF.EditorTools.ResourceTools
                     case ResourceFilterType.ChildrenFilesOnly:
                         {
                             AssignAsset(singleAssetGUID, resourceName,
-                                    resourceRule.variant);
+                                    resourceRule.variant, resourceRule.excludeSearchPattern);
                         }
                         break;
                 }

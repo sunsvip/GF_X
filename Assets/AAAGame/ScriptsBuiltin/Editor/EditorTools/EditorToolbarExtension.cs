@@ -45,6 +45,14 @@ namespace UGF.EditorTools
 #endif
         }
 #if UNITY_6000_3_OR_NEWER
+        [MenuItem("Game Framework/Show Toolbars")]
+        static void ShowToolbars()
+        {
+            var toolbarShowAll = typeof(MainToolbar).GetMethod("ShowAll", BindingFlags.NonPublic | BindingFlags.Static);
+            toolbarShowAll?.Invoke(null, new object[] { "GF_X" });
+            MainToolbar.Refresh("GF_X");
+        }
+
         [MainToolbarElement("GF_X/Scene", defaultDockIndex = 1, defaultDockPosition = MainToolbarDockPosition.Middle)]
         public static MainToolbarElement SceneSelectionButton()
         {
@@ -74,7 +82,7 @@ namespace UGF.EditorTools
             var content = new MainToolbarContent(toolsDropBtContent.text, toolsDropBtContent.image as Texture2D, toolsDropBtContent.tooltip);
             return new MainToolbarDropdown(content, (rect) => { DrawEditorToolDropdownMenus(); });
         }
-        [MainToolbarElement("GF_X/App Configs", defaultDockIndex = 5, defaultDockPosition = MainToolbarDockPosition.Middle)]
+        [MainToolbarElement("GF_X/Open Code Editor", defaultDockIndex = 5, defaultDockPosition = MainToolbarDockPosition.Middle)]
         public static MainToolbarElement OpenScriptsButton()
         {
             var content = new MainToolbarContent(openCsProjectBtContent.text, openCsProjectBtContent.image as Texture2D, openCsProjectBtContent.tooltip);
@@ -108,29 +116,22 @@ namespace UGF.EditorTools
         private static void OnLeftToolbarGUI()
         {
             GUILayout.FlexibleSpace();
+            if (GUILayout.Button(buildBtContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(125)))
+            {
+                AppBuildEditor.Open();
+            }
+            EditorGUILayout.Space(10);
             if (EditorGUILayout.DropdownButton(switchSceneBtContent, FocusType.Passive, EditorStyles.toolbarPopup, GUILayout.MaxWidth(150)))
             {
                 DrawSwithSceneDropdownMenus();
             }
             EditorGUILayout.Space(10);
-            if (GUILayout.Button(buildBtContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(125)))
-            {
-                AppBuildEditor.Open();
-            }
         }
 
         private static void OnRightToolbarGUI()
         {
-            //if (EditorGUILayout.DropdownButton(switchSceneBtContent, FocusType.Passive, EditorStyles.toolbarPopup, GUILayout.MaxWidth(150)))
-            //{
-            //    DrawSwithSceneDropdownMenus();
-            //}
-            //EditorGUILayout.Space(10);
-            //if (GUILayout.Button(buildBtContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(125)))
-            //{
-            //    AppBuildEditor.Open();
-            //}
-            //EditorGUILayout.Space(10);
+            EditorGUILayout.Space(10);
+
             if (GUILayout.Button(appConfigBtContent, EditorStyles.toolbarButton, GUILayout.MaxWidth(100)))
             {
                 var config = AppConfigs.GetInstanceEditor();
