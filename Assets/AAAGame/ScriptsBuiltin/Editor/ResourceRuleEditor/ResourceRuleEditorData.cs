@@ -23,6 +23,7 @@ namespace UGF.EditorTools.ResourceTools
         public bool packed = true;
         public ResourceFilterType filterType = ResourceFilterType.Root;
         public string searchPatterns = "*.*";
+        public string excludeSearchPattern = string.Empty;
     }
 
     public enum ResourceFilterType

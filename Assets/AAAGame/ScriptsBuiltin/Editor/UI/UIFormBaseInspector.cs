@@ -85,7 +85,11 @@ namespace UGF.EditorTools
                 varLabelGUIStyle.fontStyle = FontStyle.Bold;
                 varLabelGUIStyle.hover.textColor = Color.cyan;
             }
+#if UNITY_6000_3_OR_NEWER
+            var curDrawNode = EditorUtility.EntityIdToObject(instanceID);
+#else
             var curDrawNode = EditorUtility.InstanceIDToObject(instanceID);
+#endif
             if (curDrawNode == null) return;
             var uiForm = GetSerializeFieldTool(curDrawNode as GameObject);
             if (uiForm == null) return;

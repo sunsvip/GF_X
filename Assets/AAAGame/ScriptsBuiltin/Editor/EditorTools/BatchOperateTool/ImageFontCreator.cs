@@ -31,7 +31,7 @@ public class ImageFontCreator : UtilitySubToolBase
     private int m_FontSize;
     private int charTexInstanceId;
     private SpriteRect[] m_SpriteRects;
-    ImageFontType m_FontType = ImageFontType.Font;
+    ImageFontType m_FontType = ImageFontType.TextMeshProFont;
     bool m_NormalizeHeight = true;
     Font m_TMPBaseFont;
     public ImageFontCreator(UtilityToolEditorBase ownerEditor) : base(ownerEditor)
@@ -263,7 +263,11 @@ public class ImageFontCreator : UtilitySubToolBase
                             newFont.characterInfo = charInfoArr;
                             EditorUtility.SetDirty(newFont);
                             AssetDatabase.SaveAssetIfDirty(newFont);
+#if UNITY_6000_3_OR_NEWER
+                            Selection.activeEntityId = newFont.GetEntityId();
+#else
                             Selection.activeInstanceID = newFont.GetInstanceID();
+#endif
                         }
                         break;
                     case ImageFontType.TextMeshProFont:
@@ -316,7 +320,11 @@ public class ImageFontCreator : UtilitySubToolBase
         AssetDatabase.AddObjectToAsset(tmpMat, fontAsset);
         EditorUtility.SetDirty(fontAsset);
         AssetDatabase.SaveAssetIfDirty(fontAsset);
+#if UNITY_6000_3_OR_NEWER
+        Selection.activeEntityId = fontAsset.GetEntityId();
+#else
         Selection.activeInstanceID = fontAsset.GetInstanceID();
+#endif
     }
     private UnityEngine.TextCore.Glyph CharacterInfo2Glyph(int i, CharacterInfo charInfo, int atlasWidth, int atlasHeight)
     {
