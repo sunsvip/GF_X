@@ -15,10 +15,7 @@ MonoBehaviour:
   m_LoadFromBytes: 0
   mDataTables:
   - CameraViewTable
-  - ColorTable
-  - CombatUnitTable
   - LevelTable
-  - TestTable
   - Core/EntityGroupTable
   - Core/LanguagesTable
   - Core/SoundGroupTable

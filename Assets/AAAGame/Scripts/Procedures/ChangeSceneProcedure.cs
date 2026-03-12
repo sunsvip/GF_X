@@ -16,7 +16,7 @@ public class ChangeSceneProcedure : ProcedureBase
     {
         base.OnEnter(procedureOwner);
         loadSceneOver = false;
-
+        GF.BuiltinView.ShowLoadingProgress();
         GF.Event.Subscribe(LoadSceneSuccessEventArgs.EventId, OnLoadSceneSuccess);
         GF.Event.Subscribe(LoadSceneFailureEventArgs.EventId, OnLoadSceneFailure);
         GF.Event.Subscribe(LoadSceneUpdateEventArgs.EventId, OnLoadSceneUpdate);
@@ -67,6 +67,7 @@ public class ChangeSceneProcedure : ProcedureBase
 
     protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
     {
+        GF.BuiltinView.HideLoadingProgress();
         GF.Event.Unsubscribe(LoadSceneSuccessEventArgs.EventId, OnLoadSceneSuccess);
         GF.Event.Unsubscribe(LoadSceneFailureEventArgs.EventId, OnLoadSceneFailure);
         GF.Event.Unsubscribe(LoadSceneUpdateEventArgs.EventId, OnLoadSceneUpdate);
@@ -80,7 +81,7 @@ public class ChangeSceneProcedure : ProcedureBase
             return;
         }
         //Log.Info("场景加载进度:{0}, {1}", arg.Progress, arg.SceneAssetName);
-        //TODO 显示场景加载进度
+        GF.BuiltinView.SetLoadingProgress(arg.Progress);
     }
 
     private void OnLoadSceneSuccess(object sender, GameEventArgs e)
