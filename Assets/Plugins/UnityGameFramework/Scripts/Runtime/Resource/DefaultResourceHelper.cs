@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 #endif
 using UnityEngine.SceneManagement;
+using Utility = GameFramework.Utility;
 
 namespace UnityGameFramework.Runtime
 {
@@ -115,7 +116,7 @@ namespace UnityGameFramework.Runtime
             string errorMessage = null;
             DateTime startTime = DateTime.UtcNow;
 #if UNITY_WEBGL && !UNITY_EDITOR
-            if (fileUri.StartsWith(Application.persistentDataPath))
+            if (Utility.Path.IsSubPath(fileUri, Application.persistentDataPath))
             {
                 try
                 {

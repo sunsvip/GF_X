@@ -212,6 +212,8 @@ namespace GameFramework.Resource
                         fileStream.Write(m_ResourceManager.m_CachedStream.GetBuffer(), 0, uncompressedLength);
                     }
 
+                    WebGLPersistence.Sync(e.DownloadPath);
+
                     if (VersionListUpdateSuccess != null)
                     {
                         VersionListUpdateSuccess(e.DownloadPath, e.DownloadUri);

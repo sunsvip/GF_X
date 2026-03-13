@@ -187,7 +187,7 @@ namespace UnityGameFramework.Runtime
             }
             m_BytesFullPath = fullPath;
 #if UNITY_WEBGL && !UNITY_EDITOR
-            if (fullPath.StartsWith(Application.persistentDataPath))
+            if (Utility.Path.IsSubPath(fullPath, Application.persistentDataPath))
             {
                 bool isError = false;
                 byte[] bytes = null;

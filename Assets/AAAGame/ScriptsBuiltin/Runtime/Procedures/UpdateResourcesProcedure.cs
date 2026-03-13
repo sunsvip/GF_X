@@ -41,12 +41,16 @@ public class VersionInfo
 public class UpdateResourcesProcedure : ProcedureBase
 {
     private bool initComplete = false;
+    private bool waitPersistenceReady = false;
+    private bool versionCheckStarted = false;
     private long mDownloadTotalZipLength = 0L;
     private List<DownloadProgressData> mDownloadProgressData;
     protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
     {
         base.OnEnter(procedureOwner);
         initComplete = false;
+        waitPersistenceReady = false;
+        versionCheckStarted = false;
         mDownloadProgressData = new List<DownloadProgressData>();
 
 
@@ -60,7 +64,18 @@ public class UpdateResourcesProcedure : ProcedureBase
         GFBuiltin.Event.Subscribe(UnityGameFramework.Runtime.ResourceVerifyStartEventArgs.EventId, OnResourceVerifyStart);
         GFBuiltin.Event.Subscribe(UnityGameFramework.Runtime.ResourceVerifySuccessEventArgs.EventId, OnResourceVerifySuccess);
         GFBuiltin.Event.Subscribe(UnityGameFramework.Runtime.ResourceVerifyFailureEventArgs.EventId, OnResourceVerifyFailure);
-        CheckVersion();
+
+        waitPersistenceReady = GFBuiltin.Resource.ResourceMode == GameFramework.Resource.ResourceMode.Updatable || GFBuiltin.Resource.ResourceMode == GameFramework.Resource.ResourceMode.UpdatableWhilePlaying;
+        if (waitPersistenceReady)
+        {
+            WebGLPersistence.Initialize();
+            GFBuiltin.Log("等待持久化资源文件系统初始化...");
+            GFBuiltin.BuiltinView.ShowLoadingProgress(0);
+        }
+        else
+        {
+            CheckVersion();
+        }
     }
 
 
@@ -81,6 +96,14 @@ public class UpdateResourcesProcedure : ProcedureBase
     protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)
     {
         base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
+        if (waitPersistenceReady && !versionCheckStarted && WebGLPersistence.IsReady)
+        {
+            waitPersistenceReady = false;
+            versionCheckStarted = true;
+            GFBuiltin.Log("持久化资源文件系统初始化完成.");
+            CheckVersion();
+        }
+
         if (initComplete)
         {
             ChangeState<LoadHotfixDllProcedure>(procedureOwner);
@@ -110,6 +133,7 @@ public class UpdateResourcesProcedure : ProcedureBase
     //向服务器发送请求获取版本信息 进行版本更新检测
     void CheckVersion()
     {
+        versionCheckStarted = true;
         if (GFBuiltin.Resource.ResourceMode == GameFramework.Resource.ResourceMode.Updatable || GFBuiltin.Resource.ResourceMode == GameFramework.Resource.ResourceMode.UpdatableWhilePlaying)
         {
             Log.Info("当前为热更新模式, Web请求最新版本号...");
@@ -380,6 +404,7 @@ public class UpdateResourcesProcedure : ProcedureBase
         ResourceVerifyFailureEventArgs ne = (ResourceVerifyFailureEventArgs)e;
         Log.Warning("Verify resource '{0}' failure.", ne.Name);
     }
+
     void OnResInitComplete()
     {
         initComplete = true;

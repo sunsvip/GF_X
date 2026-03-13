@@ -336,6 +336,7 @@ namespace GameFramework.Download
                 }
 
                 File.Move(Utility.Text.Format("{0}.download", m_Task.DownloadPath), m_Task.DownloadPath);
+                WebGLPersistence.Sync(m_Task.DownloadPath);
 
                 m_Task.Status = DownloadTaskStatus.Done;
 

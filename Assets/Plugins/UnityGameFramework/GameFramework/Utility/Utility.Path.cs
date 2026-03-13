@@ -5,6 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using System;
 using System.IO;
 
 namespace GameFramework
@@ -44,10 +45,38 @@ namespace GameFramework
                     return null;
                 }
 #if UNITY_WEBGL && !UNITY_EDITOR
-                return regularPath.StartsWith(UnityEngine.Application.persistentDataPath) ? regularPath : (regularPath.Contains("://") ? regularPath : ("file:///" + regularPath).Replace("file:////", "file:///"));
+                return IsSubPath(regularPath, UnityEngine.Application.persistentDataPath) ? regularPath : (regularPath.Contains("://") ? regularPath : ("file:///" + regularPath).Replace("file:////", "file:///"));
 #else
                 return regularPath.Contains("://") ? regularPath : ("file:///" + regularPath).Replace("file:////", "file:///");
 #endif
+            }
+
+            /// <summary>
+            /// 检查路径是否等于或位于指定根路径下。
+            /// </summary>
+            /// <param name="path">要检查的路径。</param>
+            /// <param name="rootPath">根路径。</param>
+            /// <returns>路径是否等于或位于指定根路径下。</returns>
+            public static bool IsSubPath(string path, string rootPath)
+            {
+                string regularPath = GetRegularPath(path);
+                string regularRootPath = GetRegularPath(rootPath);
+                if (string.IsNullOrEmpty(regularPath) || string.IsNullOrEmpty(regularRootPath))
+                {
+                    return false;
+                }
+
+                if (string.Equals(regularPath, regularRootPath, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+
+                if (!regularRootPath.EndsWith("/", StringComparison.Ordinal))
+                {
+                    regularRootPath += "/";
+                }
+
+                return regularPath.StartsWith(regularRootPath, StringComparison.Ordinal);
             }
 
             /// <summary>

@@ -752,6 +752,7 @@ namespace GameFramework.Resource
                 }
 
                 File.Move(m_ReadWriteVersionListTempFileName, m_ReadWriteVersionListFileName);
+                WebGLPersistence.Sync();
                 m_CurrentGenerateReadWriteVersionListLength = 0;
             }
 

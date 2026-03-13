@@ -315,6 +315,7 @@ namespace GameFramework.Resource
                 }
 
                 File.Move(readWriteVersionListTempFileName, readWriteVersionListFileName);
+                WebGLPersistence.Sync();
             }
 
             private void OnLoadReadWriteVersionListSuccess(string fileUri, byte[] bytes, float duration, object userData)
