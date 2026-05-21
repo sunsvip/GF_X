@@ -143,7 +143,7 @@ public static class EntityExtension
     {
         var eId = parms.Id;
         var assetFullName = UtilityBuiltin.AssetsPath.GetEntityPath(pfbName);
-        eCom.ShowEntity(eId, Type.GetType(logicName), assetFullName, eGroup.ToString(), priority, parms);
+        eCom.ShowEntity(eId, Utility.Assembly.GetType(logicName), assetFullName, eGroup.ToString(), priority, parms);
         return eId;
     }
 

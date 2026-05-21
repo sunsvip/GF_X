@@ -25,6 +25,7 @@ namespace UGF.EditorTools
         /// Excel下拉列表总限制255个字符
         /// </summary>
         const int MAX_CHAR_LENGTH = 255;
+        private static readonly UTF8Encoding Utf8NoBom = new UTF8Encoding(false);
         static IList<KeyValuePair<int, string>> m_DataTableVarTypes = null;
         [InitializeOnLoadMethod]
         static void InitEPPlusLicense()
@@ -231,7 +232,7 @@ namespace UGF.EditorTools
             var outFileName = ConstEditor.ConstGroupScriptFileFullName;
             try
             {
-                File.WriteAllText(outFileName, sBuilder.ToString());
+                File.WriteAllText(outFileName, sBuilder.ToString(), Utf8NoBom);
                 Debug.LogFormat("------------------成功生成Group文件:{0}---------------", outFileName);
             }
             catch (Exception e)
@@ -288,11 +289,11 @@ namespace UGF.EditorTools
                 curIndex++;
             }
             sBuilder.AppendLine("}");
-            File.WriteAllText(ConstEditor.UIViewScriptFile, sBuilder.ToString());
+            File.WriteAllText(ConstEditor.UIViewScriptFile, sBuilder.ToString(), Utf8NoBom);
             Debug.LogFormat("-------------------成功生成:{0}-----------------", ConstEditor.UIViewScriptFile);
         }
         /// <summary>
-        /// 多语言Excel导出json
+        /// 多语言Excel导出资源
         /// </summary>
         /// <param name="excelFile"></param>
         /// <param name="outJsonFile"></param>
@@ -303,25 +304,18 @@ namespace UGF.EditorTools
             try
             {
                 LocalizationTextScanner.LoadLanguageExcelTexts(excelFile, ref textList);
-                SortedDictionary<string, string> languageDic = new SortedDictionary<string, string>();
-                foreach (var item in textList)
+                SortedDictionary<string, string> languageDic = CreateLanguageDictionary(textList, excelFile);
+                if (languageDic == null)
                 {
-                    if (!languageDic.ContainsKey(item.Key))
-                    {
-                        languageDic.Add(item.Key, item.Value);
-                    }
+                    return false;
                 }
-                File.WriteAllText(outJsonFile, UtilityBuiltin.Json.ToJson(languageDic), Encoding.UTF8);
+
+                EnsureFileDirectory(outJsonFile);
+                File.WriteAllText(outJsonFile, UtilityBuiltin.Json.ToJson(languageDic), Utf8NoBom);
                 if (useBytes)
                 {
                     var bytesFileName = Path.ChangeExtension(outJsonFile, ".bytes");
-                    using var fileStream = new FileStream(bytesFileName, FileMode.Create, FileAccess.Write);
-                    using var binaryWriter = new BinaryWriter(fileStream, Encoding.UTF8);
-                    foreach (var item in languageDic)
-                    {
-                        binaryWriter.Write(item.Key);
-                        binaryWriter.Write(item.Value);
-                    }
+                    WriteStringPairsBytesFile(bytesFileName, languageDic);
                 }
                 return true;
             }
@@ -331,12 +325,78 @@ namespace UGF.EditorTools
                 return false;
             }
         }
-        static bool ExcelSheet2TxtFile(ExcelWorksheet excelSheet, string outTxtFile)
+
+        private static SortedDictionary<string, string> CreateLanguageDictionary(List<LocalizationText> textList, string excelFile)
         {
+            SortedDictionary<string, string> languageDic = new SortedDictionary<string, string>();
+            foreach (var item in textList)
+            {
+                if (item == null || string.IsNullOrWhiteSpace(item.Key))
+                {
+                    continue;
+                }
+
+                if (languageDic.ContainsKey(item.Key))
+                {
+                    Debug.LogError($"多语言Excel存在重复Key, 文件:{excelFile}, Key:{item.Key}");
+                    return null;
+                }
+
+                languageDic.Add(item.Key, item.Value ?? string.Empty);
+            }
+
+            return languageDic;
+        }
+
+        private static void EnsureFileDirectory(string fileName)
+        {
+            string directoryName = Path.GetDirectoryName(fileName);
+            if (!string.IsNullOrWhiteSpace(directoryName) && !Directory.Exists(directoryName))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+        }
+
+        private static void WriteStringPairsBytesFile(string bytesFileName, IEnumerable<KeyValuePair<string, string>> pairs)
+        {
+            EnsureFileDirectory(bytesFileName);
+            string tempFileName = bytesFileName + ".tmp";
+            try
+            {
+                using (var fileStream = new FileStream(tempFileName, FileMode.Create, FileAccess.Write))
+                {
+                    using var binaryWriter = new BinaryWriter(fileStream, Utf8NoBom);
+                    foreach (var item in pairs)
+                    {
+                        binaryWriter.Write(item.Key);
+                        binaryWriter.Write(item.Value ?? string.Empty);
+                    }
+                }
+
+                if (File.Exists(bytesFileName))
+                {
+                    File.Delete(bytesFileName);
+                }
+
+                File.Move(tempFileName, bytesFileName);
+            }
+            finally
+            {
+                if (File.Exists(tempFileName))
+                {
+                    File.Delete(tempFileName);
+                }
+            }
+        }
+
+        static bool ExcelSheet2TxtFile(ExcelWorksheet excelSheet, string outTxtFile, bool normalizeCustomJsonColumns)
+        {
+            Dictionary<int, string> customJsonColumns = normalizeCustomJsonColumns ? GetCustomJsonColumns(excelSheet) : null;
             StringBuilder excelTxt = new StringBuilder();
             StringBuilder lineTxt = new StringBuilder();
             for (int rowIndex = excelSheet.Dimension.Start.Row; rowIndex <= excelSheet.Dimension.End.Row; rowIndex++)
             {
+                bool isDataRow = rowIndex >= 5 && !IsCommentRow(excelSheet, rowIndex);
                 lineTxt.Clear();
                 string rowTxt = string.Empty;
                 for (int colIndex = excelSheet.Dimension.Start.Column; colIndex <= excelSheet.Dimension.End.Column; colIndex++)
@@ -346,6 +406,12 @@ namespace UGF.EditorTools
                     {
                         cellContent = Regex.Replace(cellContent, @"[\r\n]+", string.Empty);
                     }
+
+                    if (isDataRow && customJsonColumns != null && customJsonColumns.TryGetValue(colIndex, out string customJsonType))
+                    {
+                        cellContent = DataTableProcessor.NormalizeCustomJsonValue(customJsonType, cellContent);
+                    }
+
                     lineTxt.Append(cellContent);
                     if (colIndex < excelSheet.Dimension.End.Column)
                     {
@@ -370,7 +436,7 @@ namespace UGF.EditorTools
                 {
                     Directory.CreateDirectory(outTxtDir);
                 }
-                File.WriteAllText(outTxtFile, excelTxt.ToString(), Encoding.UTF8);
+                File.WriteAllText(outTxtFile, excelTxt.ToString(), Utf8NoBom);
                 return true;
             }
             catch (Exception e)
@@ -382,7 +448,7 @@ namespace UGF.EditorTools
         /// <summary>
         /// Excel转换为Txt
         /// </summary>
-        public static bool Excel2TxtFile(string excelFileName, string outTxtFile)
+        public static bool Excel2TxtFile(string excelFileName, string outTxtFile, bool normalizeCustomJsonColumns = false)
         {
             bool result = true;
             var fileInfo = new FileInfo(excelFileName);
@@ -393,7 +459,7 @@ namespace UGF.EditorTools
                 File.Copy(excelFileName, tmpExcelFile, true);
                 using (var excelPackage = new ExcelPackage(tmpExcelFile))
                 {
-                    result = ExcelSheet2TxtFile(excelPackage.Workbook.Worksheets[0], outTxtFile);
+                    result = ExcelSheet2TxtFile(excelPackage.Workbook.Worksheets[0], outTxtFile, normalizeCustomJsonColumns);
 
                     //支持每个Sheet页导表
                     //int sheetCount = excelPackage.Workbook.Worksheets.Count;
@@ -428,6 +494,36 @@ namespace UGF.EditorTools
                 File.Delete(tmpExcelFile);
             }
             return result;
+        }
+
+        private static Dictionary<int, string> GetCustomJsonColumns(ExcelWorksheet excelSheet)
+        {
+            const int dataTableTypeRow = 3;
+            Dictionary<int, string> result = null;
+            if (excelSheet.Dimension.End.Row < dataTableTypeRow)
+            {
+                return result;
+            }
+
+            for (int colIndex = excelSheet.Dimension.Start.Column; colIndex <= excelSheet.Dimension.End.Column; colIndex++)
+            {
+                string typeName = excelSheet.GetValue<string>(dataTableTypeRow, colIndex);
+                if (!DataTableProcessor.IsCustomJsonType(typeName))
+                {
+                    continue;
+                }
+
+                result ??= new Dictionary<int, string>();
+                result[colIndex] = typeName;
+            }
+
+            return result;
+        }
+
+        private static bool IsCommentRow(ExcelWorksheet excelSheet, int rowIndex)
+        {
+            string firstCellValue = excelSheet.GetValue<string>(rowIndex, excelSheet.Dimension.Start.Column);
+            return !string.IsNullOrEmpty(firstCellValue) && firstCellValue.StartsWith(DataTableProcessor.CommentLineSeparator, StringComparison.Ordinal);
         }
         /// <summary>
         /// 从多语言Excel文件导出数据到工程
@@ -481,10 +577,7 @@ namespace UGF.EditorTools
                 if (Excel2TxtFile(excelFileName, outputFileName))
                 {
                     GFBuiltin.Log(Utility.Text.Format("导出Config文件成功: '{0}'.", outputFileName));
-                }
-                if (appConfig.LoadFromBytes)
-                {
-                    if (ExportConfig2BytesFile(outputFileName))
+                    if (appConfig.LoadFromBytes && ExportConfig2BytesFile(outputFileName))
                     {
                         GFBuiltin.Log(Utility.Text.Format("导出Config二进制文件成功: '{0}'.", outputFileName));
                     }
@@ -514,7 +607,7 @@ namespace UGF.EditorTools
                 EditorUtility.DisplayProgressBar($"导出DataTable:({i}/{totalExcelCount})", $"{excelFileName} -> {outputPath}", i / (float)totalExcelCount);
                 try
                 {
-                    if (Excel2TxtFile(excelFileName, outputPath))
+                    if (Excel2TxtFile(excelFileName, outputPath, normalizeCustomJsonColumns: true))
                     {
                         GF.Log($"导出DataTable成功:{excelFileName} -> {outputPath}");
                         if (appConfig.LoadFromBytes)
@@ -574,27 +667,13 @@ namespace UGF.EditorTools
 
             try
             {
-                
-                using (StreamReader reader = new StreamReader(configFile))
+                List<KeyValuePair<string, string>> configEntries = CreateConfigEntries(configFile);
+                if (configEntries == null)
                 {
-                    using var fileStream = new FileStream(bytesFileName, FileMode.Create, FileAccess.Write);
-                    using var binaryWriter = new BinaryWriter(fileStream, Encoding.UTF8);
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        if (string.IsNullOrWhiteSpace(line) || line.StartsWith(DataTableProcessor.CommentLineSeparator)) continue;
-                        var keyValues = line.Split(DataTableProcessor.DataSplitSeparators, StringSplitOptions.None);
-                        if (keyValues.Length != 4)
-                        {
-                            Log.Error("Can not parse config line string '{0}' which column count is invalid.", line);
-                            continue;
-                        }
-                        string configName = keyValues[1];
-                        string configValue = keyValues[3];
-                        binaryWriter.Write(configName);
-                        binaryWriter.Write(configValue);
-                    }
+                    return false;
                 }
+
+                WriteStringPairsBytesFile(bytesFileName, configEntries);
                 return true;
             }
             catch (Exception exception)
@@ -603,6 +682,45 @@ namespace UGF.EditorTools
                 return false;
             }
         }
+
+        private static List<KeyValuePair<string, string>> CreateConfigEntries(string configFile)
+        {
+            List<KeyValuePair<string, string>> configEntries = new List<KeyValuePair<string, string>>();
+            HashSet<string> configNames = new HashSet<string>();
+            using (StreamReader reader = new StreamReader(configFile, Utf8NoBom))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (string.IsNullOrWhiteSpace(line) || line.StartsWith(DataTableProcessor.CommentLineSeparator)) continue;
+                    var keyValues = line.Split(DataTableProcessor.DataSplitSeparators, StringSplitOptions.None);
+                    if (keyValues.Length != 4)
+                    {
+                        Log.Error("Can not parse config line string '{0}' which column count is invalid.", line);
+                        return null;
+                    }
+
+                    string configName = keyValues[1];
+                    string configValue = keyValues[3];
+                    if (string.IsNullOrWhiteSpace(configName))
+                    {
+                        Log.Error("Can not parse config line string '{0}' which config name is invalid.", line);
+                        return null;
+                    }
+
+                    if (!configNames.Add(configName))
+                    {
+                        Log.Error("Can not parse config line string '{0}' which config name is duplicate.", line);
+                        return null;
+                    }
+
+                    configEntries.Add(KeyValuePair.Create(configName, configValue));
+                }
+            }
+
+            return configEntries;
+        }
+
         internal static string GetGameDataRelativeName(string fileName, string relativePath)
         {
             var path = Path.GetRelativePath(relativePath, fileName);

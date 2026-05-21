@@ -38,6 +38,14 @@ namespace GameFramework.Editor.DataTableTools
                 get;
             }
 
+            public virtual bool IsCustomJson
+            {
+                get
+                {
+                    return false;
+                }
+            }
+
             public abstract string[] GetTypeStrings();
 
             public abstract void WriteToStream(DataTableProcessor dataTableProcessor, BinaryWriter binaryWriter, string value);

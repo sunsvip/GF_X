@@ -36,7 +36,7 @@ public static class DataTableExtension
 
         string dataRowClassName = System.IO.Path.GetFileName(splitNames[0]);
 
-        Type dataRowType = Type.GetType(dataRowClassName);
+        Type dataRowType = Utility.Assembly.GetType(dataRowClassName);
         if (dataRowType == null)
         {
             Log.Warning("Can not get data row type with class name '{0}'.", dataRowClassName);
@@ -146,6 +146,7 @@ public static class DataTableExtension
     public static Vector2[] ReadVector2Array(this BinaryReader binaryReader)
     {
         int length = binaryReader.Read7BitEncodedInt32();
+        if (length == -1) return null;
         Vector2[] result = new Vector2[length];
         for (int i = 0; i < length; i++)
         {
@@ -177,6 +178,7 @@ public static class DataTableExtension
     public static Vector2Int[] ReadVector2IntArray(this BinaryReader binaryReader)
     {
         int length = binaryReader.Read7BitEncodedInt32();
+        if (length == -1) return null;
         Vector2Int[] result = new Vector2Int[length];
         for (int i = 0; i < length; i++)
         {
@@ -209,6 +211,7 @@ public static class DataTableExtension
     public static Vector3[] ReadVector3Array(this BinaryReader binaryReader)
     {
         int length = binaryReader.Read7BitEncodedInt32();
+        if (length == -1) return null;
         Vector3[] result = new Vector3[length];
         for (int i = 0; i < length; i++)
         {
@@ -240,6 +243,7 @@ public static class DataTableExtension
     public static Vector3Int[] ReadVector3IntArray(this BinaryReader binaryReader)
     {
         int length = binaryReader.Read7BitEncodedInt32();
+        if (length == -1) return null;
         Vector3Int[] result = new Vector3Int[length];
         for (int i = 0; i < length; i++)
         {
@@ -272,6 +276,7 @@ public static class DataTableExtension
     public static Vector4[] ReadVector4Array(this BinaryReader binaryReader)
     {
         int length = binaryReader.Read7BitEncodedInt32();
+        if (length == -1) return null;
         Vector4[] result = new Vector4[length];
         for (int i = 0; i < length; i++)
         {
@@ -304,6 +309,7 @@ public static class DataTableExtension
     public static Unity.Mathematics.int4[] Readint4Array(this BinaryReader binaryReader)
     {
         int length = binaryReader.Read7BitEncodedInt32();
+        if (length == -1) return null;
         Unity.Mathematics.int4[] result = new Unity.Mathematics.int4[length];
         for (int i = 0; i < length; i++)
         {
@@ -319,42 +325,39 @@ public static class DataTableExtension
     /// <returns></returns>
     public static TEnum ParseEnum<TEnum>(string value) where TEnum : struct, Enum
     {
-        if (!string.IsNullOrEmpty(value))
+        if (string.IsNullOrWhiteSpace(value))
         {
-            string[] splitValue = value.Split('|', StringSplitOptions.RemoveEmptyEntries);
-            if (splitValue.Length == 1)
-            {
-                var valueStr = splitValue[0].Split('.')[1];
-                if (Enum.TryParse<TEnum>(valueStr, out TEnum result))
-                {
-                    return result;
-                }
-            }
-            else
-            {
-                int resultEnum = 0;
-                foreach (string s in splitValue)
-                {
-                    var strTrim = s.Split('.')[1].Trim();
-                    if (Enum.TryParse<TEnum>(strTrim, true, out TEnum result))
-                    {
-                        resultEnum |= Convert.ToInt32(result);
-                    }
-                }
-                return (TEnum)Enum.ToObject(typeof(TEnum), resultEnum);
-            }
+            return default;
         }
-        return default(TEnum);
+
+        if (TryParseEnum(value, out Type enumType, out int enumValue) && enumType == typeof(TEnum))
+        {
+            return ToEnum<TEnum>(enumValue);
+        }
+
+        throw new GameFrameworkException(Utility.Text.Format("Value '{0}' is not defined in enum {1}.", value, typeof(TEnum).Name));
     }
     public static TEnum ReadEnum<TEnum>(this BinaryReader binaryReader) where TEnum : struct, Enum
     {
         int value = binaryReader.Read7BitEncodedInt32();
-        if (Enum.IsDefined(typeof(TEnum), value))
-        {
-            return (TEnum)(object)value;
-        }
-        throw new GameFrameworkException(Utility.Text.Format("Value {0} is not defined in enum {1}.", value, typeof(TEnum).Name));
+        return ToEnum<TEnum>(value);
     }
+
+    public static T ParseJson<T>(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value) || string.Equals(value.Trim(), "null", StringComparison.OrdinalIgnoreCase))
+        {
+            return default;
+        }
+
+        return Utility.Json.ToObject<T>(value);
+    }
+
+    public static T ReadJson<T>(this BinaryReader binaryReader)
+    {
+        return ParseJson<T>(binaryReader.ReadString());
+    }
+
     /// <summary>
     /// 解析数据表数组
     /// </summary>
@@ -385,6 +388,7 @@ public static class DataTableExtension
     public static T[] ReadArray<T>(this BinaryReader binaryReader)
     {
         int length = binaryReader.Read7BitEncodedInt32();
+        if (length == -1) return null;
         T[] arr = new T[length];
         Type type = typeof(T);
         if (type == typeof(int))
@@ -405,14 +409,14 @@ public static class DataTableExtension
         {
             for (int i = 0; i < length; i++)
             {
-                arr[i] = (T)(object)binaryReader.Read();
+                arr[i] = (T)(object)binaryReader.ReadDouble();
             }
         }
         else if (type == typeof(long))
         {
             for (int i = 0; i < length; i++)
             {
-                arr[i] = (T)(object)binaryReader.Read();
+                arr[i] = (T)(object)binaryReader.Read7BitEncodedInt64();
             }
         }
         else if (type == typeof(bool))
@@ -448,14 +452,7 @@ public static class DataTableExtension
             for (int i = 0; i < length; i++)
             {
                 int value = binaryReader.Read7BitEncodedInt32();
-                if (Enum.IsDefined(type, value))
-                {
-                    arr[i] = (T)(object)value;
-                }
-                else
-                {
-                    throw new GameFrameworkException(Utility.Text.Format("Value {0} is not defined in enum {1}.", value, type.Name));
-                }
+                arr[i] = (T)ToEnum(type, value);
             }
         }
         else if (type == typeof(DateTime))
@@ -496,6 +493,7 @@ public static class DataTableExtension
     public static T[][] Read2DArray<T>(this BinaryReader binaryReader)
     {
         int length = binaryReader.Read7BitEncodedInt32();
+        if (length == -1) return null;
         T[][] arr = new T[length][];
         for (int i = 0; i < length; i++)
         {
@@ -506,7 +504,7 @@ public static class DataTableExtension
 
     public static Type ParseType(string value)
     {
-        return Type.GetType(value);
+        return Utility.Assembly.GetType(value);
     }
     public static Type ReadType(this BinaryReader binaryReader)
     {
@@ -535,12 +533,38 @@ public static class DataTableExtension
     {
         enumType = null;
         value = 0;
-        var enumElements = enumValue.Split('.');
-        if (enumElements.Length != 2)
+
+        if (string.IsNullOrWhiteSpace(enumValue))
         {
             return false;
         }
-        var enumName = enumElements[0];
+
+        string[] splitValues = enumValue.Split('|', StringSplitOptions.RemoveEmptyEntries);
+        if (splitValues.Length <= 0)
+        {
+            return false;
+        }
+
+        string enumName = null;
+        int result = 0;
+        for (int i = 0; i < splitValues.Length; i++)
+        {
+            string[] enumElements = splitValues[i].Trim().Split('.');
+            if (enumElements.Length != 2)
+            {
+                return false;
+            }
+
+            if (enumName == null)
+            {
+                enumName = enumElements[0].Trim();
+            }
+            else if (!string.Equals(enumName, enumElements[0].Trim(), StringComparison.Ordinal))
+            {
+                return false;
+            }
+        }
+
         enumType = Utility.Assembly.GetType(enumName);
         if (enumType == null)
         {
@@ -548,12 +572,62 @@ public static class DataTableExtension
         }
         if (enumType != null)
         {
-            value = (int)Enum.Parse(enumType, enumElements[1]);
+            if (splitValues.Length > 1 && !enumType.IsDefined(typeof(FlagsAttribute), false))
+            {
+                return false;
+            }
+
+            for (int i = 0; i < splitValues.Length; i++)
+            {
+                string[] enumElements = splitValues[i].Trim().Split('.');
+                try
+                {
+                    result |= Convert.ToInt32(Enum.Parse(enumType, enumElements[1].Trim()));
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            value = result;
         }
         return enumType != null && enumType.IsEnum;
     }
     public static bool TryParseEnum(string enumValue, out Type enumType)
     {
         return TryParseEnum(enumValue, out enumType, out _);
+    }
+
+    private static TEnum ToEnum<TEnum>(int value) where TEnum : struct, Enum
+    {
+        return (TEnum)ToEnum(typeof(TEnum), value);
+    }
+
+    private static object ToEnum(Type enumType, int value)
+    {
+        if (Enum.IsDefined(enumType, value) || IsDefinedFlagsEnumValue(enumType, value))
+        {
+            return Enum.ToObject(enumType, value);
+        }
+
+        throw new GameFrameworkException(Utility.Text.Format("Value {0} is not defined in enum {1}.", value, enumType.Name));
+    }
+
+    private static bool IsDefinedFlagsEnumValue(Type enumType, int value)
+    {
+        if (!enumType.IsDefined(typeof(FlagsAttribute), false))
+        {
+            return false;
+        }
+
+        int definedMask = 0;
+        Array values = Enum.GetValues(enumType);
+        for (int i = 0; i < values.Length; i++)
+        {
+            definedMask |= Convert.ToInt32(values.GetValue(i));
+        }
+
+        return (value & ~definedMask) == 0;
     }
 }

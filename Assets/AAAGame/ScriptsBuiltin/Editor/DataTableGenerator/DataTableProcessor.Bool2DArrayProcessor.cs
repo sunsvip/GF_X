@@ -37,7 +37,7 @@ namespace GameFramework.Editor.DataTableTools
                 return new string[]
                 {
                     "bool[][]",
-                    "system.bool[][]"
+                    "system.boolean[][]"
                 };
             }
 
@@ -51,7 +51,7 @@ namespace GameFramework.Editor.DataTableTools
                 var v = Parse(value);
                 if (v == null)
                 {
-                    binaryWriter.Write7BitEncodedInt32(0);
+                    binaryWriter.Write7BitEncodedInt32(-1);
                     return;
                 }
                 binaryWriter.Write7BitEncodedInt32(v.Length);
@@ -60,7 +60,7 @@ namespace GameFramework.Editor.DataTableTools
                     var itm = v[i];
                     if (itm == null)
                     {
-                        binaryWriter.Write7BitEncodedInt32(0);
+                        binaryWriter.Write7BitEncodedInt32(-1);
                         continue;
                     }
                     binaryWriter.Write7BitEncodedInt32(itm.Length);

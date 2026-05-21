@@ -32,6 +32,11 @@ namespace GameFramework.Editor.DataTableTools
 
                     if (dataProcessorBaseType.IsAssignableFrom(types[i]))
                     {
+                        if (types[i].GetConstructor(Type.EmptyTypes) == null)
+                        {
+                            continue;
+                        }
+
                         DataProcessor dataProcessor = (DataProcessor)Activator.CreateInstance(types[i]);
                         foreach (string typeString in dataProcessor.GetTypeStrings())
                         {
@@ -48,13 +53,27 @@ namespace GameFramework.Editor.DataTableTools
                     type = string.Empty;
                 }
 
-                DataProcessor dataProcessor = null;
-                if (s_DataProcessors.TryGetValue(type.ToLower(), out dataProcessor))
+                if (TryGetDataProcessor(type, out DataProcessor dataProcessor))
                 {
                     return dataProcessor;
                 }
 
+                if (TryResolveCustomJsonType(type, out Type customJsonType))
+                {
+                    return new CustomJsonProcessor(customJsonType);
+                }
+
                 throw new GameFrameworkException(Utility.Text.Format("Not supported data processor type '{0}'.", type));
+            }
+
+            internal static bool TryGetDataProcessor(string type, out DataProcessor dataProcessor)
+            {
+                if (type == null)
+                {
+                    type = string.Empty;
+                }
+
+                return s_DataProcessors.TryGetValue(type.ToLower(), out dataProcessor);
             }
         }
     }

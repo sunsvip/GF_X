@@ -37,7 +37,8 @@ namespace GameFramework.Editor.DataTableTools
                 return new string[]
                 {
                     "long[]",
-                    "system.long[]"
+                    "int64[]",
+                    "system.int64[]"
                 };
             }
 
@@ -48,7 +49,18 @@ namespace GameFramework.Editor.DataTableTools
 
             public override void WriteToStream(DataTableProcessor dataTableProcessor, BinaryWriter binaryWriter, string value)
             {
-                binaryWriter.Write(value);
+                var v = Parse(value);
+                if (v == null)
+                {
+                    binaryWriter.Write7BitEncodedInt32(-1);
+                    return;
+                }
+
+                binaryWriter.Write7BitEncodedInt32(v.Length);
+                for (int i = 0; i < v.Length; i++)
+                {
+                    binaryWriter.Write7BitEncodedInt64(v[i]);
+                }
             }
         }
     }

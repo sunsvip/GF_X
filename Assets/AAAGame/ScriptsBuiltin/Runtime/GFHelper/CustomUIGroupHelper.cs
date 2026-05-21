@@ -29,7 +29,7 @@ public class CustomUIGroupHelper : UIGroupHelperBase
         RectTransform transform = gameObject.GetOrAddComponent<RectTransform>();
         transform.anchorMin = Vector2.zero;
         transform.anchorMax = Vector2.one;
-        transform.anchoredPosition = Vector2.zero;
+        transform.anchoredPosition3D = Vector3.zero;
         transform.sizeDelta = Vector2.zero;
     }
 }
