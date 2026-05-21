@@ -1,5 +1,3 @@
-
-using Cysharp.Threading.Tasks;
 using GameFramework;
 using UnityGameFramework.Runtime;
 /// <summary>
@@ -44,16 +42,23 @@ public class RefParams : IReference
     /// <returns></returns>
     public T Get<T>(string key, T defaultValue = null) where T : Variable
     {
-        if (defaultValue != null)
+        var value = GF.VariablePool.GetVariable<T>(Id, key);
+        if (value != null)
         {
-            UniTask.DelayFrame(1).ContinueWith(() =>
+            if (defaultValue != null && !ReferenceEquals(defaultValue, value))
             {
                 ReferencePool.Release(defaultValue);
-            }).Forget();
+            }
 
+            return value;
         }
 
-        return GF.VariablePool.GetVariable<T>(Id, key) ?? defaultValue;
+        if (defaultValue != null)
+        {
+            GF.VariablePool.DelayReleaseVariable(defaultValue);
+        }
+
+        return defaultValue;
     }
 
     public bool TryGet<T>(string key, out T value) where T : Variable
@@ -65,6 +70,7 @@ public class RefParams : IReference
     {
         ResetProperties();
         GF.VariablePool.ClearVariables(this.Id);
+        Id = 0;
     }
     /// <summary>
     /// 释放时回调, 需重写此方法重置数据以避免脏数据

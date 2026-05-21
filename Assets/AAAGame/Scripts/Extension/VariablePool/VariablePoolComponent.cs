@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityGameFramework.Runtime;
 using UnityEngine;
 using UnityEngine.Pool;
-using System.Linq;
 
 
 #if UNITY_EDITOR
@@ -63,25 +62,46 @@ public class VariablePoolComponentInspector : UnityEditor.Editor
 /// </summary>
 public class VariablePoolComponent : GameFrameworkComponent
 {
+    [SerializeField] private int m_RootCapacity = 1024;
+    [SerializeField] private int m_DelayedReleaseCapacity = 64;
+
     private Dictionary<int, Dictionary<string, Variable>> m_Variables;
-    private DictionaryPool<string, Variable> m_ValuesPool;
+    private List<DelayedReleaseInfo> m_DelayedReleaseVariables;
+
+    private struct DelayedReleaseInfo
+    {
+        public Variable Variable;
+        public int ReleaseFrame;
+    }
 #if UNITY_EDITOR
     public Dictionary<int, Dictionary<string, Variable>> Variables => m_Variables;
 #endif
     protected override void Awake()
     {
         base.Awake();
-        m_Variables = new Dictionary<int, Dictionary<string, Variable>>(1024);
+        m_Variables = new Dictionary<int, Dictionary<string, Variable>>(Mathf.Max(m_RootCapacity, 1));
+        m_DelayedReleaseVariables = new List<DelayedReleaseInfo>(Mathf.Max(m_DelayedReleaseCapacity, 1));
     }
 
+    private void LateUpdate()
+    {
+        ReleaseDelayedVariables(Time.frameCount);
+    }
 
     private void OnDestroy()
     {
-        var keys = m_Variables.Keys.ToArray();
-        foreach (var key in keys)
+        ReleaseAllDelayedVariables();
+
+        foreach (var values in m_Variables.Values)
         {
-            ClearVariables(key);
+            foreach (var item in values)
+            {
+                ReferencePool.Release(item.Value);
+            }
+
+            DictionaryPool<string, Variable>.Release(values);
         }
+
         m_Variables.Clear();
     }
 
@@ -91,7 +111,7 @@ public class VariablePoolComponent : GameFrameworkComponent
         if (m_Variables.TryGetValue(rootId, out var values) && values.TryGetValue(key, out Variable v))
         {
             value = v as T;
-            return true;
+            return value != null;
         }
         return false;
     }
@@ -107,14 +127,29 @@ public class VariablePoolComponent : GameFrameworkComponent
 
     public void SetVariable<T>(int rootId, string key, T value) where T : Variable
     {
+        CancelDelayedRelease(value);
+
         if (m_Variables.TryGetValue(rootId, out var values))
         {
-            values[key] = value;
+            if (values.TryGetValue(key, out var oldValue))
+            {
+                if (ReferenceEquals(oldValue, value))
+                {
+                    return;
+                }
+
+                ReferencePool.Release(oldValue);
+                values[key] = value;
+            }
+            else
+            {
+                values.Add(key, value);
+            }
         }
         else
         {
             values = DictionaryPool<string, Variable>.Get();
-            values[key] = value;
+            values.Add(key, value);
             m_Variables.Add(rootId, values);
         }
     }
@@ -122,6 +157,20 @@ public class VariablePoolComponent : GameFrameworkComponent
     public bool HasVariable(int rootId, string key)
     {
         return m_Variables.TryGetValue(rootId, out var values) && values.ContainsKey(key);
+    }
+
+    public void DelayReleaseVariable(Variable value)
+    {
+        if (value == null)
+        {
+            return;
+        }
+
+        m_DelayedReleaseVariables.Add(new DelayedReleaseInfo
+        {
+            Variable = value,
+            ReleaseFrame = Time.frameCount + 1
+        });
     }
 
     public void ClearVariables(int rootId)
@@ -135,5 +184,63 @@ public class VariablePoolComponent : GameFrameworkComponent
             DictionaryPool<string, Variable>.Release(values);
             m_Variables.Remove(rootId);
         }
+    }
+
+    private void CancelDelayedRelease(Variable value)
+    {
+        if (value == null || m_DelayedReleaseVariables.Count == 0)
+        {
+            return;
+        }
+
+        for (int i = m_DelayedReleaseVariables.Count - 1; i >= 0; i--)
+        {
+            if (ReferenceEquals(m_DelayedReleaseVariables[i].Variable, value))
+            {
+                m_DelayedReleaseVariables.RemoveAt(i);
+            }
+        }
+    }
+
+    private void ReleaseDelayedVariables(int currentFrame)
+    {
+        if (m_DelayedReleaseVariables.Count == 0)
+        {
+            return;
+        }
+
+        int writeIndex = 0;
+        int count = m_DelayedReleaseVariables.Count;
+        for (int readIndex = 0; readIndex < count; readIndex++)
+        {
+            DelayedReleaseInfo item = m_DelayedReleaseVariables[readIndex];
+            if (item.ReleaseFrame <= currentFrame)
+            {
+                ReferencePool.Release(item.Variable);
+                continue;
+            }
+
+            if (writeIndex != readIndex)
+            {
+                m_DelayedReleaseVariables[writeIndex] = item;
+            }
+
+            writeIndex++;
+        }
+
+        if (writeIndex < count)
+        {
+            m_DelayedReleaseVariables.RemoveRange(writeIndex, count - writeIndex);
+        }
+    }
+
+    private void ReleaseAllDelayedVariables()
+    {
+        for (int i = 0; i < m_DelayedReleaseVariables.Count; i++)
+        {
+            ReferencePool.Release(m_DelayedReleaseVariables[i].Variable);
+        }
+
+        m_DelayedReleaseVariables.Clear();
     }
 }

@@ -1,6 +1,4 @@
 
-using UnityEngine;
-
 namespace GameFramework
 {
     public abstract class DataModelBase : IReference
@@ -11,13 +9,13 @@ namespace GameFramework
         public RefParams Userdata { get; private set; } = null;
 
         /// <summary>
-        /// 首次获取时
+        /// 每次取用时自动调用
         /// </summary>
         /// <param name="userdata"></param>
         protected virtual void OnCreate(RefParams userdata) { }
 
         /// <summary>
-        /// 当对象回收时自动调用OnClear,常用于重置变量属性,避免复用对象时带有默认数值(脏数据)
+        /// 当对象回收时自动调用
         /// </summary>
         protected virtual void OnRelease() { }
         internal void Init(int id, RefParams userdata)
@@ -30,15 +28,21 @@ namespace GameFramework
         {
             OnRelease();
             this.Id = 0;
-            if (Userdata != null)
-            {
-                ReferencePool.Release(Userdata);
-            }
+            ReleaseUserdata();
         }
 
         internal void Shutdown()
         {
             ReferencePool.Release(this);
+        }
+
+        protected void ReleaseUserdata()
+        {
+            if (Userdata != null)
+            {
+                ReferencePool.Release(Userdata);
+                Userdata = null;
+            }
         }
     }
 

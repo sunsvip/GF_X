@@ -9,6 +9,7 @@ namespace GameFramework
     public class DataModelComponent : GameFrameworkComponent
     {
         private Dictionary<TypeIdPair, DataModelBase> m_DataModels;
+        private bool m_IsSubscribedToQuitEvent;
         /// <summary>
         /// 获取DataModel数量。
         /// </summary>
@@ -22,22 +23,35 @@ namespace GameFramework
         protected override void Awake()
         {
             base.Awake();
-            m_DataModels = new Dictionary<TypeIdPair, DataModelBase>();
+            m_DataModels = new Dictionary<TypeIdPair, DataModelBase>(1024);
         }
-
         private void Start()
         {
             GF.Event.Subscribe(GFEventArgs.EventId, OnGFEventCallback);
+            m_IsSubscribedToQuitEvent = true;
         }
-        //private void OnDestroy()
-        //{
-        //    GF.Event.Unsubscribe(GFEventArgs.EventId, OnGFEventCallback);
-        //}
+        private void OnDestroy()
+        {
+            if (m_IsSubscribedToQuitEvent)
+            {
+                GF.Event.Unsubscribe(GFEventArgs.EventId, OnGFEventCallback);
+                m_IsSubscribedToQuitEvent = false;
+            }
+
+            ReleaseAll();
+            m_DataModels.Clear();
+        }
         private void OnGFEventCallback(object sender, GameEventArgs e)
         {
             var args = e as GFEventArgs;
             if (args.EventType == GFEventType.ApplicationQuit)
             {
+                if (m_IsSubscribedToQuitEvent)
+                {
+                    GF.Event.Unsubscribe(GFEventArgs.EventId, OnGFEventCallback);
+                    m_IsSubscribedToQuitEvent = false;
+                }
+
                 ReleaseAll();
             }
         }
@@ -85,6 +99,16 @@ namespace GameFramework
         /// <summary>
         /// 是否存在数据模型。
         /// </summary>
+        /// <param name="dataRowTypeName">数据模型行的类型名。</param>
+        /// <returns>是否存在数据模型。</returns>
+        public bool HasDataModel(string dataRowTypeName)
+        {
+            return HasDataModel(Utility.Assembly.GetType(dataRowTypeName));
+        }
+
+        /// <summary>
+        /// 是否存在数据模型。
+        /// </summary>
         /// <typeparam name="T">数据模型行的类型。</typeparam>
         /// <param name="name">数据模型名称。</param>
         /// <returns>是否存在数据模型。</returns>
@@ -112,6 +136,17 @@ namespace GameFramework
             }
 
             return InternalHasDataModel(new TypeIdPair(dataRowType, id));
+        }
+
+        /// <summary>
+        /// 是否存在数据模型。
+        /// </summary>
+        /// <param name="dataRowTypeName">数据模型行的类型名。</param>
+        /// <param name="id">数据模型名称。</param>
+        /// <returns>是否存在数据模型。</returns>
+        public bool HasDataModel(string dataRowTypeName, int id)
+        {
+            return HasDataModel(Utility.Assembly.GetType(dataRowTypeName), id);
         }
 
         /// <summary>
@@ -156,6 +191,16 @@ namespace GameFramework
 
             return InternalGetDataModel(new TypeIdPair(dataRowType));
         }
+
+        /// <summary>
+        /// 获取数据模型。
+        /// </summary>
+        /// <param name="dataRowTypeName">数据模型行的类型名。</param>
+        /// <returns>要获取的数据模型。</returns>
+        public DataModelBase GetDataModel(string dataRowTypeName)
+        {
+            return GetDataModel(Utility.Assembly.GetType(dataRowTypeName));
+        }
         /// <summary>
         /// 获取或创建数据模型
         /// </summary>
@@ -169,6 +214,16 @@ namespace GameFramework
                 result = CreateDataModel(dataRowType);
             }
             return result;
+        }
+
+        /// <summary>
+        /// 获取或创建数据模型
+        /// </summary>
+        /// <param name="dataRowTypeName"></param>
+        /// <returns></returns>
+        public DataModelBase GetOrCreate(string dataRowTypeName)
+        {
+            return GetOrCreate(Utility.Assembly.GetType(dataRowTypeName));
         }
         /// <summary>
         /// 获取数据模型。
@@ -215,6 +270,17 @@ namespace GameFramework
 
             return InternalGetDataModel(new TypeIdPair(dataRowType, id));
         }
+
+        /// <summary>
+        /// 获取数据模型。
+        /// </summary>
+        /// <param name="dataRowTypeName">数据模型行的类型名。</param>
+        /// <param name="id">数据模型名称。</param>
+        /// <returns>要获取的数据模型。</returns>
+        public DataModelBase GetDataModel(string dataRowTypeName, int id)
+        {
+            return GetDataModel(Utility.Assembly.GetType(dataRowTypeName), id);
+        }
         /// <summary>
         /// 获取或创建数据模型
         /// </summary>
@@ -229,6 +295,17 @@ namespace GameFramework
                 result = CreateDataModel(dataRowType, id);
             }
             return result;
+        }
+
+        /// <summary>
+        /// 获取或创建数据模型
+        /// </summary>
+        /// <param name="dataRowTypeName"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public DataModelBase GetOrCreate(string dataRowTypeName, int id)
+        {
+            return GetOrCreate(Utility.Assembly.GetType(dataRowTypeName), id);
         }
         /// <summary>
         /// 获取所有数据模型。
@@ -319,6 +396,16 @@ namespace GameFramework
         /// <summary>
         /// 创建数据模型。
         /// </summary>
+        /// <param name="dataRowTypeName">数据模型行的类型名。</param>
+        /// <returns>要创建的数据模型。</returns>
+        public DataModelBase CreateDataModel(string dataRowTypeName)
+        {
+            return CreateDataModel(dataRowTypeName, 0);
+        }
+
+        /// <summary>
+        /// 创建数据模型。
+        /// </summary>
         /// <typeparam name="T">数据模型行的类型。</typeparam>
         /// <param name="id">数据模型名称。</param>
         /// <returns>要创建的数据模型。</returns>
@@ -367,6 +454,18 @@ namespace GameFramework
         }
 
         /// <summary>
+        /// 创建数据模型。
+        /// </summary>
+        /// <param name="typeName">数据模型行的类型名。</param>
+        /// <param name="id">数据模型名称。</param>
+        /// <param name="userdata">用户数据。</param>
+        /// <returns>要创建的数据模型。</returns>
+        public DataModelBase CreateDataModel(string typeName, int id, RefParams userdata = null)
+        {
+            return CreateDataModel(Utility.Assembly.GetType(typeName), id, userdata);
+        }
+
+        /// <summary>
         /// 销毁数据模型。
         /// </summary>
         /// <typeparam name="T">数据模型行的类型。</typeparam>
@@ -400,6 +499,17 @@ namespace GameFramework
         /// <summary>
         /// 销毁数据模型。
         /// </summary>
+        /// <param name="dataRowTypeName">数据模型行的类型名。</param>
+        /// <param name="id">数据模型名称。</param>
+        /// <returns>是否销毁数据模型成功。</returns>
+        public bool ReleaseDataModel(string dataRowTypeName, int id = 0)
+        {
+            return ReleaseDataModel(Utility.Assembly.GetType(dataRowTypeName), id);
+        }
+
+        /// <summary>
+        /// 销毁数据模型。
+        /// </summary>
         /// <param name="DataModel">要销毁的数据模型。</param>
         /// <returns>是否销毁数据模型成功。</returns>
         public bool ReleaseDataModel(DataModelBase DataModel)
@@ -427,6 +537,8 @@ namespace GameFramework
 
             return null;
         }
+
+
         private bool InternalReleaseDataModel(TypeIdPair TypeIdPair)
         {
             DataModelBase DataModel = null;
