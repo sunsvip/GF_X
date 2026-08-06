@@ -1,4 +1,4 @@
-﻿#	相机视角			
+#	相机视角			
 #	ID		FollowOffset	AimOffset
 #	int		Vector3	Vector3
 #		备注	跟随偏移	

@@ -74,6 +74,7 @@
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Obfuz\GeneratedEncryptionVirtualMachine.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\ScriptableObject\AppSettings.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\EventArgs\LoadHotfixDllEventArgs.cs" />
+    <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Jobs\JobsPhysics.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Common\WebRequestCertNoValidate.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Extension\LocalizationExtension.cs" />
     <Compile Include="Assets\AAAGame\ScriptsBuiltin\Runtime\Extension\GFBuiltin.cs" />

@@ -1,4 +1,4 @@
-﻿#	UIGroup			
+#	UIGroup			
 #	ID		Name	Depth
 #	int		string	int
 #		备注		每个组的起始Order,用于控制显示顺序

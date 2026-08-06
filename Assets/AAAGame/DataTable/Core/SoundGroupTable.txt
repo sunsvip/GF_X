@@ -1,4 +1,4 @@
-﻿#	SoundGroup						
+#	SoundGroup						
 #	ID		Name	SoundAgentCount	AvoidBeingReplacedBySamePriority	Mute	Volume
 #	int		string	int	bool	bool	float
 #		备注					

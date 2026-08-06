@@ -11,8 +11,9 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-
+#if ENABLE_OBFUZ
 [Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName | Obfuz.ObfuzScope.MethodName)]
+#endif
 /// <summary>
 /// 相机视角
 /// </summary>
@@ -55,7 +56,7 @@ public class CameraViewTable : DataRowBase
 
             int index = 0;
             index++;
-            m_Id = int.Parse(columnStrings[index++]);
+            m_Id = DataTableExtension.ParseInt(columnStrings[index++]);
             index++;
             FollowOffset = DataTableExtension.ParseVector3(columnStrings[index++]);
             AimOffset = DataTableExtension.ParseVector3(columnStrings[index++]);
@@ -77,6 +78,4 @@ public class CameraViewTable : DataRowBase
 
             return true;
         }
-
-//__DATA_TABLE_PROPERTY_ARRAY__
 }

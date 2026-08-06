@@ -1,4 +1,4 @@
-﻿#	UI界面表						
+#	UI界面表						
 #	Id		SortOrder	UIPrefab	PauseCoveredUI	UIGroupId	EscapeClose
 #	int		int	string	bool	int	bool
 #		备注	显示顺序,相对于Group,每个Group间隔100		同组界面被覆盖时是否隐藏	UI组Id	返回键触发关闭界面

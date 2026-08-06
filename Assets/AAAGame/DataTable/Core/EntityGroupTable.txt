@@ -1,4 +1,4 @@
-﻿#	EntityGroup						
+#	EntityGroup						
 #	ID		Name	ReleaseInterval	Capacity	ExpireTime	Priority
 #	int		string	float	int	float	int
 #		备注					

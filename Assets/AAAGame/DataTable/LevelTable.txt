@@ -1,4 +1,4 @@
-﻿#	关卡表					i18n
+#	关卡表					i18n
 #	ID		LvPfbName	InitMoney	MoneyColorId	LvDisplayName
 #	int		string	int	int	string
 #		备注	关卡prefab名	玩家初始钱数	取值1-6	关卡显示名(多语言)

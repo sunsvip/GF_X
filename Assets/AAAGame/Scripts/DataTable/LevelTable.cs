@@ -11,8 +11,9 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-
+#if ENABLE_OBFUZ
 [Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName | Obfuz.ObfuzScope.MethodName)]
+#endif
 /// <summary>
 /// 关卡表
 /// </summary>
@@ -73,11 +74,11 @@ public class LevelTable : DataRowBase
 
             int index = 0;
             index++;
-            m_Id = int.Parse(columnStrings[index++]);
+            m_Id = DataTableExtension.ParseInt(columnStrings[index++]);
             index++;
             LvPfbName = columnStrings[index++];
-            InitMoney = int.Parse(columnStrings[index++]);
-            MoneyColorId = int.Parse(columnStrings[index++]);
+            InitMoney = DataTableExtension.ParseInt(columnStrings[index++]);
+            MoneyColorId = DataTableExtension.ParseInt(columnStrings[index++]);
             LvDisplayName = columnStrings[index++];
 
             return true;
@@ -99,6 +100,4 @@ public class LevelTable : DataRowBase
 
             return true;
         }
-
-//__DATA_TABLE_PROPERTY_ARRAY__
 }

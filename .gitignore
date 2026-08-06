@@ -7,6 +7,9 @@
 /obj
 /.vs
 /Temp
+/*.csproj
+/*.sln
+/*.slnx
 /HybridCLRData/LocalIl2CppData-WindowsEditor
 /Assets/GUI PRO Kit - Casual Game/PSD
 /Assets/GUI PRO Kit - Casual Game/Scenes
