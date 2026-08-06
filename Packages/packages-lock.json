@@ -5,21 +5,38 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "d505624c78e6d1d2d53efd716abe7349b611681e"
+      "hash": "ca7f87b6a72f3739f99a5ad0c957c7aae0cbd922"
     },
     "com.code-philosophy.obfuz": {
       "version": "https://gitee.com/focus-creative-games/obfuz.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "5557b277243062c51436fff242b753e13fbf0db0"
+      "hash": "fa2345017a22c74d13d9dd84b21bfc158d13b80d"
     },
     "com.code-philosophy.obfuz4hybridclr": {
       "version": "https://gitee.com/focus-creative-games/obfuz4hybridclr.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "59804e17a0d1562ca0f847db986ed93b25825b6d"
+      "hash": "40c8b6c1a8cfab893a02d95ceffc7e7a4a6919cd"
+    },
+    "com.coplaydev.unity-mcp": {
+      "version": "https://gitee.com/final5788/unity-mcp.git?path=/MCPForUnity#main",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.modules.animation": "1.0.0",
+        "com.unity.modules.imageconversion": "1.0.0",
+        "com.unity.modules.physics": "1.0.0",
+        "com.unity.modules.physics2d": "1.0.0",
+        "com.unity.modules.uielements": "1.0.0",
+        "com.unity.modules.screencapture": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.nuget.newtonsoft-json": "3.0.2",
+        "com.unity.test-framework": "1.1.31"
+      },
+      "hash": "4ce7dd3cc54e37e2ed6dc59cb5a047f3dccb3f50"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",

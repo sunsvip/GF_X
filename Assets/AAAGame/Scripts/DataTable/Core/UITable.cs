@@ -11,8 +11,9 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-
+#if ENABLE_OBFUZ
 [Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName | Obfuz.ObfuzScope.MethodName)]
+#endif
 /// <summary>
 /// UI界面表
 /// </summary>
@@ -82,13 +83,13 @@ public class UITable : DataRowBase
 
             int index = 0;
             index++;
-            m_Id = int.Parse(columnStrings[index++]);
+            m_Id = DataTableExtension.ParseInt(columnStrings[index++]);
             index++;
-            SortOrder = int.Parse(columnStrings[index++]);
+            SortOrder = DataTableExtension.ParseInt(columnStrings[index++]);
             UIPrefab = columnStrings[index++];
-            PauseCoveredUI = bool.Parse(columnStrings[index++]);
-            UIGroupId = int.Parse(columnStrings[index++]);
-            EscapeClose = bool.Parse(columnStrings[index++]);
+            PauseCoveredUI = DataTableExtension.ParseBool(columnStrings[index++]);
+            UIGroupId = DataTableExtension.ParseInt(columnStrings[index++]);
+            EscapeClose = DataTableExtension.ParseBool(columnStrings[index++]);
 
             return true;
         }
@@ -110,6 +111,4 @@ public class UITable : DataRowBase
 
             return true;
         }
-
-//__DATA_TABLE_PROPERTY_ARRAY__
 }

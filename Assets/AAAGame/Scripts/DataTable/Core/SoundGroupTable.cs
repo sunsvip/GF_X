@@ -11,8 +11,9 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-
+#if ENABLE_OBFUZ
 [Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName | Obfuz.ObfuzScope.MethodName)]
+#endif
 /// <summary>
 /// SoundGroup
 /// </summary>
@@ -82,13 +83,13 @@ public class SoundGroupTable : DataRowBase
 
             int index = 0;
             index++;
-            m_Id = int.Parse(columnStrings[index++]);
+            m_Id = DataTableExtension.ParseInt(columnStrings[index++]);
             index++;
             Name = columnStrings[index++];
-            SoundAgentCount = int.Parse(columnStrings[index++]);
-            AvoidBeingReplacedBySamePriority = bool.Parse(columnStrings[index++]);
-            Mute = bool.Parse(columnStrings[index++]);
-            Volume = float.Parse(columnStrings[index++]);
+            SoundAgentCount = DataTableExtension.ParseInt(columnStrings[index++]);
+            AvoidBeingReplacedBySamePriority = DataTableExtension.ParseBool(columnStrings[index++]);
+            Mute = DataTableExtension.ParseBool(columnStrings[index++]);
+            Volume = DataTableExtension.ParseFloat(columnStrings[index++]);
 
             return true;
         }
@@ -110,6 +111,4 @@ public class SoundGroupTable : DataRowBase
 
             return true;
         }
-
-//__DATA_TABLE_PROPERTY_ARRAY__
 }

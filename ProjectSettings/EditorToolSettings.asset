@@ -15,21 +15,13 @@ MonoBehaviour:
   CompressImgToolBackupDir: CompressImageTool\ImgBackupDir
   CompressImgToolCoverRaw: 1
   CompressImgToolOutputDir: CompressImageTool\ImgCompressedDir
-  CompressImgToolKeys:
-  - xxxx
-  CompressImgToolItemList: []
-  CompressImgToolOffline: 1
   CompressImgToolFastLv: 1
   CompressImgToolQualityLv: 80
   CompressImgToolQualityMinLv: 0
-  CompressImgMode: 2
-  FontCroppingCharSetsOutput: Tools\FontMinify
-  FontCroppingCharSetsFile: Tools\FontMinify\CharacterSetsBase.txt
-  ChatGPTKey: 
-  ChatGPTRandomness: 0
-  ChatGPTTimeout: 60
   LanguagesSupport: 08000000090000000e0000001b0000001c000000
+  LocalizationTranslationProvider: 2
+  LocalizationAiPromptTemplatePath: Assets/AAAGame/ScriptsBuiltin/Editor/Data/Localization/AIPrompts/LocalizationTranslatePrompt.md
+  LocalizationAiShowDebugCommandWindow: 0
   BaiduTransAppId: 
   BaiduTransSecretKey: 
   BaiduTransMaxLength: 2000
-  UIFieldToolUseSerializeMode: 1

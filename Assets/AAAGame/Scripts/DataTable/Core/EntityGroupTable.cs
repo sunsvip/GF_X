@@ -11,8 +11,9 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-
+#if ENABLE_OBFUZ
 [Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName | Obfuz.ObfuzScope.MethodName)]
+#endif
 /// <summary>
 /// EntityGroup
 /// </summary>
@@ -82,13 +83,13 @@ public class EntityGroupTable : DataRowBase
 
             int index = 0;
             index++;
-            m_Id = int.Parse(columnStrings[index++]);
+            m_Id = DataTableExtension.ParseInt(columnStrings[index++]);
             index++;
             Name = columnStrings[index++];
-            ReleaseInterval = float.Parse(columnStrings[index++]);
-            Capacity = int.Parse(columnStrings[index++]);
-            ExpireTime = float.Parse(columnStrings[index++]);
-            Priority = int.Parse(columnStrings[index++]);
+            ReleaseInterval = DataTableExtension.ParseFloat(columnStrings[index++]);
+            Capacity = DataTableExtension.ParseInt(columnStrings[index++]);
+            ExpireTime = DataTableExtension.ParseFloat(columnStrings[index++]);
+            Priority = DataTableExtension.ParseInt(columnStrings[index++]);
 
             return true;
         }
@@ -110,6 +111,4 @@ public class EntityGroupTable : DataRowBase
 
             return true;
         }
-
-//__DATA_TABLE_PROPERTY_ARRAY__
 }

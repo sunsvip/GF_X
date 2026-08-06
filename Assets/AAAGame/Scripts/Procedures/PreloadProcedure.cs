@@ -146,20 +146,43 @@ public class PreloadProcedure : ProcedureBase
         loadedProgress = 0;
         m_DataTablesCount = -1;
         var appConfig = await AppConfigs.GetInstanceSync();
-        totalProgress = appConfig.DataTables.Length + appConfig.Configs.Length + 2;//2是加载多语言和创建框架扩展
+        totalProgress = GetRuntimeDataTables(appConfig).Count + appConfig.Configs.Length + 2;//2是加载多语言和创建框架扩展
         CreateGFExtension();
     }
     private async void LoadConfigsAndDataTables()
     {
         var appConfig = await AppConfigs.GetInstanceSync();
-        m_DataTablesCount = appConfig.DataTables.Length;
+        var runtimeDataTables = GetRuntimeDataTables(appConfig);
+        m_DataTablesCount = runtimeDataTables.Count;
         foreach (var item in appConfig.Configs)
         {
             GF.Config.LoadConfig(item, appConfig.LoadFromBytes, this);
         }
-        foreach (var item in appConfig.DataTables)
+        foreach (var item in runtimeDataTables)
         {
             GF.DataTable.LoadDataTable(item, appConfig.LoadFromBytes, this);
+        }
+    }
+    private static List<string> GetRuntimeDataTables(AppConfigs appConfig)
+    {
+        var dataTables = new List<string>(ConstBuiltin.FrameworkRequiredDataTables.Length + (appConfig.DataTables?.Length ?? 0));
+        AddRuntimeDataTables(dataTables, ConstBuiltin.FrameworkRequiredDataTables);
+        AddRuntimeDataTables(dataTables, appConfig.DataTables);
+        return dataTables;
+    }
+    private static void AddRuntimeDataTables(List<string> dataTables, IEnumerable<string> tableNames)
+    {
+        if (tableNames == null)
+        {
+            return;
+        }
+
+        foreach (var tableName in tableNames)
+        {
+            if (!dataTables.Contains(tableName))
+            {
+                dataTables.Add(tableName);
+            }
         }
     }
     private void CreateGFExtension()

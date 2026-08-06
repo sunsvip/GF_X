@@ -11,8 +11,9 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-
+#if ENABLE_OBFUZ
 [Obfuz.ObfuzIgnore(Obfuz.ObfuzScope.TypeName | Obfuz.ObfuzScope.MethodName)]
+#endif
 /// <summary>
 /// UIGroup
 /// </summary>
@@ -55,10 +56,10 @@ public class UIGroupTable : DataRowBase
 
             int index = 0;
             index++;
-            m_Id = int.Parse(columnStrings[index++]);
+            m_Id = DataTableExtension.ParseInt(columnStrings[index++]);
             index++;
             Name = columnStrings[index++];
-            Depth = int.Parse(columnStrings[index++]);
+            Depth = DataTableExtension.ParseInt(columnStrings[index++]);
 
             return true;
         }
@@ -77,6 +78,4 @@ public class UIGroupTable : DataRowBase
 
             return true;
         }
-
-//__DATA_TABLE_PROPERTY_ARRAY__
 }

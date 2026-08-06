@@ -9,6 +9,13 @@ public static class ConstBuiltin
     public readonly static bool NoNetworkAllow = true;//热更模式时没网络是否允许进入游戏
     public readonly static string DES_KEY = "VaBwUXzd";//网络数据DES加密
     public readonly static string AOT_DLLS_KEY = "password";//AOT dll加密解密key
+    public static readonly string[] FrameworkRequiredDataTables =
+    {
+        "Core/EntityGroupTable",
+        "Core/SoundGroupTable",
+        "Core/UIGroupTable",
+        "Core/UITable",
+    };
 
     /// <summary>
     /// DataTable,Config,Language都支持AB测试,文件分为主文件和AB测试文件, AB测试文件名以'#'+ AB测试组名字结尾

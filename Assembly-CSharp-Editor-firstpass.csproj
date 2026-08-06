@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- Generated file, do not modify, your changes will be overwritten (use AssetPostprocessor.OnGeneratedCSProject) -->
   <PropertyGroup>
@@ -417,10 +417,6 @@
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.53f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Text.Json">
-      <HintPath>Assets\Plugins\ForEditor\CompressImageLibs\System.Text.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="EPPlus">
       <HintPath>Assets\Plugins\ForEditor\EPPlus.6.2\EPPlus.dll</HintPath>
       <Private>False</Private>
@@ -457,10 +453,6 @@
       <HintPath>Library\PackageCache\com.unity.collab-proxy@2.5.2\Lib\Editor\PlasticSCM\log4netPlastic.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Text.Encodings.Web">
-      <HintPath>Assets\Plugins\ForEditor\CompressImageLibs\System.Text.Encodings.Web.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="dnlib">
       <HintPath>Library\PackageCache\com.code-philosophy.hybridclr@2414e77fef\Plugins\dnlib.dll</HintPath>
       <Private>False</Private>
@@ -471,10 +463,6 @@
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>Assets\Plugins\ZString\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Tinify">
-      <HintPath>Assets\Plugins\ForEditor\CompressImageLibs\Tinify.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="EPPlus.Interfaces">
@@ -497,16 +485,8 @@
       <HintPath>Assets\Plugins\UnityGameFramework\Libraries\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces">
-      <HintPath>Assets\Plugins\ForEditor\CompressImageLibs\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="DOTween">
       <HintPath>Assets\Plugins\DOTween\DOTween.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SixLabors.ImageSharp">
-      <HintPath>Assets\Plugins\ForEditor\CompressImageLibs\SixLabors.ImageSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Android.Types">

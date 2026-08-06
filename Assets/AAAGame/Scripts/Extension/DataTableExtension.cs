@@ -1,16 +1,18 @@
 ﻿using GameFramework;
 using GameFramework.DataTable;
 using System;
+using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 public static class DataTableExtension
 {
+    public const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
     internal static readonly char[] DataSplitSeparators = new char[] { '\t' };
     internal static readonly char[] DataTrimSeparators = new char[] { '\"' };
+    private static readonly NumberStyles IntegerNumberStyles = NumberStyles.Integer;
+    private static readonly NumberStyles FloatingNumberStyles = NumberStyles.Float | NumberStyles.AllowThousands;
 
     /// <summary>
     /// 加载数据表, 支持A/B测试
@@ -46,18 +48,7 @@ public static class DataTableExtension
         string name = splitNames.Length > 1 ? splitNames[1] : null;
         DataTableBase dataTable = dataTableComponent.CreateDataTable(dataRowType, name);
 
-        string tableFileName = dataTableName;
-        if (!string.IsNullOrWhiteSpace(abTestGroupName))
-        {
-            var abTableFileName = Utility.Text.Format("{0}{1}{2}", dataTableName, ConstBuiltin.AB_TEST_TAG, abTestGroupName);
-            if (GFBuiltin.Resource.HasAsset(UtilityBuiltin.AssetsPath.GetDataTablePath(abTableFileName, useBytes)) != GameFramework.Resource.HasAssetResult.NotExist)
-            {
-                tableFileName = abTableFileName;
-            }
-        }
-
-        string assetName = UtilityBuiltin.AssetsPath.GetDataTablePath(tableFileName, useBytes);
-        dataTable.ReadData(assetName, userData);
+        dataTable.ReadData(GetDataTableAssetName(dataTableName, abTestGroupName, useBytes), userData);
     }
 
     /// <summary>
@@ -72,11 +63,31 @@ public static class DataTableExtension
         string abTestGroup = GFBuiltin.Setting.GetABTestGroup();
         dataTableComponent.LoadDataTable(dataTableName, abTestGroup, useBytes, userData);
     }
+
+    public static string GetDataTableAssetName(string dataTableName, string abTestGroupName, bool useBytes)
+    {
+        string tableFileName = dataTableName;
+        if (!string.IsNullOrWhiteSpace(abTestGroupName))
+        {
+            var abTableFileName = Utility.Text.Format("{0}{1}{2}", dataTableName, ConstBuiltin.AB_TEST_TAG, abTestGroupName);
+            if (GFBuiltin.Resource.HasAsset(UtilityBuiltin.AssetsPath.GetDataTablePath(abTableFileName, useBytes)) != GameFramework.Resource.HasAssetResult.NotExist)
+            {
+                tableFileName = abTableFileName;
+            }
+        }
+
+        return UtilityBuiltin.AssetsPath.GetDataTablePath(tableFileName, useBytes);
+    }
+
+    public static string GetDataTableAssetName(string dataTableName, bool useBytes)
+    {
+        return GetDataTableAssetName(dataTableName, GFBuiltin.Setting.GetABTestGroup(), useBytes);
+    }
     public static Color32 ParseColor32(string value)
     {
         if (string.IsNullOrWhiteSpace(value)) return new Color32(255, 255, 255, 255);
         string[] splitValue = value.Split(',');
-        return new Color32(byte.Parse(splitValue[0]), byte.Parse(splitValue[1]), byte.Parse(splitValue[2]), byte.Parse(splitValue[3]));
+        return new Color32(ParseByte(splitValue[0]), ParseByte(splitValue[1]), ParseByte(splitValue[2]), ParseByte(splitValue[3]));
     }
     public static Color32 ReadColor32(this BinaryReader binaryReader)
     {
@@ -86,7 +97,7 @@ public static class DataTableExtension
     {
         if (string.IsNullOrWhiteSpace(value)) return Color.white;
         string[] splitValue = value.Split(',');
-        return new Color(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]), float.Parse(splitValue[3]));
+        return new Color(ParseFloat(splitValue[0]), ParseFloat(splitValue[1]), ParseFloat(splitValue[2]), ParseFloat(splitValue[3]));
     }
     public static Color ReadColor(this BinaryReader binaryReader)
     {
@@ -96,7 +107,7 @@ public static class DataTableExtension
     {
         if (string.IsNullOrWhiteSpace(value)) return Quaternion.identity;
         string[] splitValue = value.Split(',');
-        return new Quaternion(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]), float.Parse(splitValue[3]));
+        return new Quaternion(ParseFloat(splitValue[0]), ParseFloat(splitValue[1]), ParseFloat(splitValue[2]), ParseFloat(splitValue[3]));
     }
     public static Quaternion ReadQuaternion(this BinaryReader binaryReader)
     {
@@ -105,7 +116,7 @@ public static class DataTableExtension
     public static DateTime ParseDateTime(string value)
     {
         if (string.IsNullOrWhiteSpace(value)) return DateTime.MinValue;
-        return DateTime.Parse(value);
+        return DateTime.ParseExact(value, DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None);
     }
     public static DateTime ReadDateTime(this BinaryReader binaryReader)
     {
@@ -115,7 +126,7 @@ public static class DataTableExtension
     {
         if (string.IsNullOrWhiteSpace(value)) return Rect.zero;
         string[] splitValue = value.Split(',');
-        return new Rect(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]), float.Parse(splitValue[3]));
+        return new Rect(ParseFloat(splitValue[0]), ParseFloat(splitValue[1]), ParseFloat(splitValue[2]), ParseFloat(splitValue[3]));
     }
     public static Rect ReadRect(this BinaryReader binaryReader)
     {
@@ -125,7 +136,7 @@ public static class DataTableExtension
     {
         if (string.IsNullOrWhiteSpace(value)) return Vector2.zero;
         string[] splitValue = value.Split(',');
-        return new Vector2(float.Parse(splitValue[0]), float.Parse(splitValue[1]));
+        return new Vector2(ParseFloat(splitValue[0]), ParseFloat(splitValue[1]));
     }
     public static Vector2 ReadVector2(this BinaryReader binaryReader)
     {
@@ -158,7 +169,7 @@ public static class DataTableExtension
     {
         if (string.IsNullOrWhiteSpace(value)) return Vector2Int.zero;
         string[] splitValue = value.Split(',');
-        return new Vector2Int(int.Parse(splitValue[0]), int.Parse(splitValue[1]));
+        return new Vector2Int(ParseInt(splitValue[0]), ParseInt(splitValue[1]));
     }
     public static Vector2Int ReadVector2Int(this BinaryReader binaryReader)
     {
@@ -191,7 +202,7 @@ public static class DataTableExtension
         if (string.IsNullOrWhiteSpace(value)) return Vector3.zero;
         string[] splitValue = value.Split(',');
 
-        return new Vector3(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]));
+        return new Vector3(ParseFloat(splitValue[0]), ParseFloat(splitValue[1]), ParseFloat(splitValue[2]));
     }
     public static Vector3 ReadVector3(this BinaryReader binaryReader)
     {
@@ -223,7 +234,7 @@ public static class DataTableExtension
     {
         if (string.IsNullOrWhiteSpace(value)) return Vector3Int.zero;
         string[] splitValue = value.Split(',');
-        return new Vector3Int(int.Parse(splitValue[0]), int.Parse(splitValue[1]), int.Parse(splitValue[2]));
+        return new Vector3Int(ParseInt(splitValue[0]), ParseInt(splitValue[1]), ParseInt(splitValue[2]));
     }
     public static Vector3Int ReadVector3Int(this BinaryReader binaryReader)
     {
@@ -255,7 +266,7 @@ public static class DataTableExtension
     {
         if (string.IsNullOrWhiteSpace(value)) return Vector4.zero;
         string[] splitValue = value.Split(',');
-        return new Vector4(float.Parse(splitValue[0]), float.Parse(splitValue[1]), float.Parse(splitValue[2]), float.Parse(splitValue[3]));
+        return new Vector4(ParseFloat(splitValue[0]), ParseFloat(splitValue[1]), ParseFloat(splitValue[2]), ParseFloat(splitValue[3]));
     }
     public static Vector4 ReadVector4(this BinaryReader binaryReader)
     {
@@ -288,7 +299,7 @@ public static class DataTableExtension
     {
         if (string.IsNullOrWhiteSpace(value)) return int4.zero;
         string[] splitValue = value.Split(',');
-        return new Unity.Mathematics.int4(int.Parse(splitValue[0]), int.Parse(splitValue[1]), int.Parse(splitValue[2]), int.Parse(splitValue[3]));
+        return new Unity.Mathematics.int4(ParseInt(splitValue[0]), ParseInt(splitValue[1]), ParseInt(splitValue[2]), ParseInt(splitValue[3]));
     }
     public static Unity.Mathematics.int4 Readint4(this BinaryReader binaryReader)
     {
@@ -299,6 +310,7 @@ public static class DataTableExtension
     {
         if (string.IsNullOrWhiteSpace(value)) return null;
         string[] arr = ParseArrayElements(value);
+        if (arr == null) return null;
         Unity.Mathematics.int4[] result = new Unity.Mathematics.int4[arr.Length];
         for (int i = 0; i < arr.Length; i++)
         {
@@ -325,17 +337,22 @@ public static class DataTableExtension
     /// <returns></returns>
     public static TEnum ParseEnum<TEnum>(string value) where TEnum : struct, Enum
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrEmpty(value))
         {
             return default;
         }
 
-        if (TryParseEnum(value, out Type enumType, out int enumValue) && enumType == typeof(TEnum))
+        Type enumType = typeof(TEnum);
+        int raw = ParseEnumValue(enumType, enumType.Name, value);
+        object enumValue = Enum.ToObject(enumType, raw);
+        // 校验未定义的数值(如裸数字 "3" 对非 Flags 枚举): 告警并返回默认, 不让未定义值静默流入导致 switch 命中无 case。
+        if (!Enum.IsDefined(enumType, enumValue) && !IsDefinedFlagsEnumValue(enumType, raw))
         {
-            return ToEnum<TEnum>(enumValue);
+            Log.Warning("Enum {0} value '{1}' (raw={2}) is not defined, use default.", enumType.Name, value, raw);
+            return default;
         }
 
-        throw new GameFrameworkException(Utility.Text.Format("Value '{0}' is not defined in enum {1}.", value, typeof(TEnum).Name));
+        return (TEnum)enumValue;
     }
     public static TEnum ReadEnum<TEnum>(this BinaryReader binaryReader) where TEnum : struct, Enum
     {
@@ -370,99 +387,387 @@ public static class DataTableExtension
         {
             return null;
         }
+
         string[] strs = value.Split(',');
-        T[] arr = new T[strs.Length];
-        for (int i = 0; i < strs.Length; i++)
+        Type type = typeof(T);
+
+        if (type == typeof(int))
         {
-            try
+            int[] result = new int[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
             {
-                arr[i] = (T)Convert.ChangeType(strs[i], typeof(T));
+                try
+                {
+                    result[i] = ParseInt(strs[i]);
+                }
+                catch (Exception e)
+                {
+                    LogParseArrayFailure(strs[i], e);
+                }
             }
-            catch (Exception e)
-            {
-                Log.Error("解析失败数据失败! 格式有误:{0}\nError:{1}", strs[i], e.Message);
-            }
+            return (T[])(object)result;
         }
-        return arr;
+
+        if (type == typeof(float))
+        {
+            float[] result = new float[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
+            {
+                try
+                {
+                    result[i] = ParseFloat(strs[i]);
+                }
+                catch (Exception e)
+                {
+                    LogParseArrayFailure(strs[i], e);
+                }
+            }
+            return (T[])(object)result;
+        }
+
+        if (type == typeof(double))
+        {
+            double[] result = new double[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
+            {
+                try
+                {
+                    result[i] = ParseDouble(strs[i]);
+                }
+                catch (Exception e)
+                {
+                    LogParseArrayFailure(strs[i], e);
+                }
+            }
+            return (T[])(object)result;
+        }
+
+        if (type == typeof(long))
+        {
+            long[] result = new long[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
+            {
+                try
+                {
+                    result[i] = ParseLong(strs[i]);
+                }
+                catch (Exception e)
+                {
+                    LogParseArrayFailure(strs[i], e);
+                }
+            }
+            return (T[])(object)result;
+        }
+
+        if (type == typeof(uint))
+        {
+            uint[] result = new uint[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
+            {
+                try
+                {
+                    result[i] = ParseUInt(strs[i]);
+                }
+                catch (Exception e)
+                {
+                    LogParseArrayFailure(strs[i], e);
+                }
+            }
+            return (T[])(object)result;
+        }
+
+        if (type == typeof(short))
+        {
+            short[] result = new short[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
+            {
+                try
+                {
+                    result[i] = ParseShort(strs[i]);
+                }
+                catch (Exception e)
+                {
+                    LogParseArrayFailure(strs[i], e);
+                }
+            }
+            return (T[])(object)result;
+        }
+
+        if (type == typeof(ushort))
+        {
+            ushort[] result = new ushort[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
+            {
+                try
+                {
+                    result[i] = ParseUShort(strs[i]);
+                }
+                catch (Exception e)
+                {
+                    LogParseArrayFailure(strs[i], e);
+                }
+            }
+            return (T[])(object)result;
+        }
+
+        if (type == typeof(ulong))
+        {
+            ulong[] result = new ulong[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
+            {
+                try
+                {
+                    result[i] = ParseULong(strs[i]);
+                }
+                catch (Exception e)
+                {
+                    LogParseArrayFailure(strs[i], e);
+                }
+            }
+            return (T[])(object)result;
+        }
+
+        if (type == typeof(byte))
+        {
+            byte[] result = new byte[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
+            {
+                try
+                {
+                    result[i] = ParseByte(strs[i]);
+                }
+                catch (Exception e)
+                {
+                    LogParseArrayFailure(strs[i], e);
+                }
+            }
+            return (T[])(object)result;
+        }
+
+        if (type == typeof(sbyte))
+        {
+            sbyte[] result = new sbyte[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
+            {
+                try
+                {
+                    result[i] = ParseSByte(strs[i]);
+                }
+                catch (Exception e)
+                {
+                    LogParseArrayFailure(strs[i], e);
+                }
+            }
+            return (T[])(object)result;
+        }
+
+        if (type == typeof(bool))
+        {
+            bool[] result = new bool[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
+            {
+                try
+                {
+                    result[i] = ParseBool(strs[i]);
+                }
+                catch (Exception e)
+                {
+                    LogParseArrayFailure(strs[i], e);
+                }
+            }
+            return (T[])(object)result;
+        }
+
+        if (type == typeof(char))
+        {
+            char[] result = new char[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
+            {
+                try
+                {
+                    result[i] = ParseChar(strs[i]);
+                }
+                catch (Exception e)
+                {
+                    LogParseArrayFailure(strs[i], e);
+                }
+            }
+            return (T[])(object)result;
+        }
+
+        if (type == typeof(decimal))
+        {
+            decimal[] result = new decimal[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
+            {
+                try
+                {
+                    result[i] = ParseDecimal(strs[i]);
+                }
+                catch (Exception e)
+                {
+                    LogParseArrayFailure(strs[i], e);
+                }
+            }
+            return (T[])(object)result;
+        }
+
+        if (type == typeof(DateTime))
+        {
+            DateTime[] result = new DateTime[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
+            {
+                try
+                {
+                    result[i] = ParseDateTime(strs[i]);
+                }
+                catch (Exception e)
+                {
+                    LogParseArrayFailure(strs[i], e);
+                }
+            }
+            return (T[])(object)result;
+        }
+
+        if (type == typeof(string))
+        {
+            return (T[])(object)strs;
+        }
+
+        if (type.IsEnum)
+        {
+            // 文本路径保持宽松: ParseEnumValue 已对未知成员告警返回 0, Enum.ToObject 不抛异常,
+            // 单元格异常仍被捕获, 避免一个坏单元格中断整行/整表加载。
+            T[] arr = new T[strs.Length];
+            for (int i = 0; i < strs.Length; i++)
+            {
+                try
+                {
+                    arr[i] = (T)Enum.ToObject(type, ParseEnumValue(type, type.Name, strs[i]));
+                }
+                catch (Exception e)
+                {
+                    LogParseArrayFailure(strs[i], e);
+                }
+            }
+            return arr;
+        }
+
+        throw new GameFrameworkException(Utility.Text.Format("Can not parse array for unsupported type '{0}'.", type.FullName));
+    }
+
+    private static void LogParseArrayFailure(string element, Exception e)
+    {
+        Log.Error("解析数组元素失败! 格式有误:{0}\nError:{1}", element, e.Message);
     }
     public static T[] ReadArray<T>(this BinaryReader binaryReader)
     {
         int length = binaryReader.Read7BitEncodedInt32();
         if (length == -1) return null;
-        T[] arr = new T[length];
+
         Type type = typeof(T);
         if (type == typeof(int))
         {
+            int[] result = new int[length];
             for (int i = 0; i < length; i++)
             {
-                arr[i] = (T)(object)binaryReader.Read7BitEncodedInt32();
+                result[i] = binaryReader.Read7BitEncodedInt32();
             }
+            return (T[])(object)result;
         }
-        else if (type == typeof(float))
+
+        if (type == typeof(float))
         {
+            float[] result = new float[length];
             for (int i = 0; i < length; i++)
             {
-                arr[i] = (T)(object)binaryReader.ReadSingle();
+                result[i] = binaryReader.ReadSingle();
             }
+            return (T[])(object)result;
         }
-        else if (type == typeof(double))
+
+        if (type == typeof(double))
         {
+            double[] result = new double[length];
             for (int i = 0; i < length; i++)
             {
-                arr[i] = (T)(object)binaryReader.ReadDouble();
+                result[i] = binaryReader.ReadDouble();
             }
+            return (T[])(object)result;
         }
-        else if (type == typeof(long))
+
+        if (type == typeof(long))
         {
+            long[] result = new long[length];
             for (int i = 0; i < length; i++)
             {
-                arr[i] = (T)(object)binaryReader.Read7BitEncodedInt64();
+                result[i] = binaryReader.Read7BitEncodedInt64();
             }
+            return (T[])(object)result;
         }
-        else if (type == typeof(bool))
+
+        if (type == typeof(bool))
         {
+            bool[] result = new bool[length];
             for (int i = 0; i < length; i++)
             {
-                arr[i] = (T)(object)binaryReader.ReadBoolean();
+                result[i] = binaryReader.ReadBoolean();
             }
+            return (T[])(object)result;
         }
-        else if (type == typeof(string))
+
+        if (type == typeof(string))
         {
+            string[] result = new string[length];
             for (int i = 0; i < length; i++)
             {
-                arr[i] = (T)(object)binaryReader.ReadString();
+                result[i] = binaryReader.ReadString();
             }
+            return (T[])(object)result;
         }
-        else if (type == typeof(byte))
+
+        if (type == typeof(byte))
         {
+            byte[] result = new byte[length];
             for (int i = 0; i < length; i++)
             {
-                arr[i] = (T)(object)binaryReader.ReadByte();
+                result[i] = binaryReader.ReadByte();
             }
+            return (T[])(object)result;
         }
-        else if (type == typeof(char))
+
+        if (type == typeof(char))
         {
+            char[] result = new char[length];
             for (int i = 0; i < length; i++)
             {
-                arr[i] = (T)(object)binaryReader.ReadChar();
+                result[i] = binaryReader.ReadChar();
             }
+            return (T[])(object)result;
         }
-        else if (type.IsEnum)
+
+        if (type.IsEnum)
         {
+            T[] arr = new T[length];
             for (int i = 0; i < length; i++)
             {
                 int value = binaryReader.Read7BitEncodedInt32();
                 arr[i] = (T)ToEnum(type, value);
             }
+            return arr;
         }
-        else if (type == typeof(DateTime))
+
+        if (type == typeof(DateTime))
         {
+            DateTime[] result = new DateTime[length];
             for (int i = 0; i < length; i++)
             {
-                arr[i] = (T)(object)new DateTime(binaryReader.ReadInt64());
+                result[i] = new DateTime(binaryReader.ReadInt64());
             }
+            return (T[])(object)result;
         }
-        return arr;
+
+        throw new GameFrameworkException(Utility.Text.Format("Can not read array for unsupported type '{0}'.", type.FullName));
     }
     /// <summary>
     /// 解析数据表2维数组
@@ -472,23 +777,19 @@ public static class DataTableExtension
     /// <returns></returns>
     public static T[][] Parse2DArray<T>(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        string[] elements = ParseArrayElements(value);
+        if (elements == null)
         {
             return null;
         }
-        var mats = Regex.Matches(value, "\\[.+?\\]");
-        if (mats.Count > 0)
+
+        T[][] arr = new T[elements.Length][];
+        for (int i = 0; i < elements.Length; i++)
         {
-            T[][] arr = new T[mats.Count][];
-            for (int i = 0; i < mats.Count; i++)
-            {
-                string vstr = mats[i].Value;
-                vstr = vstr[1..^1];
-                arr[i] = ParseArray<T>(vstr);
-            }
-            return arr;
+            arr[i] = ParseArray<T>(elements[i]);
         }
-        return null;
+
+        return arr;
     }
     public static T[][] Read2DArray<T>(this BinaryReader binaryReader)
     {
@@ -512,22 +813,58 @@ public static class DataTableExtension
     }
     private static string[] ParseArrayElements(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrEmpty(value))
         {
             return null;
         }
-        var mats = Regex.Matches(value, "\\[.+?\\]");
-        if (mats.Count > 0)
+
+        int start = -1;
+        int count = 0;
+        for (int i = 0; i < value.Length; i++)
         {
-            string[] arr = new string[mats.Count];
-            for (int i = 0; i < mats.Count; i++)
+            char c = value[i];
+            if (c == '[')
             {
-                string vstr = mats[i].Value;
-                arr[i] = vstr[1..^1];
+                start = i + 1;
             }
-            return arr;
+            else if (c == ']' && start >= 0)
+            {
+                // 仅当括号内非空时计入元素: '[]' 视为 0 元素 (与基线 Regex [.+?] 一致, 最终返回 null),
+                // 避免 '[]' 被误判为 1 个空元素导致下游解析出 NullReferenceException/越界。
+                if (i > start)
+                {
+                    count++;
+                }
+                start = -1;
+            }
         }
-        return null;
+
+        if (count == 0)
+        {
+            return null;
+        }
+
+        string[] elements = new string[count];
+        start = -1;
+        int elementIndex = 0;
+        for (int i = 0; i < value.Length; i++)
+        {
+            char c = value[i];
+            if (c == '[')
+            {
+                start = i + 1;
+            }
+            else if (c == ']' && start >= 0)
+            {
+                if (i > start)
+                {
+                    elements[elementIndex++] = value.Substring(start, i - start);
+                }
+                start = -1;
+            }
+        }
+
+        return elements;
     }
     public static bool TryParseEnum(string enumValue, out Type enumType, out int value)
     {
@@ -539,64 +876,182 @@ public static class DataTableExtension
             return false;
         }
 
-        string[] splitValues = enumValue.Split('|', StringSplitOptions.RemoveEmptyEntries);
-        if (splitValues.Length <= 0)
+        int dotIndex = enumValue.IndexOf('.');
+        if (dotIndex <= 0)
         {
             return false;
         }
 
-        string enumName = null;
-        int result = 0;
-        for (int i = 0; i < splitValues.Length; i++)
-        {
-            string[] enumElements = splitValues[i].Trim().Split('.');
-            if (enumElements.Length != 2)
-            {
-                return false;
-            }
-
-            if (enumName == null)
-            {
-                enumName = enumElements[0].Trim();
-            }
-            else if (!string.Equals(enumName, enumElements[0].Trim(), StringComparison.Ordinal))
-            {
-                return false;
-            }
-        }
+        string enumName = enumValue.Substring(0, dotIndex);
 
         enumType = Utility.Assembly.GetType(enumName);
         if (enumType == null)
         {
-            enumType = Utility.Assembly.GetTypes().FirstOrDefault(t => t.IsEnum && (t.Name == enumName));
+            Type[] types = Utility.Assembly.GetTypes();
+            for (int i = 0; i < types.Length; i++)
+            {
+                Type type = types[i];
+                if (type.IsEnum && type.Name == enumName)
+                {
+                    enumType = type;
+                    break;
+                }
+            }
         }
-        if (enumType != null)
+
+        if (enumType == null || !enumType.IsEnum)
         {
-            if (splitValues.Length > 1 && !enumType.IsDefined(typeof(FlagsAttribute), false))
-            {
-                return false;
-            }
-
-            for (int i = 0; i < splitValues.Length; i++)
-            {
-                string[] enumElements = splitValues[i].Trim().Split('.');
-                try
-                {
-                    result |= Convert.ToInt32(Enum.Parse(enumType, enumElements[1].Trim()));
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-
-            value = result;
+            return false;
         }
-        return enumType != null && enumType.IsEnum;
+
+        try
+        {
+            value = ParseEnumValue(enumType, enumName, enumValue);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
     public static bool TryParseEnum(string enumValue, out Type enumType)
     {
         return TryParseEnum(enumValue, out enumType, out _);
+    }
+
+    public static bool ParseBool(string value)
+    {
+        value = value.Trim();
+        if (value == "1")
+        {
+            return true;
+        }
+
+        if (value == "0")
+        {
+            return false;
+        }
+
+        return bool.Parse(value);
+    }
+
+    public static byte ParseByte(string value)
+    {
+        return byte.Parse(value, IntegerNumberStyles, CultureInfo.InvariantCulture);
+    }
+
+    public static sbyte ParseSByte(string value)
+    {
+        return sbyte.Parse(value, IntegerNumberStyles, CultureInfo.InvariantCulture);
+    }
+
+    public static short ParseShort(string value)
+    {
+        return short.Parse(value, IntegerNumberStyles, CultureInfo.InvariantCulture);
+    }
+
+    public static ushort ParseUShort(string value)
+    {
+        return ushort.Parse(value, IntegerNumberStyles, CultureInfo.InvariantCulture);
+    }
+
+    public static int ParseInt(string value)
+    {
+        return int.Parse(value, IntegerNumberStyles, CultureInfo.InvariantCulture);
+    }
+
+    public static uint ParseUInt(string value)
+    {
+        return uint.Parse(value, IntegerNumberStyles, CultureInfo.InvariantCulture);
+    }
+
+    public static long ParseLong(string value)
+    {
+        return long.Parse(value, IntegerNumberStyles, CultureInfo.InvariantCulture);
+    }
+
+    public static ulong ParseULong(string value)
+    {
+        return ulong.Parse(value, IntegerNumberStyles, CultureInfo.InvariantCulture);
+    }
+
+    public static char ParseChar(string value)
+    {
+        return char.Parse(value);
+    }
+
+    public static float ParseFloat(string value)
+    {
+        return float.Parse(value, FloatingNumberStyles, CultureInfo.InvariantCulture);
+    }
+
+    public static double ParseDouble(string value)
+    {
+        return double.Parse(value, FloatingNumberStyles, CultureInfo.InvariantCulture);
+    }
+
+    public static decimal ParseDecimal(string value)
+    {
+        return decimal.Parse(value, FloatingNumberStyles, CultureInfo.InvariantCulture);
+    }
+
+    private static int ParseEnumValue(Type enumType, string enumName, string value)
+    {
+        int result = 0;
+        bool hasFlags = false;
+        int startIndex = 0;
+        while (startIndex < value.Length)
+        {
+            int endIndex = value.IndexOf('|', startIndex);
+            if (endIndex < 0)
+            {
+                endIndex = value.Length;
+            }
+            else
+            {
+                hasFlags = true;
+            }
+
+            int dotIndex = value.IndexOf('.', startIndex, endIndex - startIndex);
+            // 要求限定形式 "EnumName.Member" (与基线一致); 裸成员名会掩盖前缀拼写错误, 不接受。
+            if (dotIndex <= startIndex || dotIndex + 1 >= endIndex)
+            {
+                Log.Warning("Value '{0}' is not defined in enum {1}, use default.", value, enumName);
+                return 0;
+            }
+
+            int enumNameLength = dotIndex - startIndex;
+            if (enumNameLength != enumName.Length ||
+                string.Compare(value, startIndex, enumName, 0, enumName.Length, StringComparison.OrdinalIgnoreCase) != 0)
+            {
+                Log.Warning("Value '{0}' is not defined in enum {1}, use default.", value, enumName);
+                return 0;
+            }
+
+            string member = value.Substring(dotIndex + 1, endIndex - dotIndex - 1);
+
+            // 大小写不敏感解析(与基线 flags 行为一致), 未知成员告警并返回默认, 不抛异常以免中断整表加载
+            if (Enum.TryParse(enumType, member, true, out object memberValue))
+            {
+                result |= Convert.ToInt32(memberValue);
+            }
+            else
+            {
+                Log.Warning("Value '{0}' is not defined in enum {1}, use default.", value, enumName);
+                return 0;
+            }
+
+            startIndex = endIndex + 1;
+        }
+
+        // 非 Flags 枚举却使用 '|' 组合: 仅告警并返回默认, 不抛出 (基线在此处宽松 OR 后返回)
+        if (hasFlags && !enumType.IsDefined(typeof(FlagsAttribute), false))
+        {
+            Log.Warning("Value '{0}' uses '|' combination but enum {1} is not Flags, use default.", value, enumName);
+            return 0;
+        }
+
+        return result;
     }
 
     private static TEnum ToEnum<TEnum>(int value) where TEnum : struct, Enum
@@ -606,9 +1061,10 @@ public static class DataTableExtension
 
     private static object ToEnum(Type enumType, int value)
     {
-        if (Enum.IsDefined(enumType, value) || IsDefinedFlagsEnumValue(enumType, value))
+        object enumValue = Enum.ToObject(enumType, value);
+        if (Enum.IsDefined(enumType, enumValue) || IsDefinedFlagsEnumValue(enumType, value))
         {
-            return Enum.ToObject(enumType, value);
+            return enumValue;
         }
 
         throw new GameFrameworkException(Utility.Text.Format("Value {0} is not defined in enum {1}.", value, enumType.Name));

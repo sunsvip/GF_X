@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- Generated file, do not modify, your changes will be overwritten (use AssetPostprocessor.OnGeneratedCSProject) -->
   <PropertyGroup>
@@ -70,29 +70,18 @@
     <Compile Include="Assets\Plugins\DOTween\Modules\DOTweenModulePhysics2D.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Plugins\ForEditor\CompressImageLibs\System.Text.Json.dll" />
     <None Include="Assets\Plugins\ForEditor\EPPlus.6.2\EPPlus.dll" />
-    <None Include="Assets\Plugins\ForEditor\CompressImageLibs\System.Buffers.dll" />
-    <None Include="Assets\Plugins\ForEditor\CompressImageLibs\System.ValueTuple.dll" />
     <None Include="Assets\Plugins\UnityGameFramework\Libraries\link.xml" />
     <None Include="Assets\Plugins\ForEditor\EPPlus.6.2\Microsoft.IO.RecyclableMemoryStream.dll" />
     <None Include="Assets\Plugins\DOTween\readme.txt" />
     <None Include="Assets\Plugins\Android\com\unity3d\player\PrivacyActivity.java" />
-    <None Include="Assets\Plugins\ForEditor\CompressImageLibs\System.Text.Encodings.Web.dll" />
-    <None Include="Assets\Plugins\ForEditor\CompressImageLibs\System.Memory.dll" />
     <None Include="Assets\Plugins\UnityGameFramework\Configs\ResourceBuilder.xml" />
-    <None Include="Assets\Plugins\ForEditor\CompressImageLibs\System.Numerics.Vectors.dll" />
-    <None Include="Assets\Plugins\ForEditor\CompressImageLibs\System.Threading.Tasks.Extensions.dll" />
     <None Include="Assets\Plugins\UnityGameFramework\Configs\ResourceCollection.xml" />
     <None Include="Assets\Plugins\ZString\Plugins\System.Runtime.CompilerServices.Unsafe.dll" />
-    <None Include="Assets\Plugins\ForEditor\CompressImageLibs\System.Runtime.CompilerServices.Unsafe.dll" />
-    <None Include="Assets\Plugins\ForEditor\CompressImageLibs\Tinify.dll" />
     <None Include="Assets\Plugins\ForEditor\EPPlus.6.2\EPPlus.Interfaces.dll" />
     <None Include="Assets\Plugins\ForEditor\EPPlus.6.2\EPPlus.System.Drawing.dll" />
     <None Include="Assets\Plugins\UnityGameFramework\Libraries\ICSharpCode.SharpZipLib.dll" />
-    <None Include="Assets\Plugins\ForEditor\CompressImageLibs\Microsoft.Bcl.AsyncInterfaces.dll" />
     <None Include="Assets\Plugins\DOTween\DOTween.dll" />
-    <None Include="Assets\Plugins\ForEditor\CompressImageLibs\SixLabors.ImageSharp.dll" />
     <None Include="Assets\Plugins\DOTween\DOTween.XML" />
     <None Include="Assets\Plugins\UnityGameFramework\Configs\ResourceEditor.xml" />
   </ItemGroup>
@@ -429,20 +418,12 @@
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.45f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Text.Json">
-      <HintPath>Assets\Plugins\ForEditor\CompressImageLibs\System.Text.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="EPPlus">
       <HintPath>Assets\Plugins\ForEditor\EPPlus.6.2\EPPlus.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.IO.RecyclableMemoryStream">
       <HintPath>Assets\Plugins\ForEditor\EPPlus.6.2\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Text.Encodings.Web">
-      <HintPath>Assets\Plugins\ForEditor\CompressImageLibs\System.Text.Encodings.Web.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="dnlib">
@@ -455,10 +436,6 @@
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>Assets\Plugins\ZString\Plugins\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Tinify">
-      <HintPath>Assets\Plugins\ForEditor\CompressImageLibs\Tinify.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="EPPlus.Interfaces">
@@ -477,16 +454,8 @@
       <HintPath>Assets\Plugins\UnityGameFramework\Libraries\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces">
-      <HintPath>Assets\Plugins\ForEditor\CompressImageLibs\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="DOTween">
       <HintPath>Assets\Plugins\DOTween\DOTween.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SixLabors.ImageSharp">
-      <HintPath>Assets\Plugins\ForEditor\CompressImageLibs\SixLabors.ImageSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="mscorlib">
